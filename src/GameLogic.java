@@ -9,4 +9,14 @@ import org.jbox2d.dynamics.World;
 public class GameLogic
 {
 
+    private static Vec2 gravity;
+    private static World world;
+
+    public GameLogic(float gravity) {
+        this.gravity = new Vec2(0.f, gravity);
+        world = new World(this.gravity);
+
+    }
+
+    public void
 }
