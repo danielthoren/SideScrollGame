@@ -1,3 +1,5 @@
+import javafx.application.Application;
+
 public class GameLoop
 {
     private long lastFpsTime = 0;
@@ -9,6 +11,7 @@ public class GameLoop
     public GameLoop() {
 	this.gameRunning = true;
 	this.gameFrame = new GameFrame("Game");
+		Application.launch(GameFrame.class, "Game");
     }
 
     public void gameLoop(final int targetFPS)

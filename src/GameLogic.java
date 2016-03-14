@@ -17,6 +17,4 @@ public class GameLogic
         world = new World(this.gravity);
 
     }
-
-    public void
 }
