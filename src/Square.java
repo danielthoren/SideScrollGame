@@ -17,14 +17,25 @@ import org.jbox2d.dynamics.World;
 
 public class Square implements DrawAndUpdateObject {
 
-    private Vec2 pos;
-    private Vec2 center;
-    private Body body;
+    protected Vec2 pos;
+    protected Vec2 center;
+    protected Body body;
     private Image image;
     private Color color;
-    private int pixPerMeter;
-    private Double height;
-    private Double width;
+    protected int pixPerMeter;
+    protected Double height;
+    protected Double width;
+
+    public Square(){                                                                                   //Why is a default constructor needed and what does it do ?
+        this.pos = null;
+        this.center = null;
+        this.body = null;
+        this.image = null;
+        this.color = null;
+        this.pixPerMeter = 0;
+        this.height = 0d;
+        this.width = 0d;
+    }
 
     public Square(World world, Vec2 pos, int pixPerMeters, Image image) {
         this.image = image;
@@ -62,10 +73,10 @@ public class Square implements DrawAndUpdateObject {
 
         BodyDef bodyDef = new BodyDef();
         bodyDef.position.set(pos);
-        bodyDef.type = BodyType.DYNAMIC;
+        //bodyDef.type = BodyType.STATIC;
         body = world.createBody(bodyDef);
         body.createFixture(fixtureDef);
-        body.setType(BodyType.DYNAMIC);
+        body.setType(BodyType.STATIC);
         body.setActive(true);
     }
 

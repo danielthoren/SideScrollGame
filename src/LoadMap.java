@@ -28,7 +28,8 @@ public final class LoadMap {
         if (loadedMap != mapNumber){
             gameObjects = new ArrayList<DrawAndUpdateObject>(10);
 
-            gameObjects.add(new StaticSquare(world, new Vec2(1.f, 1.f), 100, Color.BLUE, 0.2d, 0.2d));
+            gameObjects.add(new DynamicSquare(world, new Vec2(0.5f, 0.5f), 100, Color.BLUE, 0.2d, 0.2d));
+            gameObjects.add(new Square(world, new Vec2(0f, 5f), 100, Color.RED, 5d, 0.3d));
         }
     }
 
