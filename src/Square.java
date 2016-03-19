@@ -15,7 +15,7 @@ import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.FixtureDef;
 import org.jbox2d.dynamics.World;
 
-public class StaticSquare implements DrawAndUpdateObject {
+public class Square implements DrawAndUpdateObject {
 
     private Vec2 pos;
     private Vec2 center;
@@ -26,7 +26,7 @@ public class StaticSquare implements DrawAndUpdateObject {
     private Double height;
     private Double width;
 
-    public StaticSquare(World world, Vec2 pos, int pixPerMeters, Image image) {
+    public Square(World world, Vec2 pos, int pixPerMeters, Image image) {
         this.image = image;
         this.pixPerMeter = pixPerMeters;
         this.width = image.getWidth() / pixPerMeters;
@@ -37,7 +37,7 @@ public class StaticSquare implements DrawAndUpdateObject {
         createBody(world);
     }
 
-    public StaticSquare(World world, Vec2 pos, int pixPerMeter, Color color, double width, double height){
+    public Square(World world, Vec2 pos, int pixPerMeter, Color color, double width, double height){
         this.pixPerMeter = pixPerMeter;
         this.pos = pos;
         this.color = color;
