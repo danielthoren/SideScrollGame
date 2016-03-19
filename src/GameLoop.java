@@ -1,63 +1,39 @@
-import javafx.application.Application;
+import javafx.animation.AnimationTimer;
 
-public class GameLoop
+public class GameLoop extends AnimationTimer
 {
     private long lastFpsTime = 0;
     private long lastLoopTime = System.nanoTime();
     private int fps = 0;
-    private boolean gameRunning;
-    private GameFrame gameFrame;
+	private GameFrame gameFrame;
 
-    public GameLoop() {
-	this.gameRunning = true;
-	this.gameFrame = new GameFrame("Game");
-		Application.launch(GameFrame.class, "Game");
+    public GameLoop(GameFrame gameFrame) {
+		this.gameFrame = gameFrame;
+
     }
-
-    public void gameLoop(final int targetFPS)
+	@Override
+	public void handle(long now)
     {
-	final long optimalTime = 1000000000 / targetFPS;
+		//Calclate the time the previous rendering has taken
+		float updateLength = now - lastLoopTime;
+		lastLoopTime = now;
 
-	// keep looping round til the game ends
-	while (gameRunning)
-	{
-	    // work out how long its been since the last update, this
-	    // will be used to calculate how far the entities should
-	    // move this loop
-	    long now = System.nanoTime();
-	    long updateLength = now - lastLoopTime;
-	    lastLoopTime = now;
-	    double delta = updateLength / ((double)optimalTime);
+		// update the frame counter
+		lastFpsTime += updateLength;
+		fps++;
 
-	    // update the frame counter
-	    lastFpsTime += updateLength;
-	    fps++;
+		// update our FPS counter if a second has passed since
+		// we last recorded
+		if (lastFpsTime >= 1000000000)
+		{
+			//System.out.println("(FPS: "+fps+")");
+			lastFpsTime = 0;
+			fps = 0;
+		}
 
-	    // update our FPS counter if a second has passed since
-	    // we last recorded
-	    if (lastFpsTime >= 1000000000)
-	    {
-		System.out.println("(FPS: "+fps+")");
-		lastFpsTime = 0;
-		fps = 0;
-	    }
-
-	    // update the game logic
-
-	    // draw everyting
-
-	    // we want each frame to take 10 milliseconds, to do this
-	    // we've recorded when we started the frame. We add 10 milliseconds
-	    // to this and then factor in the current time to give
-	    // us our final value to wait for
-	    // remember this is in ms, whereas our lastLoopTime etc. vars are in ns.
-	    try{
-		Thread.sleep((lastLoopTime-System.nanoTime() + optimalTime)/1000000 );
-	    }catch (InterruptedException e){
-		Thread.currentThread().interrupt();
-		//throw new RuntimeException("Thread interrupt, save and exit!");
-	    }
-
+		// update the gameFrame logic
+		gameFrame.update(updateLength);
+		// draw everyting
+		gameFrame.draw();
 	}
-    }
 }

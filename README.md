@@ -1,2 +1,2 @@
 # SideScrollGame
-A project creating a small sidescroller game in Java
+A project creating a small sidescroller gameFrame in Java

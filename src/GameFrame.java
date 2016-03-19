@@ -1,8 +1,8 @@
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -15,21 +15,52 @@ import javafx.stage.Stage;
  * Initiates and creates the window in wich the game is drawn. Also draws a highscorelist using 'HighScoreList'.
  */
 
-
 public class GameFrame extends Application
 {
 	private String windowName;
 	private Stage primaryStage;
+	private GameComponent gameComponent;
+	private GameLoop gameLoop;
+
+	private long lastFpsTime = 0;
+	private long lastLoopTime;
+	private int fps = 0;
+	private boolean gameRunning;
+	private int targetFPS;
+
+	private double gameHeight = 600;
+	private double gameWidth = 800;
 
 	@Override
 	public  void start(Stage primaryStage){
+		//Initializing GameFrame
+		targetFPS = 1;
+		gameRunning = true;
+		gameLoop = new GameLoop(this);
+		gameComponent = new GameComponent(gameHeight, gameWidth);
+
+		//Initializing GUI
 		this.primaryStage = primaryStage;
 		primaryStage.setTitle(windowName);
-		VBox topContainer = new VBox();
-		BorderPane root = new BorderPane();
-		Scene scene = new Scene(root,800, 600);
+		Group root = new Group();
+		BorderPane mainBorderPane = new BorderPane();
+		root.getChildren().add(mainBorderPane);
+		Scene scene = new Scene(root);
 		scene.setFill(Color.BLACK);
 
+		mainBorderPane.setTop(createTopMenues());
+		mainBorderPane.setCenter(gameComponent);
+
+		primaryStage.setScene(scene);
+		primaryStage.show();
+
+
+		//Start GameLoop
+		gameLoop.start();
+	}
+
+	private VBox createTopMenues(){
+		VBox topContainer = new VBox();
 		//Creating objects to put in the container (topContainer)
 		MenuBar menuBar = new MenuBar();
 		//Adding objects to the topContainer
@@ -48,21 +79,24 @@ public class GameFrame extends Application
 			}
 		});
 
-		root.setTop(topContainer);
+		return topContainer;
+	}
 
-		primaryStage.setScene(scene);
-		primaryStage.show();
+	public void update(float timeScinseLast){
+		gameComponent.update(timeScinseLast);
+	}
+
+	public void draw(){
+		gameComponent.draw();
+
 	}
 
 	public GameFrame(String windowName) {
 		this.windowName = windowName;
 	}
-	public GameFrame(){
-		this.windowName = "Game";
-	}
 
-	public Stage getPrimaryStage() {
-		return primaryStage;
+	public GameFrame(){
+		this.windowName = "GameFrame";
 	}
 
 	/**
@@ -77,58 +111,3 @@ public class GameFrame extends Application
 		launch(args);
 	}
 }
-
-
-/*
-public class GameFrame extends JFrame
-{
-    private JTextArea highScoreArea;
-    private GameComponent gameComponent;
-    private final static int WINDOW_HEIGHT = 800;
-    private final static int WINDOW_WIDTH = 600;
-
-    public GameFrame(String windowName) throws HeadlessException {
-	super(windowName);
-
-	//Creating tetriscomponent
-	gameComponent = new GameComponent(WINDOW_HEIGHT, WINDOW_WIDTH);
-
-	//Creating Menu
-	JMenuBar menuBar = new JMenuBar();
-	JMenu menu = new JMenu("File");
-	final JToggleButton pause = new JToggleButton("Pause");
-	JMenuItem exit = new JMenuItem("Exit");
-	exit.setToolTipText("Exit application");
-
-	exit.addActionListener(new ActionListener()
-	{
-	    @Override public void actionPerformed(ActionEvent event) {
-		System.exit(0);
-	    }
-	});
-	pause.addActionListener(new ActionListener()
-	{
-	    @Override public void actionPerformed(final ActionEvent e) {
-		System.out.println("pause");
-	    }
-	});
-
-
-	menu.add(exit);
-	menuBar.add(menu);
-	menuBar.add(pause);
-	setJMenuBar(menuBar);
-
-	this.setLayout(new BorderLayout());
-
-	this.pack();
-	this.setVisible(true);
-    }
-
-    public void update(){
-	this.repaint();
-    }
-
-}
-
-**/
