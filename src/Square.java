@@ -1,13 +1,10 @@
 /**
  * Created by daniel on 2016-03-12.
  */
-import javafx.scene.Node;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import org.jbox2d.collision.shapes.PolygonShape;
-import org.jbox2d.collision.shapes.Shape;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.BodyDef;
@@ -22,9 +19,9 @@ public class Square implements DrawAndUpdateObject {
     protected Body body;
     private Image image;
     private Color color;
-    protected int pixPerMeter;
     protected Double height;
     protected Double width;
+    private float friction;
 
     public Square(){                                                                                   //Why is a default constructor needed and what does it do ?
         this.pos = null;
@@ -32,30 +29,29 @@ public class Square implements DrawAndUpdateObject {
         this.body = null;
         this.image = null;
         this.color = null;
-        this.pixPerMeter = 0;
         this.height = 0d;
         this.width = 0d;
     }
 
-    public Square(World world, Vec2 pos, int pixPerMeters, Image image) {
+    public Square(World world, Vec2 pos, float friction, Image image) {
         this.image = image;
-        this.pixPerMeter = pixPerMeters;
-        this.width = image.getWidth() / pixPerMeters;
-        this.height = image.getHeight() / pixPerMeters;
+        this.friction = friction;
         this.pos = pos;
-        this.center = new Vec2(pos.x + (width.floatValue()/2), pos.y + (height.floatValue()/2));
+        width = image.getWidth() / LoadMap.getInstance().getPixPerMeter();
+        height = image.getHeight() / LoadMap.getInstance().getPixPerMeter();
+        center = new Vec2(pos.x + (width.floatValue()/2), pos.y + (height.floatValue()/2));
 
         createBody(world);
     }
 
-    public Square(World world, Vec2 pos, int pixPerMeter, Color color, double width, double height){
-        this.pixPerMeter = pixPerMeter;
+    public Square(World world, Vec2 pos, float friction, Color color, double width, double height){
+        this.friction = friction;
         this.pos = pos;
         this.color = color;
         this.width = width;
         this.height = height;
         this.image = null;
-        this.center = new Vec2(pos.x + (this.width.floatValue()/2), pos.y + (this.height.floatValue()/2));
+        center = new Vec2(pos.x + (this.width.floatValue()/2), pos.y + (this.height.floatValue()/2));
 
         createBody(world);
     }
@@ -67,13 +63,12 @@ public class Square implements DrawAndUpdateObject {
         polygonShape.setAsBox(width.floatValue(), height.floatValue());
 
         fixtureDef.shape = polygonShape;
-        fixtureDef.density =0.9f;
-        fixtureDef.friction = 0.3f;
-        fixtureDef.restitution = 0.5f;
+        fixtureDef.density = 0f;
+        fixtureDef.friction = friction;
+        fixtureDef.restitution = 0f;
 
         BodyDef bodyDef = new BodyDef();
         bodyDef.position.set(pos);
-        //bodyDef.type = BodyType.STATIC;
         body = world.createBody(bodyDef);
         body.createFixture(fixtureDef);
         body.setType(BodyType.STATIC);
@@ -84,16 +79,15 @@ public class Square implements DrawAndUpdateObject {
      * Regular rectangle object does not need updating, static position.
      */
     public void update(){
-        System.out.println(body.getPosition().y);
     }
 
-    public void draw(GraphicsContext gc){
+    public void draw(GraphicsContext gc2d){
         if (image == null){
-            gc.setFill(color);
-            gc.fillRect(body.getPosition().x * pixPerMeter, body.getPosition().y * pixPerMeter, width * pixPerMeter, height * pixPerMeter);
+            gc2d.setFill(color);
+            gc2d.fillRect(GameComponent.metersToPix(body.getPosition().x), GameComponent.metersToPix(body.getPosition().y), GameComponent.metersToPix(width.floatValue()), GameComponent.metersToPix(height.floatValue()));
         }
         else{
-            gc.drawImage(image, pos.x * pixPerMeter, pos.y * pixPerMeter);
+            gc2d.drawImage(image, GameComponent.metersToPix(body.getPosition().x), GameComponent.metersToPix(body.getPosition().y));
         }
     }
 }

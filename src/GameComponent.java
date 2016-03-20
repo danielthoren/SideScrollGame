@@ -48,4 +48,12 @@ public class GameComponent extends Parent
             obj.draw(gc2d);
         }
     }
+
+    public static float metersToPix(float meters){
+        return meters * LoadMap.getInstance().getPixPerMeter();
+    }
+
+    public static float pixToMeters(float pix){
+        return pix / LoadMap.getInstance().getPixPerMeter();
+    }
 }

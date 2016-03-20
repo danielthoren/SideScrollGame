@@ -12,11 +12,12 @@ public final class LoadMap {
     private final static LoadMap instance = new LoadMap();
     private ArrayList<DrawAndUpdateObject> gameObjects;
 
-    private int loadedMap;
-
+    private static int loadedMap;
+    private static float pixPerMeter;
     private LoadMap() {
         gameObjects = new ArrayList<DrawAndUpdateObject>(10);
         loadedMap = 0;
+        pixPerMeter = 100;                                      //should be read from file in the future
     }
 
     public static LoadMap getInstance(){
@@ -28,10 +29,12 @@ public final class LoadMap {
         if (loadedMap != mapNumber){
             gameObjects = new ArrayList<DrawAndUpdateObject>(10);
 
-            gameObjects.add(new DynamicSquare(world, new Vec2(0.5f, 0.5f), 100, Color.BLUE, 0.2d, 0.2d));
-            gameObjects.add(new Square(world, new Vec2(0f, 5f), 100, Color.RED, 5d, 0.3d));
+            gameObjects.add(new DynamicSquare(world, new Vec2(0.5f, 0.5f), 0.3f, 0.3f, 0.3f, Color.BLUE, 0.2d, 0.2d));
+            gameObjects.add(new Square(world, new Vec2(0f, 5f), 0.3f, Color.RED, 5d, 0.3d));
         }
     }
+
+    public float getPixPerMeter(){return pixPerMeter;}
 
     public ArrayList<DrawAndUpdateObject> getMap(){
         return gameObjects;
