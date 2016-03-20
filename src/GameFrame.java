@@ -12,7 +12,8 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 /**
- * Initiates and creates the window in wich the game is drawn. Also draws a highscorelist using 'HighScoreList'.
+ * This is the main class of the game. It creates the window in wich the game and all menues is drawn. It also
+ * instantiates the game and runs it.
  */
 
 public class GameFrame extends Application
@@ -31,6 +32,10 @@ public class GameFrame extends Application
 	private double gameHeight = 600;
 	private double gameWidth = 800;
 
+	/**
+	 * The 'start' function is called to initialize the contents of the 'Application' when the 'launch()' function is called.
+	 * @param primaryStage The primary 'Stage' in wich to put nodes.
+     */
 	@Override
 	public  void start(Stage primaryStage){
 		//Initializing GameFrame
@@ -59,6 +64,10 @@ public class GameFrame extends Application
 		gameLoop.start();
 	}
 
+	/**
+	 * Creates the Vbox instance, and the contents therin, to be placed on the windows top.
+	 * @return
+     */
 	private VBox createTopMenues(){
 		VBox topContainer = new VBox();
 		//Creating objects to put in the container (topContainer)
@@ -82,10 +91,17 @@ public class GameFrame extends Application
 		return topContainer;
 	}
 
-	public void update(float timeScinseLast){
-		gameComponent.update(timeScinseLast);
+	/**
+	 * Updates the 'GameComponent'
+	 * @param nanosScinseLast The time scinse the last update in nanoseconds.
+     */
+	public void update(float nanosScinseLast){
+		gameComponent.update(nanosScinseLast);
 	}
 
+	/**
+	 * Draws the 'GameComponent'
+	 */
 	public void draw(){
 		gameComponent.draw();
 

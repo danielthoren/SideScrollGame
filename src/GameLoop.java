@@ -1,5 +1,8 @@
 import javafx.animation.AnimationTimer;
 
+/**
+ * Responsible for updating and drawing the game at a constant rate. It also keeps track of the current fps.
+ */
 public class GameLoop extends AnimationTimer
 {
     private long lastFpsTime = 0;
@@ -7,10 +10,18 @@ public class GameLoop extends AnimationTimer
     private int fps = 0;
 	private GameFrame gameFrame;
 
+	/**
+	 * Initialices the 'Gameloop'
+	 * @param gameFrame The 'GameFrame to update
+     */
     public GameLoop(GameFrame gameFrame) {
 		this.gameFrame = gameFrame;
-
     }
+
+	/**
+	 * The function called for every interval. Holds the code that updates and draws the game every frame.
+	 * @param now
+     */
 	@Override
 	public void handle(long now)
     {

@@ -1,9 +1,17 @@
 import javafx.scene.canvas.GraphicsContext;
 
 /**
- * Created by daniel on 2016-03-19.
+ * Interface for all of the objects that needs updating and drawing
  */
 public interface DrawAndUpdateObject {
+    /**
+     * The function that updates the object every frame
+     */
     public void update();
+
+    /**
+     * The function that draws the object every frame
+     * @param gc The GraphicsContext with wich to draw
+     */
     public void draw(GraphicsContext gc);
 }

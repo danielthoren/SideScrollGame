@@ -14,16 +14,19 @@ import org.jbox2d.dynamics.World;
 
 public class Square implements DrawAndUpdateObject {
 
-    protected Vec2 pos;
-    protected Vec2 center;
-    protected Body body;
-    private Image image;
-    private Color color;
-    protected Double height;
-    protected Double width;
-    private float friction;
+    protected Vec2 pos;     //The position of the upper left corner of the square in meters
+    protected Vec2 center;  //The center position of the square in meters (calculated using 'pos', 'height' and 'width')
+    protected Body body;    //The body of the square
+    private Image image;    //The image representing the square in the visual realm (=none if no image)
+    private Color color;    //The color of the square (=none if no color)
+    protected Double height;//The height of the square in meters
+    protected Double width; //The width of the square in meters
+    private float friction; //The friction of the square´s body
 
-    public Square(){                                                                                   //Why is a default constructor needed and what does it do ?
+    /**
+     * The default constructor of the class. Should never be used!
+     */
+    private Square(){                                                                                   //Why is a default constructor needed and what does it do ?
         this.pos = null;
         this.center = null;
         this.body = null;
@@ -33,6 +36,13 @@ public class Square implements DrawAndUpdateObject {
         this.width = 0d;
     }
 
+    /**
+     * Creates a square with static position and collision properites.
+     * @param world The world in wich to add its body
+     * @param pos The position at wich to place the square (units in meters)
+     * @param friction The friction of the body
+     * @param image The image to display over the body (visible part of the square)
+     */
     public Square(World world, Vec2 pos, float friction, Image image) {
         this.image = image;
         this.friction = friction;
@@ -44,6 +54,15 @@ public class Square implements DrawAndUpdateObject {
         createBody(world);
     }
 
+    /**
+     * Creates a square with static position and collision properties.
+     * @param world The world in wich to add its body
+     * @param pos The position at wich to place the square (units in meters)
+     * @param friction The fiction of the body
+     * @param color The color of the Square
+     * @param width The width of the square in meters (world coordinates)
+     * @param height The height of the square in meters (world coordinates)
+     */
     public Square(World world, Vec2 pos, float friction, Color color, double width, double height){
         this.friction = friction;
         this.pos = pos;
@@ -56,23 +75,40 @@ public class Square implements DrawAndUpdateObject {
         createBody(world);
     }
 
+    /**
+     * Creates the body of the 'Square' object.
+     * @param world The world in wich to add its body.
+     */
     private void createBody(World world){
         FixtureDef fixtureDef = new FixtureDef();
         PolygonShape polygonShape = new PolygonShape();
 
-        polygonShape.setAsBox(width.floatValue(), height.floatValue());
+        //Do note that the SetAsBox takes half of the width and half of the height then spanning said measurments
+        //out on both sides of the centerpoint (bodyposition)
+        polygonShape.setAsBox(width.floatValue()/2, height.floatValue()/2);
 
+        //Creating the fixture of the body. The concrete part that can be touched (the part that can collide)
         fixtureDef.shape = polygonShape;
         fixtureDef.density = 0f;
         fixtureDef.friction = friction;
         fixtureDef.restitution = 0f;
 
+        //Creating the body using the fixtureDef and the BodyDef created beneath
         BodyDef bodyDef = new BodyDef();
-        bodyDef.position.set(pos);
+        bodyDef.position.set(center);
         body = world.createBody(bodyDef);
         body.createFixture(fixtureDef);
         body.setType(BodyType.STATIC);
         body.setActive(true);
+    }
+
+    /**
+     * Returns the world coordiate of the upper left corner of the body. The standard position is based on
+     * the body´s centerpoint.
+     * @return The world coordinates of the upper left corner of the body.
+     */
+    protected Vec2 getUpLeftCorner(){
+        return new Vec2(body.getPosition().x - (width.floatValue()/2), body.getPosition().y + (height.floatValue()/2));
     }
 
     /**
@@ -81,13 +117,20 @@ public class Square implements DrawAndUpdateObject {
     public void update(){
     }
 
-    public void draw(GraphicsContext gc2d){
+    /**
+     * Draws the color, or texture over the body of the object. Do note that the Fx coordinates has pixels as unit while
+     * the world coordinates has meters as unit.
+     * @param gc The GraphicsContext to be used to draw with
+     */
+    public void draw(GraphicsContext gc){
         if (image == null){
-            gc2d.setFill(color);
-            gc2d.fillRect(GameComponent.metersToPix(body.getPosition().x), GameComponent.metersToPix(body.getPosition().y), GameComponent.metersToPix(width.floatValue()), GameComponent.metersToPix(height.floatValue()));
+            gc.setFill(color);
+            gc.fillRect(GameComponent.metersToPix(getUpLeftCorner().x), GameComponent.metersToPix(getUpLeftCorner().y), GameComponent.metersToPix(width.floatValue()), GameComponent.metersToPix(height.floatValue()));
         }
         else{
-            gc2d.drawImage(image, GameComponent.metersToPix(body.getPosition().x), GameComponent.metersToPix(body.getPosition().y));
+            gc.drawImage(image, GameComponent.metersToPix(getUpLeftCorner().x), GameComponent.metersToPix(getUpLeftCorner().y));
         }
     }
+
+
 }
