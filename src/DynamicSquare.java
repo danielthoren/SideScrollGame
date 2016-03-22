@@ -53,5 +53,6 @@ public class DynamicSquare extends Square {
         this.body.setType(BodyType.DYNAMIC);
         this.body.getFixtureList().setRestitution(restitution);
         this.body.getFixtureList().setDensity(density);
+        this.body.setFixedRotation(false);
     }
 }

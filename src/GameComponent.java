@@ -26,6 +26,7 @@ public class GameComponent extends Parent
     private Vec2 gravity;
     private double height, width;                           //The height and width of the window in pixels
     private int velocityIterations, positionIterations;     //Values deciding the accuracy of velocity and position
+    private Map currentMap;
 
     /**
      * Instanciates a game.
@@ -45,16 +46,20 @@ public class GameComponent extends Parent
         canvas = new Canvas(width, height);
         gc = canvas.getGraphicsContext2D();
         getChildren().add(canvas);
+        this.requestFocus();
         gameObjects = new ArrayList<DrawAndUpdateObject>(10);
 
         LoadMap.getInstance().loadMap(world, 1);
         gameObjects = LoadMap.getInstance().getMap(1).getGameObjects();
+        currentMap = LoadMap.getInstance().getMap(1);                                                 ///////////////////Value needs to be moved to user interface
 
         //Setting the keyevents to listen to
         this.setOnKeyPressed(new EventHandler<KeyEvent>()
         {
             @Override public void handle(final KeyEvent event) {
-
+                for (InputListener obj : currentMap.getGameObjectsListen()){
+                    obj.inputAction(event);
+                }
             }
         });
     }
@@ -65,7 +70,10 @@ public class GameComponent extends Parent
      */
     public void update(float nanosecScienceLast){
         world.step(nanosecScienceLast / 1000000000, velocityIterations,positionIterations);
-        for (DrawAndUpdateObject obj : gameObjects){
+        for (DrawAndUpdateObject obj : currentMap.getGameObjects()){
+            obj.update();
+        }
+        for (InputListener obj : currentMap.getGameObjectsListen()){
             obj.update();
         }
     }
@@ -74,10 +82,13 @@ public class GameComponent extends Parent
      * Draws all of the game objects on the 'canvas'
      */
     public void draw(){
-        GraphicsContext gc2d = canvas.getGraphicsContext2D();
-        gc2d.clearRect(0,0, canvas.getWidth(), canvas.getHeight());
-        for (DrawAndUpdateObject obj : gameObjects){
-            obj.draw(gc2d);
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+        gc.clearRect(0,0, canvas.getWidth(), canvas.getHeight());
+        for (DrawAndUpdateObject obj : currentMap.getGameObjects()){
+            obj.draw(gc);
+        }
+        for (InputListener obj : currentMap.getGameObjectsListen()){
+            obj.draw(gc);
         }
     }
 

@@ -124,8 +124,14 @@ public class Square implements DrawAndUpdateObject {
      */
     public void draw(GraphicsContext gc){
         if (image == null){
-            gc.setFill(color);
-            gc.fillRect(GameComponent.metersToPix(getUpLeftCorner().x), GameComponent.metersToPix(getUpLeftCorner().y), GameComponent.metersToPix(width.floatValue()), GameComponent.metersToPix(height.floatValue()));
+            gc.save();
+                gc.translate(GameComponent.metersToPix(getUpLeftCorner().x), GameComponent.metersToPix(getUpLeftCorner().y));
+                gc.rotate(Math.toDegrees(body.getAngle()));
+                gc.setFill(color);
+                float halfWidth = GameComponent.metersToPix(width.floatValue()) / 2;
+                float halfHeight = GameComponent.metersToPix(height.floatValue()) / 2;
+                gc.fillRect(-halfWidth, -halfHeight, 2 * halfWidth, 2 * halfHeight);
+            gc.restore();
         }
         else{
             gc.drawImage(image, GameComponent.metersToPix(getUpLeftCorner().x), GameComponent.metersToPix(getUpLeftCorner().y));
