@@ -15,7 +15,6 @@ import javafx.stage.Stage;
  * This is the main class of the game. It creates the window in wich the game and all menues is drawn. It also
  * instantiates the game and runs it.
  */
-
 public class GameFrame extends Application
 {
 	private String windowName;

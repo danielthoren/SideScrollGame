@@ -1,10 +1,13 @@
+import javafx.event.EventHandler;
 import javafx.scene.Parent;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.KeyEvent;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.World;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This is the class that handles all the logic in the game. It is also a child of the class 'Parent' wich extends
@@ -15,7 +18,8 @@ import java.util.ArrayList;
  */
 public class GameComponent extends Parent
 {
-    private ArrayList<DrawAndUpdateObject> gameObjects;     //The physical objects both drawn and updated
+    private List<DrawAndUpdateObject> gameObjects;     //The physical objects both drawn and updated
+    private List<InputListener> gameObjectsListen;     //The physical objects like above who listen to keyevents
     private Canvas canvas;                                  //The canvas on wich to draw on
     private GraphicsContext gc;                             //The GraphicsContext with wich to draw
     private World world;
@@ -44,7 +48,15 @@ public class GameComponent extends Parent
         gameObjects = new ArrayList<DrawAndUpdateObject>(10);
 
         LoadMap.getInstance().loadMap(world, 1);
-        gameObjects = LoadMap.getInstance().getMap();
+        gameObjects = LoadMap.getInstance().getMap(1).getGameObjects();
+
+        //Setting the keyevents to listen to
+        this.setOnKeyPressed(new EventHandler<KeyEvent>()
+        {
+            @Override public void handle(final KeyEvent event) {
+
+            }
+        });
     }
 
     /**
