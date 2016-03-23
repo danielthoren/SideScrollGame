@@ -62,6 +62,14 @@ public class GameComponent extends Parent
                 }
             }
         });
+        this.setOnKeyReleased(new EventHandler<KeyEvent>()
+        {
+            @Override public void handle(final KeyEvent event) {
+                for (InputListener obj : currentMap.getGameObjectsListen()){
+                    obj.inputAction(event);
+                }
+            }
+        });
     }
 
     /**

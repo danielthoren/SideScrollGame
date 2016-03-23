@@ -12,21 +12,20 @@ import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.FixtureDef;
 import org.jbox2d.dynamics.World;
 
-public class Square implements DrawAndUpdateObject {
+public class Circle implements DrawAndUpdateObject {
 
     protected Vec2 pos;     //The position of the upper left corner of the square in meters
     protected Vec2 center;  //The center position of the square in meters (calculated using 'pos', 'height' and 'width')
     protected Body body;    //The body of the square
     private Image image;    //The image representing the square in the visual realm (=none if no image)
     private Color color;    //The color of the square (=none if no color)
-    protected Double height;//The height of the square in meters
-    protected Double width; //The width of the square in meters
+    private float radious;  //The radious of the circle
     private float friction; //The friction of the square´s body
 
     /**
      * The default constructor of the class. Should never be used!
      */
-    private Square(){                                                                                   //Why is a default constructor needed and what does it do ?
+    private Circle(){                                                                                   //Why is a default constructor needed and what does it do ?
 	this.pos = null;
 	this.center = null;
 	this.body = null;
@@ -43,7 +42,7 @@ public class Square implements DrawAndUpdateObject {
      * @param friction The friction of the body
      * @param image The image to display over the body (visible part of the square)
      */
-    public Square(World world, Vec2 pos, float friction, Image image) {
+    public Circle(World world, Vec2 pos, float friction, Image image) {
 	this.image = image;
 	this.friction = friction;
 	this.pos = pos;
@@ -63,7 +62,7 @@ public class Square implements DrawAndUpdateObject {
      * @param width The width of the square in meters (world coordinates)
      * @param height The height of the square in meters (world coordinates)
      */
-    public Square(World world, Vec2 pos, float friction, Color color, double width, double height){
+    public Circle(World world, Vec2 pos, float friction, Color color, double width, double height){
 	this.friction = friction;
 	this.pos = pos;
 	this.color = color;
