@@ -41,6 +41,9 @@ public final class LoadMap {
             gameObjects.add( new Square(world, new Vec2(0f, 3f), 5f, Color.BEIGE, 0.4d, 6d));
             gameObjects.add( new Square(world, new Vec2(7f, 3f), 5f, Color.BEIGE, 0.4d, 6d));
 
+            gameObjects.add(new Circle(world, new Vec2(4f, 4f), 0.3f, Color.RED, 0.2d));
+            gameObjects.add(new DynamicCircle(world, new Vec2(5f, 4f), 0.3f, 0.3f, 0.3f, Color.RED, 0.2d));
+
             Square playerSquare = new Square(world, new Vec2(2.2f, 5.5f), 0.3f, Color.DEEPPINK, 0.4d, 0.4d);
             gameObjectsListen.add(new Player(playerSquare, new Vec2(10,0)));
 
