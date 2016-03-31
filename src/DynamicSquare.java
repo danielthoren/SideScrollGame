@@ -25,6 +25,7 @@ public class DynamicSquare extends Square {
      */
     public DynamicSquare(World world, Vec2 pos, float friction, float density, float restitution, Image image) {
         super(world, pos, friction, image);
+        body.setUserData(this);
         this.density = density;
         this.restitution = restitution;
         slideFactor = 0.95f;
@@ -44,6 +45,7 @@ public class DynamicSquare extends Square {
      */
     public DynamicSquare(World world, Vec2 pos, float friction, float density, float restitution, Color color, double width, double height) {
         super(world, pos, friction, color, width, height);
+        body.setUserData(this);
         this.restitution = restitution;
         this.density = density;
         slideFactor = 0.95f;

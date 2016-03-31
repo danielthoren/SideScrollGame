@@ -26,6 +26,7 @@ public class Circle extends SolidObject implements DrawAndUpdateObject {
 		this.radious = image.getWidth()/2;
 
 		createBody(world);
+		body.setUserData(this);
 	}
 
 	/**
@@ -42,6 +43,7 @@ public class Circle extends SolidObject implements DrawAndUpdateObject {
 		center = new Vec2(pos.x + this.radious.floatValue()/2, pos.y + this.radious.floatValue()/2);
 
 		createBody(world);
+		body.setUserData(this);
 	}
 
 	/**

@@ -17,7 +17,6 @@ public class Square extends SolidObject implements DrawAndUpdateObject
 
 	protected Double height;//The height of the square in meters
 	protected Double width; //The width of the square in meters
-	private float friction; //The friction of the square´s body
 
 	/**
 	 * Creates a square with static position and collision properites.
@@ -32,6 +31,7 @@ public class Square extends SolidObject implements DrawAndUpdateObject
 		height = image.getHeight() / LoadMap.getInstance().getPixPerMeter();
 
 		createBody(world);
+		body.setUserData(this);
 	}
 
 	/**
@@ -50,6 +50,7 @@ public class Square extends SolidObject implements DrawAndUpdateObject
 		center = new Vec2(pos.x + (this.width.floatValue()/2), pos.y + (this.height.floatValue()/2));
 
 		createBody(world);
+		body.setUserData(this);
 	}
 
 	/**
@@ -92,6 +93,7 @@ public class Square extends SolidObject implements DrawAndUpdateObject
 	 * Regular rectangle object does not need updating, static position.
 	 */
 	public void update(){
+		//System.out.println(body.getUserData().toString());
 	}
 
 	@Override

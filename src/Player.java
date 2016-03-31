@@ -4,6 +4,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.BodyType;
+import org.jbox2d.dynamics.contacts.ContactEdge;
 import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 
 import javax.swing.event.DocumentEvent;
@@ -15,21 +16,26 @@ public class Player implements InputListener
     private Square playerSquare;
     private boolean isRunning;
 
-    public Player(Square playerSquare, Vec2 speedVector) {
+    public Player(DynamicSquare playerSquare, Vec2 speedVector) {
         this.speedVector = speedVector;
         this.playerSquare = playerSquare;
         isRunning = false;
+        playerSquare.body.setUserData(this);
 
-        playerSquare.body.setType(BodyType.DYNAMIC);
-        playerSquare.body.getFixtureList().setDensity(100f);
-        playerSquare.body.getFixtureList().setRestitution(0f);
-        playerSquare.body.getFixtureList().setFriction(1000f);
         playerSquare.body.setFixedRotation(true);
+
+        playerSquare.body.setUserData(this);
     }
 
     public void update(){
         if (!isRunning){
             playerSquare.body.setLinearVelocity(new Vec2(0, playerSquare.body.getLinearVelocity().y));
+        }
+        for (ContactEdge edge = playerSquare.body.getContactList(); edge != null; edge = edge.next){
+            //System.out.println(edge.contact.getFixtureA().getBody().getUserData());
+            if (edge.contact.isTouching() && edge.contact.getFixtureA().getBody().getUserData() instanceof Square){
+                System.out.println(edge.contact.getFriction() + "square: " + edge.contact.getFixtureA().getFriction() + "player: " + edge.contact.getFixtureB().getFriction());
+            }
         }
     }
 

@@ -23,6 +23,7 @@ public class DynamicCircle extends Circle {
      */
     public DynamicCircle(World world, Vec2 pos, float friction, float density, float restitution, Image image) {
         super(world, pos, friction, image);
+        body.setUserData(this);
         this.density = density;
         this.restitution = restitution;
         makeDynamic();
@@ -41,6 +42,7 @@ public class DynamicCircle extends Circle {
      */
     public DynamicCircle(World world, Vec2 pos, float friction, float density, float restitution, Color color, double radious) {
         super(world, pos, friction, color, radious);
+        body.setUserData(this);
         this.restitution = restitution;
         this.density = density;
         makeDynamic();
