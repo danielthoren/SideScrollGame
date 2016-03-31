@@ -20,15 +20,13 @@ import java.util.List;
  */
 public class GameComponent extends Parent
 {
-    private List<DrawAndUpdateObject> gameObjects;     //The physical objects both drawn and updated
-    private List<InputListener> gameObjectsListen;     //The physical objects like above who listen to keyevents
     private Canvas canvas;                                  //The canvas on wich to draw on
     private GraphicsContext gc;                             //The GraphicsContext with wich to draw
     private World world;
-    private Vec2 gravity;
     private double height, width;                           //The height and width of the window in pixels
     private int velocityIterations, positionIterations;     //Values deciding the accuracy of velocity and position
     private Map currentMap;
+    private int currentMapNumber = 1;                        ///////////////////Value needs to be moved to user interface!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     /**
      * Instanciates a game.
@@ -39,21 +37,18 @@ public class GameComponent extends Parent
         this.height = height;
         this.width = width;
 
+        world = new World(LoadMap.getInstance().getMapGravity(currentMapNumber));
+
+        LoadMap.getInstance().loadMap(world, currentMapNumber);
+        currentMap = LoadMap.getInstance().getMap(currentMapNumber);
+
         velocityIterations = 6;  //Accuracy of jbox2d velocity simulation
         positionIterations = 3;  //Accuracy of jbox2d position simulation
-
-        gravity = new Vec2(0f, 9.82f);
-        world = new World(gravity);
 
         canvas = new Canvas(width, height);
         gc = canvas.getGraphicsContext2D();
         getChildren().add(canvas);
         this.requestFocus();
-        gameObjects = new ArrayList<DrawAndUpdateObject>(10);
-
-        LoadMap.getInstance().loadMap(world, 1);
-        gameObjects = LoadMap.getInstance().getMap(1).getGameObjects();
-        currentMap = LoadMap.getInstance().getMap(1);                                                 ///////////////////Value needs to be moved to user interface
 
         //Setting the keyevents to listen to
         this.setOnKeyPressed(new EventHandler<KeyEvent>()

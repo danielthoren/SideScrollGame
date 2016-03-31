@@ -10,6 +10,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 /**
@@ -38,37 +39,37 @@ public class GameFrame extends Application
      */
     @Override
     public  void start(Stage primaryStage){
-	//Initializing GameFrame
-	targetFPS = 1;
-	gameRunning = true;
-	gameLoop = new GameLoop(this);
-	gameComponent = new GameComponent(gameHeight, gameWidth);
+        //Initializing GameFrame
+        targetFPS = 1;
+        gameRunning = true;
+        gameLoop = new GameLoop(this);
+        gameComponent = new GameComponent(gameHeight, gameWidth);
 
-	//Giving 'gameComponent' focus
-	Platform.runLater(new Runnable()
-	{
-	    @Override public void run() {
-		gameComponent.requestFocus();
-	    }
-	});
+        //Giving 'gameComponent' focus
+        Platform.runLater(new Runnable()
+        {
+            @Override public void run() {
+                gameComponent.requestFocus();
+            }
+        });
 
-	//Initializing GUI this.primaryStage = primaryStage;
-	primaryStage.setTitle(windowName);
-	Group root = new Group();
-	BorderPane mainBorderPane = new BorderPane();
-	root.getChildren().add(mainBorderPane);
-	Scene scene = new Scene(root);
-	scene.setFill(Color.BLACK);
+        //Initializing GUI this.primaryStage = primaryStage;
+        primaryStage.setTitle(windowName);
+        Group root = new Group();
+        BorderPane mainBorderPane = new BorderPane();
+        root.getChildren().add(mainBorderPane);
+        Scene scene = new Scene(root);
+        scene.setFill(Color.BLACK);
 
-	mainBorderPane.setTop(createTopMenues());
-	mainBorderPane.setCenter(gameComponent);
+        mainBorderPane.setTop(createTopMenues());
+        mainBorderPane.setCenter(gameComponent);
 
-	primaryStage.setScene(scene);
-	primaryStage.show();
+        primaryStage.setScene(scene);
+        primaryStage.show();
 
 
-	//Start GameLoop
-	gameLoop.start();
+        //Start GameLoop
+        gameLoop.start();
     }
 
     /**
@@ -76,26 +77,27 @@ public class GameFrame extends Application
      * @return
      */
     private VBox createTopMenues(){
-	VBox topContainer = new VBox();
-	//Creating objects to put in the container (topContainer)
-	MenuBar menuBar = new MenuBar();
-	//Adding objects to the topContainer
-	topContainer.getChildren().add(menuBar);
-	//Creating menues and putting them in the menuBar
-	Menu file = new Menu("File");
-	menuBar.getMenus().addAll(file);
-	//Creating MenuItems and putting them in the correct Menu
-	MenuItem exit = new MenuItem("Exit");
-	file.getItems().addAll(exit);
-	//Adding actionevents to the MenuItems
-	exit.setOnAction(new EventHandler<ActionEvent>() {
-	    @Override
-	    public void handle(ActionEvent event) {
-		System.exit(1);
-	    }
-	});
+        VBox topContainer = new VBox();
+        //Creating objects to put in the container (topContainer)
+        MenuBar menuBar = new MenuBar();
+        Text fps = new Text();
+        //Adding objects to the topContainer
+        topContainer.getChildren().addAll(menuBar, fps);
+        //Creating menues and putting them in the menuBar
+        Menu file = new Menu("File");
+        menuBar.getMenus().addAll(file);
+        //Creating MenuItems and putting them in the correct Menu
+        MenuItem exit = new MenuItem("Exit");
+        file.getItems().addAll(exit);
+        //Adding actionevents to the MenuItems
+        exit.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                System.exit(1);
+            }
+        });
 
-	return topContainer;
+        return topContainer;
     }
 
     /**
@@ -103,23 +105,23 @@ public class GameFrame extends Application
      * @param nanosScinseLast The time scinse the last update in nanoseconds.
      */
     public void update(float nanosScinseLast){
-	gameComponent.update(nanosScinseLast);
+        gameComponent.update(nanosScinseLast);
     }
 
     /**
      * Draws the 'GameComponent'
      */
     public void draw(){
-	gameComponent.draw();
+        gameComponent.draw();
 
     }
 
     public GameFrame(String windowName) {
-	this.windowName = windowName;
+        this.windowName = windowName;
     }
 
     public GameFrame(){
-	this.windowName = "GameFrame";
+        this.windowName = "GameFrame";
     }
 
     /**
@@ -131,6 +133,6 @@ public class GameFrame extends Application
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-	launch(args);
+        launch(args);
     }
 }

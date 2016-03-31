@@ -9,10 +9,8 @@ import org.jbox2d.dynamics.World;
  */
 public class DynamicSquare extends Square {
 
-    private float density;
-    private float restitution;
-    //Holds the factor of wich the x-velocity is multiplied each tick, lessens the sliding of the object on STATIC surfaces.
-    private float slideFactor;
+    private float density = 10;
+    private float restitution = 0.01f;
 
     /**
      * Creates a square on wich realtime physics is applied.
@@ -23,12 +21,9 @@ public class DynamicSquare extends Square {
      * @param restitution The restitution of the body (the bouncines of the body)
      * @param image The image representing the body in the visual realm
      */
-    public DynamicSquare(World world, Vec2 pos, float friction, float density, float restitution, Image image) {
+    public DynamicSquare(World world, Vec2 pos, float friction, Image image) {
         super(world, pos, friction, image);
         body.setUserData(this);
-        this.density = density;
-        this.restitution = restitution;
-        slideFactor = 0.95f;
         makeDynamic();
     }
 
@@ -43,13 +38,9 @@ public class DynamicSquare extends Square {
      * @param width The width of the body in meters
      * @param height The height of the body in meters
      */
-    public DynamicSquare(World world, Vec2 pos, float friction, float density, float restitution, Color color, double width, double height) {
+    public DynamicSquare(World world, Vec2 pos, float friction, Color color, double width, double height) {
         super(world, pos, friction, color, width, height);
         body.setUserData(this);
-        this.restitution = restitution;
-        this.density = density;
-        slideFactor = 0.95f;
-        //body.setLinearDamping(0.99f);
         makeDynamic();
     }
 
@@ -65,17 +56,13 @@ public class DynamicSquare extends Square {
 
     @Override
     public void update(){
-        //Prevents the squares from sliding across STATIC surfaces. More sliding with bigger slideFactor
-        //body.setLinearVelocity(new Vec2(body.getLinearVelocity().x * 0.95f, body.getLinearVelocity().y));
     }
 
-    /**
-     * Holds the factor of wich the x-velocity is multiplied each tick, lessens the sliding of the object on STATIC surfaces.
-     * @param slideFactor The factor, values between 0.1 and 0.99 are accepted
-     */
-    public void setSlideFactor(float slideFactor) {
-        if (!(slideFactor < 0.1 || slideFactor > 0.99)){
-            this.slideFactor = slideFactor;
-        }
+    public void setDensity(float density) {
+        this.density = density;
+    }
+
+    public void setRestitution(float restitution) {
+        this.restitution = restitution;
     }
 }

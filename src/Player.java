@@ -1,25 +1,22 @@
-import javafx.event.EventType;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import org.jbox2d.common.Vec2;
-import org.jbox2d.dynamics.BodyType;
-import org.jbox2d.dynamics.contacts.ContactEdge;
-import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
-
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.HyperlinkEvent;
 
 public class Player implements InputListener
 {
-    private Vec2 speedVector;
+    private Vec2 acceleration;
     private Square playerSquare;
     private boolean isRunning;
+    private Direction direction;
+    private Vec2 maxVelocity;
 
-    public Player(DynamicSquare playerSquare, Vec2 speedVector) {
-        this.speedVector = speedVector;
+    public Player(DynamicSquare playerSquare, Vec2 acceleration) {
+        this.acceleration = acceleration;
         this.playerSquare = playerSquare;
+        direction = Direction.NONE;
         isRunning = false;
+        maxVelocity = new Vec2(10f, 20f);
         playerSquare.body.setUserData(this);
 
         playerSquare.body.setFixedRotation(true);
@@ -29,14 +26,29 @@ public class Player implements InputListener
 
     public void update(){
         if (!isRunning){
-            playerSquare.body.setLinearVelocity(new Vec2(0, playerSquare.body.getLinearVelocity().y));
-        }
-        for (ContactEdge edge = playerSquare.body.getContactList(); edge != null; edge = edge.next){
-            //System.out.println(edge.contact.getFixtureA().getBody().getUserData());
-            if (edge.contact.isTouching() && edge.contact.getFixtureA().getBody().getUserData() instanceof Square){
-                System.out.println(edge.contact.getFriction() + "square: " + edge.contact.getFixtureA().getFriction() + "player: " + edge.contact.getFixtureB().getFriction());
+            if (direction == Direction.RIGHT && playerSquare.body.getLinearVelocity().x > 0){
+                playerSquare.body.applyForceToCenter(new Vec2(-acceleration.x, 0));
+            }
+            else if (direction == Direction.LEFT && playerSquare.body.getLinearVelocity().x < 0){
+                playerSquare.body.applyForceToCenter(new Vec2(acceleration.x, 0));
             }
         }
+        else{
+            if (direction == Direction.RIGHT && playerSquare.body.getLinearVelocity().x < maxVelocity.x){
+                playerSquare.body.applyForceToCenter(new Vec2(acceleration.x, 0));
+            }
+            else if (direction == Direction.LEFT && playerSquare.body.getLinearVelocity().x > -maxVelocity.x){
+                playerSquare.body.applyForceToCenter(new Vec2(-acceleration.x, 0));
+            }
+        }
+        /*
+        //Good debug print, prints the friction values of all collisions with STATIC Square objects
+        for (ContactEdge edge = playerSquare.body.getContactList(); edge != null; edge = edge.next){
+            if (edge.contact.isTouching() && edge.contact.getFixtureA().getBody().getUserData() instanceof Square){
+                System.out.println("Contact Friction: " + edge.contact.getFriction() + " Square: " + edge.contact.getFixtureA().getFriction() + " Player: " + edge.contact.getFixtureB().getFriction());
+            }
+        }
+        */
     }
 
     public void draw(GraphicsContext gc){
@@ -47,21 +59,19 @@ public class Player implements InputListener
         if (event.getEventType().equals(KeyEvent.KEY_PRESSED)) {
             if (event.getCode() == KeyCode.A) {
                 isRunning = true;
-                playerSquare.body.setLinearVelocity(new Vec2(-speedVector.x, 0));
+                direction = Direction.LEFT;
             }
             if (event.getCode() == KeyCode.D) {
                 isRunning = true;
-                playerSquare.body.setLinearVelocity(new Vec2(speedVector.x, 0));
+                direction = Direction.RIGHT;
             }
         }
         else if (event.getEventType().equals(KeyEvent.KEY_RELEASED)){
             if (event.getCode() == KeyCode.A){
                 isRunning = false;
-                playerSquare.body.setLinearVelocity(new Vec2(0, playerSquare.body.getLinearVelocity().y));
             }
             if (event.getCode() == KeyCode.D){
                 isRunning = false;
-                playerSquare.body.setLinearVelocity(new Vec2(0, playerSquare.body.getLinearVelocity().y));
             }
         }
 

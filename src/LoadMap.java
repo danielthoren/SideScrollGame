@@ -34,9 +34,9 @@ public final class LoadMap {
             gameObjects = new ArrayList<DrawAndUpdateObject>(10);
             gameObjectsListen = new ArrayList<InputListener>(10);
 
-            gameObjects.add(new DynamicSquare(world, new Vec2(1f, 2f), 0.3f, 1f, 0f, Color.BLUE, 0.4d, 0.4d));
-            gameObjects.add(new DynamicSquare(world, new Vec2(1.5f, 2f), 0.3f, 1f, 0f, Color.AQUA, 0.4d, 0.4d));
-            gameObjects.add(new DynamicSquare(world, new Vec2(1.3f, 0.5f), 0.3f, 1f, 0f, Color.AZURE, 0.4d, 0.4d));
+            gameObjects.add(new DynamicSquare(world, new Vec2(1f, 2f), 0.3f, Color.BLUE, 0.4d, 0.4d));
+            gameObjects.add(new DynamicSquare(world, new Vec2(1.5f, 2f), 0.3f, Color.AQUA, 0.4d, 0.4d));
+            gameObjects.add(new DynamicSquare(world, new Vec2(1.3f, 0.5f), 0.3f, Color.AZURE, 0.4d, 0.4d));
             gameObjects.add( new Square(world, new Vec2(0f, 3f), 1f, Color.BEIGE, 0.4d, 6d));
             gameObjects.add( new Square(world, new Vec2(7f, 3f), 1f, Color.BEIGE, 0.4d, 6d));
 
@@ -47,13 +47,17 @@ public final class LoadMap {
             gameObjects.add(new Circle(world, new Vec2(4f, 4f), 0.3f, Color.RED, 0.2d));
             gameObjects.add(new DynamicCircle(world, new Vec2(5f, 4f), 0.3f, 0.3f, 0.3f, Color.RED, 0.2d));
 
-            DynamicSquare playerSquare = new DynamicSquare(world, new Vec2(2.2f, 1f), 0.3f, 10f, 0f, Color.DEEPPINK, 0.4d, 0.4d);
+            DynamicSquare playerSquare = new DynamicSquare(world, new Vec2(2.2f, 1f), 10f, Color.DEEPPINK, 0.4d, 0.4d);
             //playerSquare.body.setTransform(playerSquare.body.getPosition(), -0.2f);
-            gameObjectsListen.add(new Player(playerSquare, new Vec2(10,0)));
+            gameObjectsListen.add(new Player(playerSquare, new Vec2(100,0)));
 
-            Map map = new Map(gameObjects, gameObjectsListen);
+            Map map = new Map(gameObjects, gameObjectsListen, getMapGravity(mapNumber));
             maps.put(mapNumber, map);
         }
+    }
+
+    public Vec2 getMapGravity(int mapNumber){
+        return new Vec2(0, 9.82f);                                                                        ///////////////////////////////////Needs to be dealt with
     }
 
     public float getPixPerMeter(){return pixPerMeter;}

@@ -47,4 +47,8 @@ public class GameLoop extends AnimationTimer
 		// draw everyting
 		gameFrame.draw();
 	}
+
+	public int getFps() {
+		return fps;
+	}
 }

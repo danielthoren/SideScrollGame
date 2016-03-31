@@ -1,4 +1,5 @@
 import jdk.internal.util.xml.impl.Input;
+import org.jbox2d.common.Vec2;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,16 +13,21 @@ public class Map
     private List<DrawAndUpdateObject> gameObjects;
     private List<InputListener> gameObjectsListen;
 
-    public Map(List<DrawAndUpdateObject> gameObjects, List<InputListener> gameObjectsListen) {
-	this.gameObjects = gameObjects;
-	this.gameObjectsListen = gameObjectsListen;
+    private Vec2 gravity;
+
+    public Map(List<DrawAndUpdateObject> gameObjects, List<InputListener> gameObjectsListen, Vec2 gravity) {
+        this.gameObjects = gameObjects;
+        this.gameObjectsListen = gameObjectsListen;
+        this.gravity = gravity;
     }
 
     public List<DrawAndUpdateObject> getGameObjects() {
-	return gameObjects;
+        return gameObjects;
     }
 
     public List<InputListener> getGameObjectsListen() {
-	return gameObjectsListen;
+        return gameObjectsListen;
     }
+
+    public Vec2 getGravity() {return gravity;}
 }
