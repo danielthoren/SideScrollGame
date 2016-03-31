@@ -11,6 +11,8 @@ public class DynamicSquare extends Square {
 
     private float density;
     private float restitution;
+    //Holds the factor of wich the x-velocity is multiplied each tick, lessens the sliding of the object on STATIC surfaces.
+    private float slideFactor;
 
     /**
      * Creates a square on wich realtime physics is applied.
@@ -25,6 +27,7 @@ public class DynamicSquare extends Square {
         super(world, pos, friction, image);
         this.density = density;
         this.restitution = restitution;
+        slideFactor = 0.95f;
         makeDynamic();
     }
 
@@ -43,6 +46,8 @@ public class DynamicSquare extends Square {
         super(world, pos, friction, color, width, height);
         this.restitution = restitution;
         this.density = density;
+        slideFactor = 0.95f;
+        //body.setLinearDamping(0.99f);
         makeDynamic();
     }
 
@@ -54,5 +59,21 @@ public class DynamicSquare extends Square {
         this.body.getFixtureList().setRestitution(restitution);
         this.body.getFixtureList().setDensity(density);
         this.body.setFixedRotation(false);
+    }
+
+    @Override
+    public void update(){
+        //Prevents the squares from sliding across STATIC surfaces. More sliding with bigger slideFactor
+        //body.setLinearVelocity(new Vec2(body.getLinearVelocity().x * 0.95f, body.getLinearVelocity().y));
+    }
+
+    /**
+     * Holds the factor of wich the x-velocity is multiplied each tick, lessens the sliding of the object on STATIC surfaces.
+     * @param slideFactor The factor, values between 0.1 and 0.99 are accepted
+     */
+    public void setSlideFactor(float slideFactor) {
+        if (!(slideFactor < 0.1 || slideFactor > 0.99)){
+            this.slideFactor = slideFactor;
+        }
     }
 }

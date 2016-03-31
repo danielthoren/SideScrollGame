@@ -66,7 +66,7 @@ public class Square extends SolidObject implements DrawAndUpdateObject
 
 		//Creating the fixture of the body. The concrete part that can be touched (the part that can collide)
 		fixtureDef.shape = polygonShape;
-		fixtureDef.density = 0f;
+		fixtureDef.density = 10f;
 		fixtureDef.friction = friction;
 		fixtureDef.restitution = 0f;
 
