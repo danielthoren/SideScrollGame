@@ -62,14 +62,14 @@ public class SolidObject {
      * the world coordinates has meters as unit.
      * @param gc The GraphicsContext to be used to draw with
      */
-    public void drawSquare(GraphicsContext gc, Double width, Double height){
+    public void drawSquare(GraphicsContext gc, Vec2 position, float angle, Double width, Double height){
         //Saving the current xy-plane to the gc stack
         gc.save();
         //Translating the original gc xy-plane to a new xy-plane with its origin in the center of this body and saving the
         //new xy-plane on top of the stack
-        gc.translate(GameComponent.metersToPix(body.getPosition().x), GameComponent.metersToPix(body.getPosition().y));
+        gc.translate(GameComponent.metersToPix(position.x), GameComponent.metersToPix(position.y));
         //Rotating the top xy-plane of the stack (the one created above) to the current degree of the body
-        gc.rotate(Math.toDegrees(body.getAngle()));
+        gc.rotate(Math.toDegrees(angle));
         //Drawing the body so that the center of the visual representation is in the new xy-planes origin
         gc.setFill(color);
         float halfWidth = GameComponent.metersToPix(width.floatValue()) / 2;
@@ -85,14 +85,14 @@ public class SolidObject {
      * the world coordinates has meters as unit.
      * @param gc The GraphicsContext to be used to draw with
      */
-    public void drawCircle(GraphicsContext gc, Double radious, Color color){
+    public void drawCircle(GraphicsContext gc, Vec2 position, float angle, Double radious){
         //Saving the current xy-plane to the gc stack
         gc.save();
         //Translating the original gc xy-plane to a new xy-plane with its origin in the center of this body and saving the
         //new xy-plane on top of the stack
-        gc.translate(GameComponent.metersToPix(body.getPosition().x), GameComponent.metersToPix(body.getPosition().y));
+        gc.translate(GameComponent.metersToPix(position.x), GameComponent.metersToPix(position.y));
         //Rotating the top xy-plane of the stack (the one created above) to the current degree of the body
-        gc.rotate(Math.toDegrees(body.getAngle()));
+        gc.rotate(Math.toDegrees(angle));
         //Drawing the body so that the center of the visual representation is in the new xy-planes origin
         gc.setFill(color);
         float pixRadious  = GameComponent.metersToPix(radious.floatValue());

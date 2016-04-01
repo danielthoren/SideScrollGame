@@ -50,15 +50,17 @@ public final class LoadMap {
             //bottomSquare.body.setTransform(bottomSquare.center, -0.2f);
             gameObjects.add(bottomSquare);
 
-            gameObjects.add(new DynamicCircle(world, new Vec2(2f, 1f), 0.3f, 0.3f, 0.3f, Color.RED, 0.2d));
+            //gameObjects.add(new DynamicCircle(world, new Vec2(2f, 1f), 0.3f, 0.3f, 0.3f, Color.RED, 0.2d));
 
-            Player player = new Player(world, new Vec2(6f, 1f), 0.3f, new Vec2(10f, 0f), new Vec2(0.4f, 0.8f), Color.BLUE);
+            Vec2 position = new Vec2(6f, 1f);
+            Vec2 acceleration = new Vec2(50f, 800f);
+            Vec2 deceleration = new Vec2(100f, 0f);
+            Vec2 size = new Vec2(0.4f, 0.9f); //Must have a ration bigger than 1:2
+            float friction = 0.3f;
+            float density = 2f;
+
+            Player player = new Player(world, position, friction, density, acceleration, deceleration, size, Color.BLUE);
             gameObjectsListen.add(player);
-            /*
-            DynamicSquare playerSquare = new DynamicSquare(world, new Vec2(2.2f, 1f), 10f, Color.DEEPPINK, 0.4d, 0.4d);
-            //playerSquare.body.setTransform(playerSquare.body.getPosition(), -0.2f);
-            gameObjectsListen.add(new Player(playerSquare, new Vec2(100,0)));
-            */
 
             Map map = new Map(gameObjects, gameObjectsListen, getMapGravity(mapNumber));
             maps.put(mapNumber, map);
@@ -66,7 +68,7 @@ public final class LoadMap {
     }
 
     public Vec2 getMapGravity(int mapNumber){
-        return new Vec2(0, 9.82f);                                                                        ///////////////////////////////////Needs to be dealt with
+        return new Vec2(0, 20f);                                                                        ///////////////////////////////////Needs to be dealt with
     }
 
     public float getPixPerMeter(){return pixPerMeter;}
