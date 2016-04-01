@@ -99,6 +99,8 @@ public class Player extends SolidObject implements InputListener
         bottomCircle.userData = bottomCirclePos;
         bottomSensor.shape = bottomSensorShape;
         bottomSensor.isSensor = true;
+        bottomSensor.density = 0;
+        bottomSensor.friction = 0;
 
         //Creating the body using the fixtureDef and the BodyDef created beneath
         BodyDef bodyDef = new BodyDef();
@@ -156,16 +158,20 @@ public class Player extends SolidObject implements InputListener
         } else {
             for (Fixture fixture = body.getFixtureList(); fixture != null; fixture = fixture.getNext()) {
                 if (fixture.getType() == ShapeType.CIRCLE){
-                    Vec2 relativeFixturePos = (Vec2) fixture.getUserData();
-                    Vec2 fixturePos = new Vec2(body.getPosition().x, body.getPosition().y - relativeFixturePos.y);
+                    CircleShape circle = (CircleShape) fixture.getShape();
+                    Vec2 fixturePos = new Vec2(body.getPosition().x, body.getPosition().y - circle.m_p.y);
                     Float radious = fixture.getShape().getRadius();
                     super.drawCircle(gc, fixturePos, body.getAngle(), radious.doubleValue());
                 }
                 else if (fixture.getType() == ShapeType.POLYGON && !fixture.isSensor()){
                     Vec2 size = (Vec2) fixture.getUserData();
+                    PolygonShape polygon = (PolygonShape) fixture.getShape();
                     Float height = size.y;
                     Float width = size.x;
                     super.drawSquare(gc, body.getPosition(), body.getAngle(), width.doubleValue(), height.doubleValue());
+                }
+                else if (fixture.getType() == ShapeType.POLYGON && fixture.isSensor()){
+
                 }
             }
         }
@@ -193,6 +199,10 @@ public class Player extends SolidObject implements InputListener
                 isRunning = false;
             }
         }
+    }
+
+    private void airborne(boolean isAirBorne){
+        this.isAirBorne = isAirBorne;
     }
 
     private void jump(){
