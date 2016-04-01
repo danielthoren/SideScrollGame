@@ -116,9 +116,7 @@ public class GameFrame extends Application
 
     }
 
-    public GameFrame(String windowName) {
-        this.windowName = windowName;
-    }
+    public GameFrame(String windowName) {this.windowName = windowName;}
 
     public GameFrame(){
         this.windowName = "GameFrame";

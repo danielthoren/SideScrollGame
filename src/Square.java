@@ -76,6 +76,7 @@ public class Square extends SolidObject implements DrawAndUpdateObject
 		bodyDef.position.set(center);
 		body = world.createBody(bodyDef);
 		body.createFixture(fixtureDef);
+
 		body.setType(BodyType.STATIC);
 		body.setActive(true);
 	}

@@ -37,6 +37,7 @@ public class SolidObject {
         this.image = image;
         this.friction = friction;
         this.pos = pos;
+        color = null;
         Double imHeight = image.getHeight();
         Double imWIdth = image.getWidth();
         center = new Vec2(pos.x + (imWIdth.floatValue()/2), pos.y + (imHeight.floatValue()/2));

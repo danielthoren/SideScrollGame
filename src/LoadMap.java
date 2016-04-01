@@ -50,12 +50,15 @@ public final class LoadMap {
             //bottomSquare.body.setTransform(bottomSquare.center, -0.2f);
             gameObjects.add(bottomSquare);
 
-            gameObjects.add(new Circle(world, new Vec2(4f, 4f), 0.3f, Color.RED, 0.2d));
-            gameObjects.add(new DynamicCircle(world, new Vec2(5f, 4f), 0.3f, 0.3f, 0.3f, Color.RED, 0.2d));
+            gameObjects.add(new DynamicCircle(world, new Vec2(2f, 1f), 0.3f, 0.3f, 0.3f, Color.RED, 0.2d));
 
+            Player player = new Player(world, new Vec2(6f, 1f), 0.3f, new Vec2(10f, 0f), new Vec2(0.4f, 0.8f), Color.BLUE);
+            gameObjectsListen.add(player);
+            /*
             DynamicSquare playerSquare = new DynamicSquare(world, new Vec2(2.2f, 1f), 10f, Color.DEEPPINK, 0.4d, 0.4d);
             //playerSquare.body.setTransform(playerSquare.body.getPosition(), -0.2f);
             gameObjectsListen.add(new Player(playerSquare, new Vec2(100,0)));
+            */
 
             Map map = new Map(gameObjects, gameObjectsListen, getMapGravity(mapNumber));
             maps.put(mapNumber, map);

@@ -9,85 +9,71 @@ import org.jbox2d.collision.shapes.PolygonShape;
 import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.BodyDef;
 import org.jbox2d.dynamics.BodyType;
+import org.jbox2d.dynamics.Fixture;
 import org.jbox2d.dynamics.FixtureDef;
 import org.jbox2d.dynamics.World;
 
-public class Player implements InputListener
+public class Player extends SolidObject implements InputListener
 {
 
     private Square playerSquare;
     private Direction direction;
     private World world;
-    private Body body;
     private Vec2 maxVelocity;
     private Vec2 acceleration;
     private Vec2 size;
-    private Vec2 position;
-    private Vec2 center;
-    private Color color;
     private float restitution;
-    private float friction;
     private float density;
     private boolean isRunning;
 
-    public Player(DynamicSquare playerSquare, Vec2 acceleration) {
-        this.acceleration = acceleration;
-        this.playerSquare = playerSquare;
-        direction = Direction.NONE;
-        isRunning = false;
-        maxVelocity = new Vec2(10f, 20f);
-        playerSquare.body.setUserData(this);
-
-        playerSquare.body.setFixedRotation(true);
-
-        playerSquare.body.setUserData(this);
-    }
-
     public Player(World world, Vec2 position, float friction, Vec2 acceleration, Vec2 size, Color color) {
+        super(position, friction, color);
+        center = new Vec2(position.x + size.x/2, position.y + size.y/2);
         this.acceleration = acceleration;
-        this.friction = friction;
-        this.position = position;
         this.world = world;
         this.size = size;
-        this.color = color;
         this.playerSquare = null;
         density = 10;
         restitution = 0;
-        center = new Vec2(position.x + size.x/2, position.y + size.y/2);
         direction = Direction.NONE;
         isRunning = false;
+        //Default values, can be changed with setters
         maxVelocity = new Vec2(10f, 20f);
-        playerSquare.body.setUserData(this);
-
-        playerSquare.body.setFixedRotation(true);
-
-        playerSquare.body.setUserData(this);
+        createBody(world);
+        body.setUserData(this);
     }
 
     private void createBody(World world){
-        FixtureDef bottomCircle = new FixtureDef();
         FixtureDef upperCircle = new FixtureDef();
         FixtureDef middleBox = new FixtureDef();
+        FixtureDef bottomCircle = new FixtureDef();
 
         PolygonShape polygonShape = new PolygonShape();
-        CircleShape circleShape = new CircleShape();
+        CircleShape upperCircleShape = new CircleShape();
+        CircleShape bottomCircleShape = new CircleShape();
 
         //Do note that the SetAsBox takes half of the width and half of the height then spanning said measurments
         //out on both sides of the centerpoint (bodyposition). The height of each element is first divided by two
         //(because the shapes takes half width and height) and then by 3 since there are 3 elements on a player.
-        circleShape.setRadius(size.x/2);
-        polygonShape.setAsBox(size.x/2, size.y - (size.x*2));
+        float middleBoxHeight = size.y - size.x*2;
+        float radious = size.x/2;
+
+        upperCircleShape.setRadius(size.x/2);
+        polygonShape.setAsBox(size.x/2, middleBoxHeight);
+        upperCircleShape.m_p.set(0f, middleBoxHeight + radious);
+        bottomCircleShape.m_p.set(0f, -middleBoxHeight - radious);
+        polygonShape.m_centroid.set(0,0);
 
         //Creating the fixture of the body. The concrete part that can be touched (the part that can collide)
         middleBox.shape = polygonShape;
         middleBox.density = density;
         middleBox.friction = friction;
         middleBox.restitution = restitution;
-        bottomCircle.shape = circleShape;
+        bottomCircle.shape = bottomCircleShape;
         bottomCircle.density = density;
         bottomCircle.friction = friction;
         bottomCircle.restitution = restitution;
-        upperCircle.shape = circleShape;
+        upperCircle.shape = upperCircleShape;
         upperCircle.density = density;
         upperCircle.friction = friction;
         upperCircle.restitution = restitution;
@@ -96,26 +82,29 @@ public class Player implements InputListener
         BodyDef bodyDef = new BodyDef();
         bodyDef.position.set(center);
         body = world.createBody(bodyDef);
-        body.createFixture(middleBox);
-        body.setType(BodyType.STATIC);
+        if (middleBoxHeight > 0){body.createFixture(middleBox);}
+        body.createFixture(upperCircle);
+        body.createFixture(bottomCircle);
+        body.setType(BodyType.DYNAMIC);
+        body.setFixedRotation(true);
         body.setActive(true);
     }
 
     public void update(){
         if (!isRunning){
-            if (direction == Direction.RIGHT && playerSquare.body.getLinearVelocity().x > 0){
-                playerSquare.body.applyForceToCenter(new Vec2(-acceleration.x, 0));
+            if (direction == Direction.RIGHT && body.getLinearVelocity().x > 0){
+                body.applyForceToCenter(new Vec2(-acceleration.x, 0));
             }
-            else if (direction == Direction.LEFT && playerSquare.body.getLinearVelocity().x < 0){
-                playerSquare.body.applyForceToCenter(new Vec2(acceleration.x, 0));
+            else if (direction == Direction.LEFT && body.getLinearVelocity().x < 0){
+                body.applyForceToCenter(new Vec2(acceleration.x, 0));
             }
         }
         else{
-            if (direction == Direction.RIGHT && playerSquare.body.getLinearVelocity().x < maxVelocity.x){
-                playerSquare.body.applyForceToCenter(new Vec2(acceleration.x, 0));
+            if (direction == Direction.RIGHT && body.getLinearVelocity().x < maxVelocity.x){
+                body.applyForceToCenter(new Vec2(acceleration.x, 0));
             }
-            else if (direction == Direction.LEFT && playerSquare.body.getLinearVelocity().x > -maxVelocity.x){
-                playerSquare.body.applyForceToCenter(new Vec2(-acceleration.x, 0));
+            else if (direction == Direction.LEFT && body.getLinearVelocity().x > -maxVelocity.x){
+                body.applyForceToCenter(new Vec2(-acceleration.x, 0));
             }
         }
         /*
@@ -128,8 +117,15 @@ public class Player implements InputListener
         */
     }
 
-    public void draw(GraphicsContext gc){
-        playerSquare.draw(gc);
+    public void draw(GraphicsContext gc) {
+
+        if (body == null) {
+            playerSquare.draw(gc);
+        } else {
+            for (Fixture fixture = body.getFixtureList(); fixture != null; fixture = fixture.getNext()) {
+                System.out.println(fixture.getType());
+            }
+        }
     }
 
     public void inputAction(KeyEvent event){
@@ -152,5 +148,9 @@ public class Player implements InputListener
             }
         }
 
+    }
+
+    public void setMaxVelocity(Vec2 maxVelocity){
+        this.maxVelocity = maxVelocity;
     }
 }
