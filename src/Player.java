@@ -11,6 +11,7 @@ import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.Fixture;
 import org.jbox2d.dynamics.FixtureDef;
 import org.jbox2d.dynamics.World;
+import org.jbox2d.dynamics.contacts.ContactEdge;
 
 public class Player extends SolidObject implements InputListener
 {
@@ -126,11 +127,6 @@ public class Player extends SolidObject implements InputListener
             else{
                 body.setLinearVelocity(new Vec2(0f, body.getLinearVelocity().y));
             }
-            /*
-            else if (body.getLinearVelocity().x < 0.1 * acceleration.x || body.getLinearVelocity().x > -0.1 * acceleration.x){
-                body.setLinearVelocity(new Vec2(0f, body.getLinearVelocity().y));
-            }*/
-
         }
         else{
             //Code for smooth dexeleration when keys released
@@ -141,14 +137,21 @@ public class Player extends SolidObject implements InputListener
                 body.applyForceToCenter(new Vec2(-acceleration.x, 0));
             }
         }
+        //Good debug print
         /*
+        for (Fixture fixture = body.getFixtureList(); fixture != null; fixture = fixture.getNext()){
+            if (fixture.isSensor()){
+                PolygonShape poly = (PolygonShape) fixture.getShape();
+                System.out.println(poly.m_centroid);
+            }
+        }*/
         //Good debug print, prints the friction values of all collisions with STATIC Square objects
-        for (ContactEdge edge = playerSquare.body.getContactList(); edge != null; edge = edge.next){
+        /*
+        for (ContactEdge edge = body.getContactList(); edge != null; edge = edge.next){
             if (edge.contact.isTouching() && edge.contact.getFixtureA().getBody().getUserData() instanceof Square){
                 System.out.println("Contact Friction: " + edge.contact.getFriction() + " Square: " + edge.contact.getFixtureA().getFriction() + " Player: " + edge.contact.getFixtureB().getFriction());
             }
-        }
-        */
+        }*/
     }
 
     @Override
@@ -172,23 +175,23 @@ public class Player extends SolidObject implements InputListener
 
     public void inputAction(KeyEvent event){
         if (event.getEventType().equals(KeyEvent.KEY_PRESSED)) {
-            if (event.getCode() == KeyCode.A) {
+            if (event.getCode() == KeyCode.A || event.getCode() == KeyCode.LEFT) {
                 isRunning = true;
                 direction = Direction.LEFT;
             }
-            if (event.getCode() == KeyCode.D) {
+            if (event.getCode() == KeyCode.D || event.getCode() == KeyCode.RIGHT) {
                 isRunning = true;
                 direction = Direction.RIGHT;
             }
-            if (event.getCode() == KeyCode.W){
+            if (event.getCode() == KeyCode.W || event.getCode() == KeyCode.UP){
                 jump();
             }
         }
         else if (event.getEventType().equals(KeyEvent.KEY_RELEASED)){
-            if (event.getCode() == KeyCode.A){
+            if (event.getCode() == KeyCode.A || event.getCode() == KeyCode.LEFT){
                 isRunning = false;
             }
-            if (event.getCode() == KeyCode.D){
+            if (event.getCode() == KeyCode.D || event.getCode() == KeyCode.RIGHT){
                 isRunning = false;
             }
         }
