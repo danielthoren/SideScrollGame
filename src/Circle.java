@@ -86,10 +86,10 @@ public class Circle extends SolidObject implements DrawAndUpdateObject {
 	 */
 	public void draw(GraphicsContext gc){
 		if (image == null){
-			super.drawCircle(gc, body.getPosition(), body.getAngle(), radious);
+			super.drawCircle(gc, body.getPosition(), radious);
 		}
 		else{
-			super.drawSquare(gc, body.getPosition(), body.getAngle(), radious, radious);
+			super.drawSquare(gc, body.getPosition(), radious, radious);
 		}
 	}
 }

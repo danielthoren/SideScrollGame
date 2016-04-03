@@ -1,9 +1,13 @@
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
+import org.jbox2d.collision.shapes.CircleShape;
+import org.jbox2d.collision.shapes.PolygonShape;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
+import org.jbox2d.dynamics.Fixture;
 import org.jbox2d.dynamics.World;
+import org.jbox2d.dynamics.contacts.ContactEdge;
 
 /**
  * Created by daniel on 2016-03-31.
@@ -15,6 +19,8 @@ public class SolidObject {
     protected Image image;    //The image representing the square in the visual realm (=none if no image)
     protected Color color;    //The color of the square (=none if no color)
     protected float friction; //The friction of the square´s body
+
+    protected static  final float sensorThickness = 0.1f;       //Holds the constant sensor thickness
 
     /**
      * The default constructor of the class. Should never be used!
@@ -59,17 +65,18 @@ public class SolidObject {
 
     /**
      * Draws the color, or texture over the body of the object. Do note that the Fx coordinates has pixels as unit while
-     * the world coordinates has meters as unit.
+     * the world coordinates has meters as unit. Also do note that the function draws the square at the origin of the
+     * bodycoordinates.
      * @param gc The GraphicsContext to be used to draw with
      */
-    public void drawSquare(GraphicsContext gc, Vec2 position, float angle, Double width, Double height){
+    protected void drawSquare(GraphicsContext gc, Vec2 position, Double width, Double height){
         //Saving the current xy-plane to the gc stack
         gc.save();
         //Translating the original gc xy-plane to a new xy-plane with its origin in the center of this body and saving the
         //new xy-plane on top of the stack
         gc.translate(GameComponent.metersToPix(position.x), GameComponent.metersToPix(position.y));
         //Rotating the top xy-plane of the stack (the one created above) to the current degree of the body
-        gc.rotate(Math.toDegrees(angle));
+        gc.rotate(Math.toDegrees(body.getAngle()));
         //Drawing the body so that the center of the visual representation is in the new xy-planes origin
         gc.setFill(color);
         float halfWidth = GameComponent.metersToPix(width.floatValue()) / 2;
@@ -82,22 +89,76 @@ public class SolidObject {
 
     /**
      * Draws the color, or texture over the body of the object. Do note that the Fx coordinates has pixels as unit while
-     * the world coordinates has meters as unit.
+     * the world coordinates has meters as unit. Also do note that the function draws the circle at the origo of the
+     * bodycoordinates.
      * @param gc The GraphicsContext to be used to draw with
      */
-    public void drawCircle(GraphicsContext gc, Vec2 position, float angle, Double radious){
+    protected void drawCircle(GraphicsContext gc, Vec2 position, Double radious){
         //Saving the current xy-plane to the gc stack
         gc.save();
         //Translating the original gc xy-plane to a new xy-plane with its origin in the center of this body and saving the
         //new xy-plane on top of the stack
         gc.translate(GameComponent.metersToPix(position.x), GameComponent.metersToPix(position.y));
         //Rotating the top xy-plane of the stack (the one created above) to the current degree of the body
-        gc.rotate(Math.toDegrees(angle));
+        gc.rotate(Math.toDegrees(body.getAngle()));
         //Drawing the body so that the center of the visual representation is in the new xy-planes origin
         gc.setFill(color);
         float pixRadious  = GameComponent.metersToPix(radious.floatValue());
-        gc.fillOval(-pixRadious, -pixRadious, 2 * pixRadious, 2 * pixRadious);
+        if (image == null) {gc.fillOval(-pixRadious, -pixRadious, 2 * pixRadious, 2 * pixRadious);}
+        else {gc.drawImage(image, -pixRadious/2, pixRadious/2);}
         //Popping the stack, removing the top element, thus leaving the original xy-plane at the top
         gc.restore();
+    }
+
+    /**
+     * Draws a given square type 'PolygonFixture' (Initialized with the 'SetAsBox()' function). The Fixture must have
+     * its 'UserData' set to a 'Vec2' containing the size of the square.
+     * @param gc The 'GraphicsContext' with wich to paint.
+     * @param fixture The fixture to paint. Note that the 'UserData' of the fixture must be a 'Vec2' containing the
+     *                size of the square as follows: (width , height) where both height and width must be of the type float.
+     */
+    protected void drawBoxPolygonFixture(GraphicsContext gc, Fixture fixture){
+        //Getting the size of the square from the userdata
+        Vec2 size = (Vec2) fixture.getUserData();
+        //Setting pointer to shape object of type 'PolygonShape' (we are sure this is a 'PolygonShape', thus casting)
+        PolygonShape polygon = (PolygonShape) fixture.getShape();
+        //Setting the dimensions to object variables containing conversion functions
+        Float height = size.y;
+        Float width = size.x;
+        //Calculating the global coordinates of the center of the square
+        Vec2 globalPosition = new Vec2(fixture.getBody().getPosition().x - polygon.m_centroid.x, fixture.getBody().getPosition().y - polygon.m_centroid.y);
+        //Draws the square at the global coordinates
+        drawSquare(gc, globalPosition, width.doubleValue(), height.doubleValue());
+    }
+
+    /**
+     * Draws any given 'Fixture' with a 'Circleshape'.
+     * @param gc The 'GraphicsContext' with wich to draw.
+     * @param fixture The fixture to draw
+     */
+    protected void drawCircleFixture(GraphicsContext gc, Fixture fixture){
+        //Casting the attatched 'Shape' to CircleShape (this must be a circleshape for the Fixture to be a circle)
+        CircleShape circle = (CircleShape) fixture.getShape();
+        //Calculating the global coordinates of the circles center
+        Vec2 fixturePos = new Vec2(body.getPosition().x, body.getPosition().y - circle.m_p.y);
+        Float radious = fixture.getShape().getRadius();
+        //Drawing the circle
+        drawCircle(gc, fixturePos, radious.doubleValue());
+    }
+
+    protected void drawSensor(GraphicsContext gc, Fixture sensor){
+        Color tmpColor = color;
+        boolean isTriggered = false;
+        for (ContactEdge edge = sensor.getBody().getContactList(); edge != null; edge = edge.next){
+            if (edge.contact.isTouching() && edge.contact.getFixtureB().equals(sensor)){
+                isTriggered = true;
+            }
+        }
+        if (isTriggered) {color = Color.GREEN;}
+        else {color = Color.RED;}
+
+        drawBoxPolygonFixture(gc, sensor);
+
+        color = tmpColor;
     }
 }

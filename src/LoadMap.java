@@ -59,6 +59,8 @@ public final class LoadMap {
             float friction = 0.3f;
             float density = 2f;
 
+            gameObjects.add(new DynamicSquare(world, new Vec2(position.x - 0.03f, position.y - 0.5f), 0.3f, Color.BROWN, 0.4d, 0.4d));
+
             Player player = new Player(world, position, friction, density, acceleration, deceleration, size, Color.BLUE);
             gameObjectsListen.add(player);
 

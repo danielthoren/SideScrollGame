@@ -1,5 +1,4 @@
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
@@ -7,7 +6,6 @@ import org.jbox2d.collision.shapes.CircleShape;
 import org.jbox2d.collision.shapes.ShapeType;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.collision.shapes.PolygonShape;
-import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.BodyDef;
 import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.Fixture;
@@ -27,9 +25,10 @@ public class Player extends SolidObject implements InputListener
     private Vec2 size;
     private float restitution;
     private float density;
-    private int jumpCount;        //Keeps track of the times the player has jumped since last on the ground
+    private int jumpCount;                                     //Keeps track of the times the player has jumped since last on the ground
     private boolean isRunning;
     private boolean isAirBorne;
+    private static boolean drawSensors = true;                 //Used for debugging, draws the sensorFixtures of the player
 
     public Player(World world, Vec2 position, float friction, float density, Vec2 acceleration, Vec2 deceleration, Vec2 size, Color color) {
         super(position, friction, color);
@@ -67,19 +66,19 @@ public class Player extends SolidObject implements InputListener
         //(because the shapes takes half width and height) and then by 3 since there are 3 elements on a player.
         float middleBoxHeight = size.y - size.x;
         float radious = size.x/2;
-        float sensorSize = 0.01f;
         Vec2 upperCirclePos = new Vec2(0f, ((size.y - radious*4)/2) + radious);
         Vec2 bottomCirclePos = new Vec2(0f, -((size.y - radious*4)/2) - radious);
 
         upperCircleShape.setRadius(size.x/2);
         bottomCircleShape.setRadius(size.x/2);
         middleBoxShape.setAsBox(size.x/2, middleBoxHeight);
-        bottomSensorShape.setAsBox(size.x, sensorSize);
+        bottomSensorShape.setAsBox(size.x, sensorThickness);
 
         upperCircleShape.m_p.set(upperCirclePos);
         middleBoxShape.m_centroid.set(0f, 0f);
         bottomCircleShape.m_p.set(bottomCirclePos);
-        bottomSensorShape.m_centroid.set(0f, bottomCirclePos.y + radious + sensorSize);
+        bottomSensorShape.m_centroid.set(0f, bottomCirclePos.y - radious - sensorThickness);
+        System.out.print(bottomSensorShape.m_centroid.y);
 
         //Creating the fixture of the body. The concrete part that can be touched (the part that can collide)
         upperCircle.shape = upperCircleShape;
@@ -101,6 +100,7 @@ public class Player extends SolidObject implements InputListener
         bottomSensor.isSensor = true;
         bottomSensor.density = 0;
         bottomSensor.friction = 0;
+        bottomSensor.userData = new Vec2(size.x, sensorThickness);
 
         //Creating the body using the fixtureDef and the BodyDef created beneath
         BodyDef bodyDef = new BodyDef();
@@ -158,20 +158,13 @@ public class Player extends SolidObject implements InputListener
         } else {
             for (Fixture fixture = body.getFixtureList(); fixture != null; fixture = fixture.getNext()) {
                 if (fixture.getType() == ShapeType.CIRCLE){
-                    CircleShape circle = (CircleShape) fixture.getShape();
-                    Vec2 fixturePos = new Vec2(body.getPosition().x, body.getPosition().y - circle.m_p.y);
-                    Float radious = fixture.getShape().getRadius();
-                    super.drawCircle(gc, fixturePos, body.getAngle(), radious.doubleValue());
+                    drawCircleFixture(gc, fixture);
                 }
                 else if (fixture.getType() == ShapeType.POLYGON && !fixture.isSensor()){
-                    Vec2 size = (Vec2) fixture.getUserData();
-                    PolygonShape polygon = (PolygonShape) fixture.getShape();
-                    Float height = size.y;
-                    Float width = size.x;
-                    super.drawSquare(gc, body.getPosition(), body.getAngle(), width.doubleValue(), height.doubleValue());
+                    drawBoxPolygonFixture(gc, fixture);
                 }
-                else if (fixture.getType() == ShapeType.POLYGON && fixture.isSensor()){
-
+                else if (fixture.getType() == ShapeType.POLYGON && fixture.isSensor() && drawSensors){
+                    drawSensor(gc, fixture);
                 }
             }
         }
