@@ -266,6 +266,7 @@
         </option>
         <option name="ignoreClassWithParameterization" value="true" />
         <option name="ignoreThrowables" value="true" />
+        <option name="commentsAreContent" value="true" />
       </inspection_tool>
       <inspection_tool class="EmptyDirectory" enabled="true" level="WARNING" enabled_by_default="true" />
       <inspection_tool class="EmptyInitializer" enabled="true" level="WARNING" enabled_by_default="true" />
@@ -697,7 +698,6 @@
         <option name="ignoreIterators" value="false" />
       </inspection_tool>
       <inspection_tool class="LoopStatementThatDoesntLoopJS" enabled="false" level="WARNING" enabled_by_default="false" />
-      <inspection_tool class="LossyEncoding" enabled="true" level="WARNING" enabled_by_default="true" />
       <inspection_tool class="MagicNumber" enabled="true" level="WARNING" enabled_by_default="true">
         <option name="ignoreInitialCapacity" value="true" />
       </inspection_tool>
@@ -854,9 +854,6 @@
       <inspection_tool class="PointlessArithmeticExpressionJS" enabled="false" level="WARNING" enabled_by_default="false" />
       <inspection_tool class="PointlessBitwiseExpressionJS" enabled="false" level="WARNING" enabled_by_default="false">
         <option name="m_ignoreExpressionsContainingConstants" value="false" />
-      </inspection_tool>
-      <inspection_tool class="PointlessBooleanExpression" enabled="true" level="WARNING" enabled_by_default="true">
-        <option name="m_ignoreExpressionsContainingConstants" value="true" />
       </inspection_tool>
       <inspection_tool class="PointlessBooleanExpressionJS" enabled="false" level="WARNING" enabled_by_default="false" />
       <inspection_tool class="PointlessIndexOfComparison" enabled="true" level="WARNING" enabled_by_default="true" />
