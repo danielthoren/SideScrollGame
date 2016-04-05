@@ -10,6 +10,19 @@ public class GameContactListener implements ContactListener
      * @param contact
      */
     public void beginContact(Contact contact){
+
+		System.out.print(contact.getFixtureB().m_isSensor);
+		System.out.print("    A:    ");
+		System.out.println(contact.getFixtureA().isSensor());
+
+		if (contact.getFixtureB().getUserData() == "sensor"){
+			System.out.println("sensor lies");
+		}
+		if (contact.getFixtureA().getUserData() == "sensor"){
+			System.out.println("sensor lies");
+		}
+
+
 	if (contact.getFixtureA().getBody().getUserData() instanceof Player && contact.getFixtureA().isSensor()){
 	    Player player = (Player) contact.getFixtureA().getBody().getUserData();
 	    player.isAirBorne = false;

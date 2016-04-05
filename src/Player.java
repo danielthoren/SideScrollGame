@@ -69,8 +69,8 @@ public class Player extends SolidObject implements InputListener
         float radious = size.x/2;
         Vec2 upperCirclePos = new Vec2(0f, ((size.y - radious*4)/2) + radious);
         Vec2 bottomCirclePos = new Vec2(0f, -((size.y - radious*4)/2) - radious);
-        Vec2 bottomSensorPos = new Vec2(0f, bottomCirclePos.y - radious - sensorThickness + 0.1f);
-        Vec2 bottomSensorSize = new Vec2(size.x - size.x/2 , 0.4f);
+        Vec2 bottomSensorPos = new Vec2(0f, bottomCirclePos.y - radious - sensorThickness);
+        Vec2 bottomSensorSize = new Vec2(size.x - size.x/2 , 0.8f);
 
         upperCircleShape.setRadius(size.x/2);
         bottomCircleShape.setRadius(size.x/2);
@@ -88,20 +88,24 @@ public class Player extends SolidObject implements InputListener
         upperCircle.friction = 0;
         upperCircle.restitution = restitution;
         upperCircle.userData = upperCirclePos;
+        upperCircle.isSensor = false;
         middleBox.shape = middleBoxShape;
         middleBox.density = density;
         middleBox.friction = 0;
         middleBox.restitution = restitution;
         middleBox.userData = new Vec2(size.x, middleBoxHeight);
+        middleBox.isSensor = false;
         bottomCircle.shape = bottomCircleShape;
         bottomCircle.density = density;
         bottomCircle.friction = friction;
         bottomCircle.restitution = restitution;
         bottomCircle.userData = bottomCirclePos;
+        bottomCircle.isSensor = false;
         bottomSensor.shape = bottomSensorShape;
         bottomSensor.isSensor = true;
         bottomSensor.density = 0;
         bottomSensor.friction = 0;
+        bottomSensor.userData = "sensor";
         bottomSensor.userData = bottomSensorSize;
 
         //Creating the body using the fixtureDef and the BodyDef created beneath
@@ -116,6 +120,12 @@ public class Player extends SolidObject implements InputListener
         body.setFixedRotation(true);
         body.setUserData(this);
         body.setActive(true);
+
+        System.out.println(body.m_fixtureCount);
+        Fixture fixture = body.getFixtureList();
+        for (int x = 0; x <= body.m_fixtureCount; x++){
+            fixture.getNext();
+        }
     }
 
     public void update(){
