@@ -65,17 +65,17 @@ public class Player extends SolidObject implements InputListener
         //Do note that the SetAsBox takes half of the width and half of the height then spanning said measurments
         //out on both sides of the centerpoint (bodyposition). The height of each element is first divided by two
         //(because the shapes takes half width and height) and then by 3 since there are 3 elements on a player.
-        float middleBoxHeight = (size.y - size.x) / 2;
+        float middleBoxHeight = (size.y - size.x);
         float radious = size.x/2;
         Vec2 upperCirclePos = new Vec2(0f, ((size.y - radious*4)/2) + radious);
         Vec2 bottomCirclePos = new Vec2(0f, -((size.y - radious*4)/2) - radious);
-        Vec2 bottomSensorPos = new Vec2(0f, bottomCirclePos.y - radious - sensorThickness);
-        Vec2 bottomSensorSize = new Vec2(size.x - size.x/4, sensorThickness);
+        Vec2 bottomSensorPos = new Vec2(0f, bottomCirclePos.y - radious - sensorThickness + 0.1f);
+        Vec2 bottomSensorSize = new Vec2(size.x - size.x/2 , 0.4f);
 
         upperCircleShape.setRadius(size.x/2);
         bottomCircleShape.setRadius(size.x/2);
-        middleBoxShape.setAsBox(size.x/2, middleBoxHeight);
-        bottomSensorShape.setAsBox(bottomSensorSize.x, bottomSensorSize.y);
+        middleBoxShape.setAsBox(size.x/2, middleBoxHeight / 2);
+        bottomSensorShape.setAsBox(bottomSensorSize.x / 2, bottomSensorSize.y / 2);
 
         upperCircleShape.m_p.set(upperCirclePos);
         middleBoxShape.m_centroid.set(0f, 0f);
@@ -169,8 +169,7 @@ public class Player extends SolidObject implements InputListener
                     drawBoxPolygonFixture(gc, fixture);
                 }
                 else if (fixture.getType() == ShapeType.POLYGON && fixture.isSensor() && drawSensors){
-                    PolygonShape poly = (PolygonShape) fixture.getShape();
-                    //drawSensor(gc, );
+                    drawSensor(gc, fixture, !isAirBorne);
                 }
             }
         }

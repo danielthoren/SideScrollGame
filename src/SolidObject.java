@@ -145,11 +145,31 @@ public class SolidObject {
         drawCircle(gc, fixturePos, radious.doubleValue());
     }
 
+
     protected void drawSensor(GraphicsContext gc, Fixture sensor, boolean isTriggered){
         Color tmpColor = color;
         if (isTriggered) {color = Color.GREEN;}
         else {color = Color.RED;}
+
         drawBoxPolygonFixture(gc, sensor);
+
         color = tmpColor;
     }
+
+    /*
+    protected void drawSensor(GraphicsContext gc, Fixture sensor){
+        Color tmpColor = color;
+        boolean isTriggered = false;
+        for (ContactEdge edge = sensor.getBody().getContactList(); edge != null; edge = edge.next){
+            if (edge.contact.isTouching() && edge.contact.getFixtureB().equals(sensor)){
+                isTriggered = true;
+            }
+        }
+        if (isTriggered) {color = Color.GREEN;}
+        else {color = Color.RED;}
+
+        drawBoxPolygonFixture(gc, sensor);
+
+        color = tmpColor;
+    }*/
 }

@@ -3,13 +3,7 @@ import javafx.scene.Parent;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyEvent;
-import org.jbox2d.common.Vec2;
-import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.World;
-import org.jbox2d.dynamics.contacts.Contact;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * This is the class that handles all the logic in the game. It is also a child of the class 'Parent' wich extends
@@ -23,6 +17,7 @@ public class GameComponent extends Parent
     private Canvas canvas;                                  //The canvas on wich to draw on
     private GraphicsContext gc;                             //The GraphicsContext with wich to draw
     private World world;
+    private GameContactListener gameContactListener;
     private double height, width;                           //The height and width of the window in pixels
     private int velocityIterations, positionIterations;     //Values deciding the accuracy of velocity and position
     private Map currentMap;
@@ -38,6 +33,9 @@ public class GameComponent extends Parent
         this.width = width;
 
         world = new World(LoadMap.getInstance().getMapGravity(currentMapNumber));
+        gameContactListener = new GameContactListener();
+        world.setContactListener(gameContactListener);
+        world.setAllowSleep(false);
 
         LoadMap.getInstance().loadMap(world, currentMapNumber);
         currentMap = LoadMap.getInstance().getMap(currentMapNumber);
