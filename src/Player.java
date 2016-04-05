@@ -28,7 +28,7 @@ public class Player extends SolidObject implements InputListener
     private float density;
     private int jumpCount;                                     //Keeps track of the times the player has jumped since last on the ground
     private boolean isRunning;
-    private boolean isAirBorne;
+    public boolean isAirBorne;
     private static boolean drawSensors = true;                 //Used for debugging, draws the sensorFixtures of the player
 
     public Player(World world, Vec2 position, float friction, float density, Vec2 acceleration, Vec2 deceleration, Vec2 size, Color color) {
@@ -65,21 +65,22 @@ public class Player extends SolidObject implements InputListener
         //Do note that the SetAsBox takes half of the width and half of the height then spanning said measurments
         //out on both sides of the centerpoint (bodyposition). The height of each element is first divided by two
         //(because the shapes takes half width and height) and then by 3 since there are 3 elements on a player.
-        float middleBoxHeight = size.y - size.x;
+        float middleBoxHeight = (size.y - size.x) / 2;
         float radious = size.x/2;
         Vec2 upperCirclePos = new Vec2(0f, ((size.y - radious*4)/2) + radious);
         Vec2 bottomCirclePos = new Vec2(0f, -((size.y - radious*4)/2) - radious);
+        Vec2 bottomSensorPos = new Vec2(0f, bottomCirclePos.y - radious - sensorThickness);
+        Vec2 bottomSensorSize = new Vec2(size.x - size.x/4, sensorThickness);
 
         upperCircleShape.setRadius(size.x/2);
         bottomCircleShape.setRadius(size.x/2);
         middleBoxShape.setAsBox(size.x/2, middleBoxHeight);
-        bottomSensorShape.setAsBox(size.x, sensorThickness);
+        bottomSensorShape.setAsBox(bottomSensorSize.x, bottomSensorSize.y);
 
         upperCircleShape.m_p.set(upperCirclePos);
         middleBoxShape.m_centroid.set(0f, 0f);
         bottomCircleShape.m_p.set(bottomCirclePos);
-        bottomSensorShape.m_centroid.set(0f, bottomCirclePos.y - radious - sensorThickness);
-        System.out.print(bottomSensorShape.m_centroid.y);
+        bottomSensorShape.m_centroid.set(bottomSensorPos);
 
         //Creating the fixture of the body. The concrete part that can be touched (the part that can collide)
         upperCircle.shape = upperCircleShape;
@@ -101,7 +102,7 @@ public class Player extends SolidObject implements InputListener
         bottomSensor.isSensor = true;
         bottomSensor.density = 0;
         bottomSensor.friction = 0;
-        bottomSensor.userData = new Vec2(size.x, sensorThickness);
+        bottomSensor.userData = bottomSensorSize;
 
         //Creating the body using the fixtureDef and the BodyDef created beneath
         BodyDef bodyDef = new BodyDef();
@@ -113,6 +114,7 @@ public class Player extends SolidObject implements InputListener
         groundSensor = body.createFixture(bottomSensor);
         body.setType(BodyType.DYNAMIC);
         body.setFixedRotation(true);
+        body.setUserData(this);
         body.setActive(true);
     }
 
@@ -167,7 +169,8 @@ public class Player extends SolidObject implements InputListener
                     drawBoxPolygonFixture(gc, fixture);
                 }
                 else if (fixture.getType() == ShapeType.POLYGON && fixture.isSensor() && drawSensors){
-                    drawSensor(gc, fixture);
+                    PolygonShape poly = (PolygonShape) fixture.getShape();
+                    //drawSensor(gc, );
                 }
             }
         }
