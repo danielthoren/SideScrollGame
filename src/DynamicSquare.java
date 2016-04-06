@@ -54,9 +54,6 @@ public class DynamicSquare extends Square {
         this.body.setFixedRotation(false);
     }
 
-    @Override
-    public void update(){
-    }
 
     public void setDensity(float density) {
         this.density = density;

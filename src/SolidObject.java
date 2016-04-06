@@ -37,7 +37,7 @@ public class SolidObject {
      * Sets variables for a Solid Object with static position and collision properites.
      * @param pos The position at wich to place the Object (units in meters)
      * @param friction The friction of the body
-     * @param image The image to display over the body (visible part of the object)
+     * @param image The image to display over the body (visible part of the object).
      */
     public SolidObject(Vec2 pos, float friction, Image image) {
         this.image = image;
