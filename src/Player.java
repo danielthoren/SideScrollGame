@@ -44,7 +44,7 @@ public class Player extends SolidObject implements InputListener
         jumpCount = 0;
         direction = Direction.NONE;
         isRunning = false;
-        isAirBorne = false;
+        isAirBorne = true;
         //Default values, can be changed with setters
         maxVelocity = new Vec2(10f, 20f);
         createBody(world);
@@ -69,13 +69,16 @@ public class Player extends SolidObject implements InputListener
         float radious = size.x/2;
         Vec2 upperCirclePos = new Vec2(0f, ((size.y - radious*4)/2) + radious);
         Vec2 bottomCirclePos = new Vec2(0f, -((size.y - radious*4)/2) - radious);
-        Vec2 bottomSensorPos = new Vec2(0f, bottomCirclePos.y - radious - sensorThickness);
-        Vec2 bottomSensorSize = new Vec2(size.x - size.x/2 , 0.8f);
+        //Vec2 bottomSensorPos = new Vec2(0f, bottomCirclePos.y - radious - sensorThickness);
+        //Vec2 bottomSensorSize = new Vec2(size.x , 0.1f);
+        Vec2 bottomSensorPos = new Vec2(- size.x, 0);
+        Vec2 bottomSensorSize = new Vec2(sensorThickness , size.y);
 
         upperCircleShape.setRadius(size.x/2);
         bottomCircleShape.setRadius(size.x/2);
         middleBoxShape.setAsBox(size.x/2, middleBoxHeight / 2);
         bottomSensorShape.setAsBox(bottomSensorSize.x / 2, bottomSensorSize.y / 2);
+        System.out.println(radious);
 
         upperCircleShape.m_p.set(upperCirclePos);
         middleBoxShape.m_centroid.set(0f, 0f);
@@ -108,24 +111,22 @@ public class Player extends SolidObject implements InputListener
         bottomSensor.userData = "sensor";
         bottomSensor.userData = bottomSensorSize;
 
+        System.out.println(bottomCirclePos);
+
         //Creating the body using the fixtureDef and the BodyDef created beneath
         BodyDef bodyDef = new BodyDef();
         bodyDef.position.set(center);
         body = world.createBody(bodyDef);
-        body.createFixture(upperCircle);
         if (middleBoxHeight > 0){body.createFixture(middleBox);}
+        body.createFixture(upperCircle);
         body.createFixture(bottomCircle);
         groundSensor = body.createFixture(bottomSensor);
+        //groundSensor.setSensor(true);
         body.setType(BodyType.DYNAMIC);
         body.setFixedRotation(true);
         body.setUserData(this);
         body.setActive(true);
-
-        System.out.println(body.m_fixtureCount);
-        Fixture fixture = body.getFixtureList();
-        for (int x = 0; x <= body.m_fixtureCount; x++){
-            fixture.getNext();
-        }
+        body.setSleepingAllowed(false);
     }
 
     public void update(){

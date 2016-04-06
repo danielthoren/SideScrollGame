@@ -125,7 +125,7 @@ public class SolidObject {
         Float height = size.y;
         Float width = size.x;
         //Calculating the global coordinates of the center of the square
-        Vec2 globalPosition = new Vec2(fixture.getBody().getPosition().x - polygon.m_centroid.x, fixture.getBody().getPosition().y - polygon.m_centroid.y);
+        Vec2 globalPosition = new Vec2(fixture.getBody().getPosition().x + polygon.m_centroid.x, fixture.getBody().getPosition().y - polygon.m_centroid.y);
         //Draws the square at the global coordinates
         drawSquare(gc, globalPosition, width.doubleValue(), height.doubleValue());
     }

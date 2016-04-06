@@ -53,7 +53,7 @@ public final class LoadMap {
 
             //gameObjects.add(new DynamicCircle(world, new Vec2(2f, 1f), 0.3f, 0.3f, 0.3f, Color.RED, 0.2d));
 
-            Vec2 position = new Vec2(6f, 1f);
+            Vec2 position = new Vec2(6f, 0f);
             Vec2 acceleration = new Vec2(50f, 800f);
             Vec2 deceleration = new Vec2(100f, 0f);
             Vec2 size = new Vec2(0.4f, 0.9f); //Must have a ration bigger than 1:2
