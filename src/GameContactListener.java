@@ -5,11 +5,16 @@ import org.jbox2d.collision.Manifold;
 
 public class GameContactListener implements ContactListener
 {
+
+    private int n = 0;
+
     /**
      * Called when two fixtures begin to touch.
      * @param contact
      */
     public void beginContact(Contact contact){
+
+	System.out.println(Integer.toString(++n) + " " + Boolean.toString(contact.getFixtureA().isSensor() || contact.getFixtureB().isSensor()));
 
 	if (contact.getFixtureA().getBody().getUserData() instanceof Player && contact.getFixtureA().isSensor()){
 	    Player player = (Player) contact.getFixtureA().getBody().getUserData();

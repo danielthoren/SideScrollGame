@@ -119,15 +119,15 @@ public class SolidObject {
     protected void drawBoxPolygonFixture(GraphicsContext gc, Fixture fixture){
         //Setting pointer to shape object of type 'PolygonShape' (we are sure this is a 'PolygonShape', thus casting)
         PolygonShape polygon = (PolygonShape) fixture.getShape();
+
         //Calculating the size
         Vec2 size = new Vec2(Math.abs(polygon.getVertex(0).x - polygon.getVertex(1).x), Math.abs(polygon.getVertex(0).y - polygon.getVertex(3).y));
-        //Setting the dimensions to object variables containing conversion functions
-        Float height = size.y;
-        Float width = size.x;
+
         //Calculating the global coordinates of the center of the square
-        Vec2 globalPosition = new Vec2(fixture.getBody().getPosition().x + polygon.m_centroid.x, fixture.getBody().getPosition().y - polygon.m_centroid.y);
+        Vec2 globalPosition = new Vec2(fixture.getBody().getPosition().x + polygon.getVertex(1).x - size.x / 2, fixture.getBody().getPosition().y);
+
         //Draws the square at the global coordinates
-        drawSquare(gc, globalPosition, width.doubleValue(), height.doubleValue());
+        drawSquare(gc, globalPosition, (double)size.x, (double)size.y);
     }
 
     /**

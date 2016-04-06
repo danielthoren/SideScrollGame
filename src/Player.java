@@ -71,19 +71,19 @@ public class Player extends SolidObject implements InputListener
         Vec2 bottomCirclePos = new Vec2(0f, -((size.y - radious*4)/2) - radious);
         //Vec2 bottomSensorPos = new Vec2(0f, bottomCirclePos.y - radious - sensorThickness);
         //Vec2 bottomSensorSize = new Vec2(size.x , 0.1f);
-        Vec2 bottomSensorPos = new Vec2(- size.x, 0);
-        Vec2 bottomSensorSize = new Vec2(sensorThickness , size.y);
+        Vec2 bottomSensorPos = new Vec2(size.x, 0);
+        Vec2 bottomSensorSize = new Vec2(sensorThickness + 0.2f , size.y);
 
         upperCircleShape.setRadius(size.x/2);
         bottomCircleShape.setRadius(size.x/2);
         middleBoxShape.setAsBox(size.x/2, middleBoxHeight / 2);
-        bottomSensorShape.setAsBox(bottomSensorSize.x / 2, bottomSensorSize.y / 2);
+        bottomSensorShape.setAsBox(bottomSensorSize.x / 2, bottomSensorSize.y / 2, new Vec2(-1.5f, 0), 0);
         System.out.println(radious);
 
         upperCircleShape.m_p.set(upperCirclePos);
         middleBoxShape.m_centroid.set(0f, 0f);
         bottomCircleShape.m_p.set(bottomCirclePos);
-        bottomSensorShape.m_centroid.set(bottomSensorPos);
+        bottomSensorShape.m_centroid.set(0, 0);//bottomSensorPos);
 
         //Creating the fixture of the body. The concrete part that can be touched (the part that can collide)
         upperCircle.shape = upperCircleShape;
