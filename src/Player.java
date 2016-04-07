@@ -11,11 +11,10 @@ import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.Fixture;
 import org.jbox2d.dynamics.FixtureDef;
 import org.jbox2d.dynamics.World;
-import org.jbox2d.dynamics.contacts.ContactEdge;
+import org.jbox2d.dynamics.contacts.Contact;
 
-public class Player extends SolidObject implements InputListener
+public class Player extends SolidObject implements InputListener, DrawAndUpdateObject, CollisionListener
 {
-
     private Square playerSquare;
     private Direction direction;
     private World world;
@@ -28,7 +27,7 @@ public class Player extends SolidObject implements InputListener
     private float density;
     private int jumpCount;                                     //Keeps track of the times the player has jumped since last on the ground
     private boolean isRunning;
-    public boolean isAirBorne;
+    public boolean grounded;
     private static boolean drawSensors = true;                 //Used for debugging, draws the sensorFixtures of the player
 
     public Player(World world, Vec2 position, float friction, float density, Vec2 acceleration, Vec2 deceleration, Vec2 size, Color color) {
@@ -44,7 +43,7 @@ public class Player extends SolidObject implements InputListener
         jumpCount = 0;
         direction = Direction.NONE;
         isRunning = false;
-        isAirBorne = true;
+        grounded = false;
         //Default values, can be changed with setters
         maxVelocity = new Vec2(10f, 20f);
         createBody(world);
@@ -108,8 +107,7 @@ public class Player extends SolidObject implements InputListener
         bottomSensor.isSensor = true;
         bottomSensor.density = 0;
         bottomSensor.friction = 0;
-        bottomSensor.userData = "sensor";
-        bottomSensor.userData = bottomSensorSize;
+        bottomSensor.userData = grounded;
 
         System.out.println(bottomCirclePos);
 
@@ -180,7 +178,7 @@ public class Player extends SolidObject implements InputListener
                     drawBoxPolygonFixture(gc, fixture);
                 }
                 else if (fixture.getType() == ShapeType.POLYGON && fixture.isSensor() && drawSensors){
-                    drawSensor(gc, fixture, !isAirBorne);
+                    drawSensor(gc, fixture, grounded);
                 }
             }
         }
@@ -210,8 +208,30 @@ public class Player extends SolidObject implements InputListener
         }
     }
 
+    public void beginContact(Contact contact){
+        if (contact.getFixtureA().getBody().getUserData().equals(this) && contact.getFixtureA().isSensor()){
+       	    grounded = true;
+       	    System.out.print("player on ground:      ");
+       	}
+       	if (contact.getFixtureB().getBody().getUserData().equals(this) && contact.getFixtureB().isSensor()){
+       	    grounded = true;
+       	    System.out.println("player on ground");
+       	}
+    }
+
+    public void endContact(Contact contact){
+        if (contact.getFixtureA().getBody().getUserData().equals(this) && contact.getFixtureA().isSensor()){
+            grounded = false;
+            System.out.println("player in air");
+        }
+        if (contact.getFixtureB().getBody().getUserData().equals(this) && contact.getFixtureB().isSensor()){
+            grounded = false;
+            System.out.println("player in air");
+        }
+    }
+
     private void airborne(boolean isAirBorne){
-        this.isAirBorne = isAirBorne;
+        this.grounded = isAirBorne;
     }
 
     private void jump(){

@@ -124,7 +124,7 @@ public class SolidObject {
         Vec2 size = new Vec2(Math.abs(polygon.getVertex(0).x - polygon.getVertex(1).x), Math.abs(polygon.getVertex(0).y - polygon.getVertex(3).y));
 
         //Calculating the global coordinates of the center of the square
-        Vec2 globalPosition = new Vec2(fixture.getBody().getPosition().x + polygon.getVertex(1).x - size.x / 2, fixture.getBody().getPosition().y);
+        Vec2 globalPosition = new Vec2(fixture.getBody().getPosition().x + polygon.getVertex(1).x - size.x / 2, fixture.getBody().getPosition().y - polygon.getVertex(2).y + size.y / 2);
 
         //Draws the square at the global coordinates
         drawSquare(gc, globalPosition, (double)size.x, (double)size.y);
@@ -155,21 +155,4 @@ public class SolidObject {
 
         color = tmpColor;
     }
-
-    /*
-    protected void drawSensor(GraphicsContext gc, Fixture sensor){
-        Color tmpColor = color;
-        boolean isTriggered = false;
-        for (ContactEdge edge = sensor.getBody().getContactList(); edge != null; edge = edge.next){
-            if (edge.contact.isTouching() && edge.contact.getFixtureB().equals(sensor)){
-                isTriggered = true;
-            }
-        }
-        if (isTriggered) {color = Color.GREEN;}
-        else {color = Color.RED;}
-
-        drawBoxPolygonFixture(gc, sensor);
-
-        color = tmpColor;
-    }*/
 }

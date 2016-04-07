@@ -17,11 +17,11 @@ public class GameComponent extends Parent
     private Canvas canvas;                                  //The canvas on wich to draw on
     private GraphicsContext gc;                             //The GraphicsContext with wich to draw
     private World world;
-    private GameContactListener gameContactListener;
+    private ContactListenerGame contactListenerGame;
     private double height, width;                           //The height and width of the window in pixels
     private int velocityIterations, positionIterations;     //Values deciding the accuracy of velocity and position
     private Map currentMap;
-    private int currentMapNumber = 1;                        ///////////////////Value needs to be moved to user interface!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    private static int currentMapNumber = 1;                        ///////////////////Value needs to be moved to user interface!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     /**
      * Instanciates a game.
@@ -33,8 +33,8 @@ public class GameComponent extends Parent
         this.width = width;
 
         world = new World(LoadMap.getInstance().getMapGravity(currentMapNumber));
-        gameContactListener = new GameContactListener();
-        world.setContactListener(gameContactListener);
+        contactListenerGame = new ContactListenerGame();
+        world.setContactListener(contactListenerGame);
         world.setAllowSleep(false);
 
         LoadMap.getInstance().loadMap(world, currentMapNumber);
@@ -76,9 +76,6 @@ public class GameComponent extends Parent
         for (DrawAndUpdateObject obj : currentMap.getGameObjects()){
             obj.update();
         }
-        for (InputListener obj : currentMap.getGameObjectsListen()){
-            obj.update();
-        }
     }
 
     /**
@@ -88,9 +85,6 @@ public class GameComponent extends Parent
         GraphicsContext gc = canvas.getGraphicsContext2D();
         gc.clearRect(0,0, canvas.getWidth(), canvas.getHeight());
         for (DrawAndUpdateObject obj : currentMap.getGameObjects()){
-            obj.draw(gc);
-        }
-        for (InputListener obj : currentMap.getGameObjectsListen()){
             obj.draw(gc);
         }
     }
@@ -113,5 +107,9 @@ public class GameComponent extends Parent
      */
     public static float pixToMeters(float pix){
         return pix / LoadMap.getInstance().getPixPerMeter();
+    }
+
+    public static int getCurrentMapNumber() {
+        return currentMapNumber;
     }
 }

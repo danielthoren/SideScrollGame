@@ -3,7 +3,9 @@ import org.jbox2d.callbacks.ContactListener;
 import org.jbox2d.dynamics.contacts.Contact;
 import org.jbox2d.collision.Manifold;
 
-public class GameContactListener implements ContactListener
+import java.util.List;
+
+public class ContactListenerGame implements ContactListener
 {
 
     private int n = 0;
@@ -12,19 +14,10 @@ public class GameContactListener implements ContactListener
      * Called when two fixtures begin to touch.
      * @param contact
      */
-    public void beginContact(Contact contact){
-
-	System.out.println(Integer.toString(++n) + " " + Boolean.toString(contact.getFixtureA().isSensor() || contact.getFixtureB().isSensor()));
-
-	if (contact.getFixtureA().getBody().getUserData() instanceof Player && contact.getFixtureA().isSensor()){
-	    Player player = (Player) contact.getFixtureA().getBody().getUserData();
-	    player.isAirBorne = false;
-	    System.out.print("player on ground:      ");
-	}
-	if (contact.getFixtureB().getBody().getUserData() instanceof Player && contact.getFixtureB().isSensor()){
-	    Player player = (Player) contact.getFixtureB().getBody().getUserData();
-	    player.isAirBorne = false;
-	    System.out.println("player on ground");
+    public void beginContact(Contact contact) {
+	List<CollisionListener> listeners = LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber()).getGameObjectsCollision();
+	for (CollisionListener obj : listeners){
+	    obj.beginContact(contact);
 	}
     }
 
@@ -33,15 +26,9 @@ public class GameContactListener implements ContactListener
      * @param contact
      */
     public void endContact(Contact contact){
-	if (contact.getFixtureA().getBody().getUserData() instanceof Player && contact.getFixtureA().isSensor()){
-	    Player player = (Player) contact.getFixtureA().getBody().getUserData();
-	    player.isAirBorne = true;
-	    System.out.println("player in air");
-	}
-	if (contact.getFixtureB().getBody().getUserData() instanceof Player && contact.getFixtureB().isSensor()){
-	    Player player = (Player) contact.getFixtureB().getBody().getUserData();
-	    player.isAirBorne = true;
-	    System.out.println("player in air");
+	List<CollisionListener> listeners = LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber()).getGameObjectsCollision();
+	for (CollisionListener obj : listeners){
+	    obj.endContact(contact);
 	}
     }
 

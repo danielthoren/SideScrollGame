@@ -30,9 +30,11 @@ public final class LoadMap {
     public void loadMap(World world, Integer mapNumber){
         List<DrawAndUpdateObject> gameObjects;
         List<InputListener> gameObjectsListen;
+        List<CollisionListener> gameObjectsCollision;
         if (!maps.containsKey(mapNumber)){
             gameObjects = new ArrayList<DrawAndUpdateObject>(10);
-            gameObjectsListen = new ArrayList<InputListener>(10);
+            gameObjectsListen = new ArrayList<InputListener>(2);
+            gameObjectsCollision = new ArrayList<CollisionListener>(2);
 
 
             gameObjects.add(new DynamicSquare(world, new Vec2(1f, 2f), 0.3f, Color.BLUE, 0.4d, 0.4d));
@@ -64,8 +66,10 @@ public final class LoadMap {
 
             Player player = new Player(world, position, friction, density, acceleration, deceleration, size, Color.BLUE);
             gameObjectsListen.add(player);
+            gameObjects.add(player);
+            gameObjectsCollision.add(player);
 
-            Map map = new Map(gameObjects, gameObjectsListen, getMapGravity(mapNumber));
+            Map map = new Map(gameObjects, gameObjectsListen, gameObjectsCollision, getMapGravity(mapNumber));
             maps.put(mapNumber, map);
         }
     }

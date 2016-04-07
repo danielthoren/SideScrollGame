@@ -12,11 +12,13 @@ public class Map
 {
     private List<DrawAndUpdateObject> gameObjects;
     private List<InputListener> gameObjectsListen;
+    private List<CollisionListener> gameObjectsCollision;
 
     private Vec2 gravity;
 
-    public Map(List<DrawAndUpdateObject> gameObjects, List<InputListener> gameObjectsListen, Vec2 gravity) {
+    public Map(List<DrawAndUpdateObject> gameObjects, List<InputListener> gameObjectsListen, List<CollisionListener> gameObjectsCollision, Vec2 gravity) {
         this.gameObjects = gameObjects;
+        this.gameObjectsCollision = gameObjectsCollision;
         this.gameObjectsListen = gameObjectsListen;
         this.gravity = gravity;
     }
@@ -28,6 +30,8 @@ public class Map
     public List<InputListener> getGameObjectsListen() {
         return gameObjectsListen;
     }
+
+    public List<CollisionListener> getGameObjectsCollision() {return gameObjectsCollision;}
 
     public Vec2 getGravity() {return gravity;}
 }
