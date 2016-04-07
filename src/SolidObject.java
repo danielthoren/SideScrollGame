@@ -111,24 +111,23 @@ public class SolidObject {
     }
 
     /**
-     * Draws a given square type 'PolygonFixture' (Initialized with the 'SetAsBox()' function). The Fixture must have
-     * its 'UserData' set to a 'Vec2' containing the size of the square.
+     * Draws a given square type 'PolygonFixture' (Initialized with the 'SetAsBox()' function).
      * @param gc The 'GraphicsContext' with wich to paint.
-     * @param fixture The fixture to paint. Note that the 'UserData' of the fixture must be a 'Vec2' containing the
-     *                size of the square as follows: (width , height) where both height and width must be of the type float.
+     * @param fixture The fixture to paint.
+     *
      */
     protected void drawBoxPolygonFixture(GraphicsContext gc, Fixture fixture){
-        //Getting the size of the square from the userdata
-        Vec2 size = (Vec2) fixture.getUserData();
         //Setting pointer to shape object of type 'PolygonShape' (we are sure this is a 'PolygonShape', thus casting)
         PolygonShape polygon = (PolygonShape) fixture.getShape();
-        //Setting the dimensions to object variables containing conversion functions
-        Float height = size.y;
-        Float width = size.x;
+
+        //Calculating the size
+        Vec2 size = new Vec2(Math.abs(polygon.getVertex(0).x - polygon.getVertex(1).x), Math.abs(polygon.getVertex(0).y - polygon.getVertex(3).y));
+
         //Calculating the global coordinates of the center of the square
-        Vec2 globalPosition = new Vec2(fixture.getBody().getPosition().x - polygon.m_centroid.x, fixture.getBody().getPosition().y - polygon.m_centroid.y);
+        Vec2 globalPosition = new Vec2(fixture.getBody().getPosition().x + polygon.getVertex(1).x - size.x / 2, fixture.getBody().getPosition().y - polygon.getVertex(2).y + size.y / 2);
+
         //Draws the square at the global coordinates
-        drawSquare(gc, globalPosition, width.doubleValue(), height.doubleValue());
+        drawSquare(gc, globalPosition, (double)size.x, (double)size.y);
     }
 
     /**
@@ -146,14 +145,9 @@ public class SolidObject {
         drawCircle(gc, fixturePos, radious.doubleValue());
     }
 
-    protected void drawSensor(GraphicsContext gc, Fixture sensor){
+
+    protected void drawSensor(GraphicsContext gc, Fixture sensor, boolean isTriggered){
         Color tmpColor = color;
-        boolean isTriggered = false;
-        for (ContactEdge edge = sensor.getBody().getContactList(); edge != null; edge = edge.next){
-            if (edge.contact.isTouching() && edge.contact.getFixtureB().equals(sensor)){
-                isTriggered = true;
-            }
-        }
         if (isTriggered) {color = Color.GREEN;}
         else {color = Color.RED;}
 
