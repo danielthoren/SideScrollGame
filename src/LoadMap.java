@@ -46,8 +46,10 @@ public final class LoadMap {
             gameObjects.add(new DynamicSquare(world, new Vec2(1f, 3f), 0.3f, Color.BLUE, 0.4d, 0.4d));
             gameObjects.add(new DynamicSquare(world, new Vec2(1.5f, 3f), 0.3f, Color.AQUA, 0.4d, 0.4d));
             gameObjects.add(new DynamicSquare(world, new Vec2(1.3f, 1.5f), 0.3f, Color.AZURE, 0.4d, 0.4d));
-            gameObjects.add( new Square(world, new Vec2(0f, 3f), 1f, Color.BEIGE, 0.4d, 6d));
-            gameObjects.add( new Square(world, new Vec2(7f, 3f), 1f, Color.BEIGE, 0.4d, 6d));
+            gameObjects.add(new Square(world, new Vec2(0f, 3f), 1f, Color.BEIGE, 0.4d, 6d));
+            gameObjects.add(new Square(world, new Vec2(7f, 3f), 1f, Color.BEIGE, 0.4d, 6d));
+            gameObjects.add(new MovingPlatform(world, new Vec2(0f, 3f), 3f, Color.WHEAT, 1d, 0.1d, new Vec2(7f, 4f)));
+            gameObjects.add(new MovingPlatform(world, new Vec2(1f, 3f), 3f, Color.BISQUE, 1d, 0.1d, new Vec2(1f, 5f)));
 
             Square bottomSquare = new Square(world, new Vec2(0f, 5.5f), 0.8f, Color.AZURE, 8d, 0.4d);
             //bottomSquare.body.setTransform(bottomSquare.center, -0.2f);

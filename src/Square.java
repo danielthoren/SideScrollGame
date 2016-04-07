@@ -47,8 +47,7 @@ public class Square extends SolidObject implements DrawAndUpdateObject
 		super(pos, friction, color);
 		this.width = width;
 		this.height = height;
-		center = new Vec2(pos.x + (this.width.floatValue()/2), pos.y + (this.height.floatValue()/2));
-
+		this.center = pos;
 		createBody(world);
 		body.setUserData(this);
 	}
