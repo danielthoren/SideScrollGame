@@ -27,7 +27,9 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
     private float density;
     private int jumpCount;                                     //Keeps track of the times the player has jumped since last on the ground
     private boolean isRunning;
-    public boolean grounded;
+    private boolean grounded;
+    private boolean collisionLeft;
+    private boolean collisionRight;
     private static boolean drawSensors = true;                 //Used for debugging, draws the sensorFixtures of the player
 
     public Player(World world, Vec2 position, float friction, float density, Vec2 acceleration, Vec2 deceleration, Vec2 size, Color color) {
@@ -44,6 +46,8 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
         direction = Direction.NONE;
         isRunning = false;
         grounded = false;
+        collisionLeft = false;
+        collisionRight = false;
         //Default values, can be changed with setters
         maxVelocity = new Vec2(10f, 20f);
         createBody(world);
@@ -55,9 +59,13 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
         FixtureDef middleBox = new FixtureDef();
         FixtureDef bottomCircle = new FixtureDef();
         FixtureDef bottomSensor = new FixtureDef();
+        FixtureDef leftSensor = new FixtureDef();
+        FixtureDef rightSensor = new FixtureDef();
 
         PolygonShape middleBoxShape = new PolygonShape();
         PolygonShape bottomSensorShape = new PolygonShape();
+        PolygonShape leftSensorShape = new PolygonShape();
+        PolygonShape rightSensorShape = new PolygonShape();
         CircleShape upperCircleShape = new CircleShape();
         CircleShape bottomCircleShape = new CircleShape();
 
@@ -66,23 +74,26 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
         //(because the shapes takes half width and height) and then by 3 since there are 3 elements on a player.
         float middleBoxHeight = (size.y - size.x);
         float radious = size.x/2;
-        Vec2 upperCirclePos = new Vec2(0f, ((size.y - radious*4)/2) + radious);
-        Vec2 bottomCirclePos = new Vec2(0f, -((size.y - radious*4)/2) - radious);
-        //Vec2 bottomSensorPos = new Vec2(0f, bottomCirclePos.y - radious - sensorThickness);
-        //Vec2 bottomSensorSize = new Vec2(size.x , 0.1f);
-        Vec2 bottomSensorPos = new Vec2(size.x, 0);
-        Vec2 bottomSensorSize = new Vec2(sensorThickness + 0.2f , size.y);
+        Vec2 upperCirclePos = new Vec2(0f, -((size.y - radious*4)/2) - radious);
+        Vec2 bottomCirclePos = new Vec2(0f, ((size.y - radious*4)/2) + radious);
+        Vec2 bottomSensorPos = new Vec2(0f, bottomCirclePos.y + radious);
+        Vec2 bottomSensorSize = new Vec2(size.x - size.x/2 , sensorThickness);
+        Vec2 leftSensorPos = new Vec2(-size.x, 0f);
+        Vec2 leftSensorSize = new Vec2(sensorThickness, size.y - size.y/5);
+        Vec2 rightSensorPos = new Vec2(size.x, 0f);
+        Vec2 rightSensorSize = new Vec2(sensorThickness, size.y - size.y/5);
 
+        //Initializing the shapes
         upperCircleShape.setRadius(size.x/2);
         bottomCircleShape.setRadius(size.x/2);
         middleBoxShape.setAsBox(size.x/2, middleBoxHeight / 2);
-        bottomSensorShape.setAsBox(bottomSensorSize.x / 2, bottomSensorSize.y / 2, new Vec2(-1.5f, 0), 0);
-        System.out.println(radious);
+        bottomSensorShape.setAsBox(bottomSensorSize.x / 2, bottomSensorSize.y / 2, bottomSensorPos, 0);
+        leftSensorShape.setAsBox(leftSensorSize.x / 2, leftSensorSize.y / 2, leftSensorPos, 0);
+        rightSensorShape.setAsBox(rightSensorSize.x / 2, rightSensorSize.y / 2, rightSensorPos, 0);
 
+        //Setting the position of the circles
         upperCircleShape.m_p.set(upperCirclePos);
-        middleBoxShape.m_centroid.set(0f, 0f);
         bottomCircleShape.m_p.set(bottomCirclePos);
-        bottomSensorShape.m_centroid.set(0, 0);//bottomSensorPos);
 
         //Creating the fixture of the body. The concrete part that can be touched (the part that can collide)
         upperCircle.shape = upperCircleShape;
@@ -108,8 +119,16 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
         bottomSensor.density = 0;
         bottomSensor.friction = 0;
         bottomSensor.userData = grounded;
-
-        System.out.println(bottomCirclePos);
+        leftSensor.shape = leftSensorShape;
+        leftSensor.isSensor = true;
+        leftSensor.density = 0;
+        leftSensor.friction = 0;
+        leftSensor.userData = collisionLeft;
+        rightSensor.shape = rightSensorShape;
+        rightSensor.isSensor = true;
+        rightSensor.density = 0;
+        rightSensor.friction = 0;
+        rightSensor.userData = collisionRight;
 
         //Creating the body using the fixtureDef and the BodyDef created beneath
         BodyDef bodyDef = new BodyDef();
@@ -118,8 +137,9 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
         if (middleBoxHeight > 0){body.createFixture(middleBox);}
         body.createFixture(upperCircle);
         body.createFixture(bottomCircle);
-        groundSensor = body.createFixture(bottomSensor);
-        //groundSensor.setSensor(true);
+        body.createFixture(bottomSensor);
+        body.createFixture(rightSensor);
+        body.createFixture(leftSensor);
         body.setType(BodyType.DYNAMIC);
         body.setFixedRotation(true);
         body.setUserData(this);
@@ -148,21 +168,6 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
                 body.applyForceToCenter(new Vec2(-acceleration.x, 0));
             }
         }
-        //Good debug print
-        /*
-        for (Fixture fixture = body.getFixtureList(); fixture != null; fixture = fixture.getNext()){
-            if (fixture.isSensor()){
-                PolygonShape poly = (PolygonShape) fixture.getShape();
-                System.out.println(poly.m_centroid);
-            }
-        }*/
-        //Good debug print, prints the friction values of all collisions with STATIC Square objects
-        /*
-        for (ContactEdge edge = body.getContactList(); edge != null; edge = edge.next){
-            if (edge.contact.isTouching() && edge.contact.getFixtureA().getBody().getUserData() instanceof Square){
-                System.out.println("Contact Friction: " + edge.contact.getFriction() + " Square: " + edge.contact.getFixtureA().getFriction() + " Player: " + edge.contact.getFixtureB().getFriction());
-            }
-        }*/
     }
 
     @Override
@@ -178,7 +183,7 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
                     drawBoxPolygonFixture(gc, fixture);
                 }
                 else if (fixture.getType() == ShapeType.POLYGON && fixture.isSensor() && drawSensors){
-                    drawSensor(gc, fixture, grounded);
+                    drawSensor(gc, fixture, (boolean)fixture.getUserData());
                 }
             }
         }
@@ -210,28 +215,25 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
 
     public void beginContact(Contact contact){
         if (contact.getFixtureA().getBody().getUserData().equals(this) && contact.getFixtureA().isSensor()){
-       	    grounded = true;
-       	    System.out.print("player on ground:      ");
-       	}
+            
+        }
        	if (contact.getFixtureB().getBody().getUserData().equals(this) && contact.getFixtureB().isSensor()){
-       	    grounded = true;
-       	    System.out.println("player on ground");
+
+            System.out.println(grounded);
+            userData = true;
+            System.out.println(grounded);
        	}
     }
 
     public void endContact(Contact contact){
         if (contact.getFixtureA().getBody().getUserData().equals(this) && contact.getFixtureA().isSensor()){
-            grounded = false;
-            System.out.println("player in air");
+            boolean userData = (boolean) contact.getFixtureA().getUserData();
+            userData = false;
         }
         if (contact.getFixtureB().getBody().getUserData().equals(this) && contact.getFixtureB().isSensor()){
-            grounded = false;
-            System.out.println("player in air");
+            boolean userData = (boolean) contact.getFixtureB().getUserData();
+            userData = false;
         }
-    }
-
-    private void airborne(boolean isAirBorne){
-        this.grounded = isAirBorne;
     }
 
     private void jump(){

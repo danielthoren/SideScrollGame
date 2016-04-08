@@ -7,9 +7,6 @@ import java.util.List;
 
 public class ContactListenerGame implements ContactListener
 {
-
-    private int n = 0;
-
     /**
      * Called when two fixtures begin to touch.
      * @param contact

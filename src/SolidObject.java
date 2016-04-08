@@ -20,7 +20,7 @@ public class SolidObject {
     protected Color color;    //The color of the square (=none if no color)
     protected float friction; //The friction of the square´s body
 
-    protected static  final float sensorThickness = 0.1f;       //Holds the constant sensor thickness
+    protected static final float sensorThickness = 0.05f;       //Holds the constant sensor thickness
 
     /**
      * The default constructor of the class. Should never be used!
@@ -124,7 +124,7 @@ public class SolidObject {
         Vec2 size = new Vec2(Math.abs(polygon.getVertex(0).x - polygon.getVertex(1).x), Math.abs(polygon.getVertex(0).y - polygon.getVertex(3).y));
 
         //Calculating the global coordinates of the center of the square
-        Vec2 globalPosition = new Vec2(fixture.getBody().getPosition().x + polygon.getVertex(1).x - size.x / 2, fixture.getBody().getPosition().y - polygon.getVertex(2).y + size.y / 2);
+        Vec2 globalPosition = new Vec2(fixture.getBody().getPosition().x + polygon.getVertex(1).x - size.x / 2, fixture.getBody().getPosition().y + polygon.getVertex(2).y - size.y / 2);
 
         //Draws the square at the global coordinates
         drawSquare(gc, globalPosition, (double)size.x, (double)size.y);
