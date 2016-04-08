@@ -14,12 +14,15 @@ import java.util.List;
  */
 public final class LoadMap {
 
+
     private final static LoadMap instance = new LoadMap();
     private AbstractMap<Integer, Map> maps;
 
     private static float pixPerMeter;
+    private static int objectID;
     private LoadMap() {
         maps = new HashMap<Integer, Map>();
+        objectID = 0;
         pixPerMeter = 100;                                      //should be read from file in the future
     }
 
@@ -66,7 +69,7 @@ public final class LoadMap {
 
             gameObjects.add(new DynamicSquare(world, new Vec2(position.x - 0.03f, position.y - 0.5f), 0.3f, Color.BROWN, 0.4d, 0.4d));
 
-            Player player = new Player(world, position, friction, density, acceleration, deceleration, size, Color.BLUE);
+            Player player = new Player(objectID++, world, position, friction, density, acceleration, deceleration, size, Color.BLUE);
             gameObjectsListen.add(player);
             gameObjects.add(player);
             gameObjectsCollision.add(player);

@@ -27,13 +27,15 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
     private float density;
     private int jumpCount;                                     //Keeps track of the times the player has jumped since last on the ground
     private boolean isRunning;
-    private boolean grounded;
-    private boolean collisionLeft;
-    private boolean collisionRight;
+    private Boolean grounded;
+    private Boolean collisionLeft;
+    private Boolean collisionRight;
     private static boolean drawSensors = true;                 //Used for debugging, draws the sensorFixtures of the player
+    private final int ID;
 
-    public Player(World world, Vec2 position, float friction, float density, Vec2 acceleration, Vec2 deceleration, Vec2 size, Color color) {
+    public Player(int ID, World world, Vec2 position, float friction, float density, Vec2 acceleration, Vec2 deceleration, Vec2 size, Color color) {
         super(position, friction, color);
+        this.ID = ID;
         center = new Vec2(position.x + size.x/2, position.y + size.y/2);
         this.acceleration = acceleration;
         this.deceleration = deceleration;
@@ -118,17 +120,17 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
         bottomSensor.isSensor = true;
         bottomSensor.density = 0;
         bottomSensor.friction = 0;
-        bottomSensor.userData = grounded;
+        bottomSensor.userData = new SensorStatus(Direction.DOWN);
         leftSensor.shape = leftSensorShape;
         leftSensor.isSensor = true;
         leftSensor.density = 0;
         leftSensor.friction = 0;
-        leftSensor.userData = collisionLeft;
+        leftSensor.userData = new SensorStatus(Direction.LEFT);
         rightSensor.shape = rightSensorShape;
         rightSensor.isSensor = true;
         rightSensor.density = 0;
         rightSensor.friction = 0;
-        rightSensor.userData = collisionRight;
+        rightSensor.userData = new SensorStatus(Direction.RIGHT);
 
         //Creating the body using the fixtureDef and the BodyDef created beneath
         BodyDef bodyDef = new BodyDef();
@@ -183,7 +185,7 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
                     drawBoxPolygonFixture(gc, fixture);
                 }
                 else if (fixture.getType() == ShapeType.POLYGON && fixture.isSensor() && drawSensors){
-                    drawSensor(gc, fixture, (boolean)fixture.getUserData());
+                    drawSensor(gc, fixture, ((SensorStatus)fixture.getUserData()).isDrawSensor());
                 }
             }
         }
@@ -215,24 +217,54 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
 
     public void beginContact(Contact contact){
         if (contact.getFixtureA().getBody().getUserData().equals(this) && contact.getFixtureA().isSensor()){
-            
+            switch (((SensorStatus)contact.getFixtureA().getUserData()).getPosition()){
+                case DOWN :
+                    grounded = true;
+                    break;
+                case LEFT: collisionLeft = true;
+                    break;
+                case RIGHT: collisionRight = true;
+                    break;
+            }
+            ((SensorStatus)contact.getFixtureA().getUserData()).setDrawSensor(true);
         }
        	if (contact.getFixtureB().getBody().getUserData().equals(this) && contact.getFixtureB().isSensor()){
-
-            System.out.println(grounded);
-            userData = true;
-            System.out.println(grounded);
+            switch (((SensorStatus)contact.getFixtureB().getUserData()).getPosition()){
+                case DOWN : grounded = true;
+                    break;
+                case LEFT: collisionLeft = true;
+                    break;
+                case RIGHT: collisionRight = true;
+                    break;
+            }
+            ((SensorStatus)contact.getFixtureA().getUserData()).setDrawSensor(true);
        	}
     }
 
     public void endContact(Contact contact){
         if (contact.getFixtureA().getBody().getUserData().equals(this) && contact.getFixtureA().isSensor()){
-            boolean userData = (boolean) contact.getFixtureA().getUserData();
-            userData = false;
+            System.out.println(((SensorStatus)contact.getFixtureA().getUserData()).getPosition());
+            switch (((SensorStatus)contact.getFixtureA().getUserData()).getPosition()){
+                case DOWN : grounded = false;
+                    break;
+                case LEFT: collisionLeft = false;
+                    break;
+                case RIGHT: collisionRight = false;
+                    break;
+            }
+            ((SensorStatus)contact.getFixtureA().getUserData()).setDrawSensor(false);
         }
         if (contact.getFixtureB().getBody().getUserData().equals(this) && contact.getFixtureB().isSensor()){
-            boolean userData = (boolean) contact.getFixtureB().getUserData();
-            userData = false;
+            System.out.println(((SensorStatus)contact.getFixtureB().getUserData()).getPosition());
+            switch (((SensorStatus)contact.getFixtureB().getUserData()).getPosition()){
+                case DOWN : grounded = false;
+                    break;
+                case LEFT: collisionLeft = false;
+                    break;
+                case RIGHT: collisionRight = false;
+                    break;
+            }
+            ((SensorStatus)contact.getFixtureA().getUserData()).setDrawSensor(false);
         }
     }
 
@@ -241,9 +273,23 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
         body.applyLinearImpulse(new Vec2(0f, -impulse), body.getWorldCenter());
     }
 
+    /**
+     * Override function of equals checking if this instance of player and the 'obj' are exactly the same by using
+     * the players unique ID number.
+     * @param obj The object to compare to
+     * @return If the obj is the same as this
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Player && ((Player) obj).getID() == this.getID()){return true;}
+        else {return false;}
+    }
+
     public void setRestitution(float restitution) {this.restitution = restitution;}
 
     public void setMaxVelocity(Vec2 maxVelocity){
         this.maxVelocity = maxVelocity;
     }
+
+    public int getID() {return ID;}
 }
