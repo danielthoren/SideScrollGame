@@ -13,7 +13,7 @@ import static java.lang.Math.abs;
 /**
  * This class creates a movingplatform.
  */
-public class MovingPlatform extends Square implements DrawAndUpdateObject {
+public class MovingPlatform extends Square{
     private Vec2 startPos;                  //The start posistion of the platform
     private Vec2 endPos;                    // The position where the platform should return
     private Vec2 positiveVelocity;          // The velocity of the platform in the positive direction
