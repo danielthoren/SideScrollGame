@@ -29,6 +29,7 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
     private boolean isRunning;
     public boolean grounded;
     private static boolean drawSensors = true;                 //Used for debugging, draws the sensorFixtures of the player
+    private int score;                                         // The score of the player
 
     public Player(World world, Vec2 position, float friction, float density, Vec2 acceleration, Vec2 deceleration, Vec2 size, Color color) {
         super(position, friction, color);
@@ -48,6 +49,7 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
         maxVelocity = new Vec2(10f, 20f);
         createBody(world);
         body.setUserData(this);
+        score = 0;
     }
 
     private void createBody(World world){
