@@ -237,7 +237,7 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
                 case RIGHT: collisionRight = true;
                     break;
             }
-            ((SensorStatus)contact.getFixtureA().getUserData()).setDrawSensor(true);
+            ((SensorStatus)contact.getFixtureB().getUserData()).setDrawSensor(true);
        	}
     }
 
@@ -264,7 +264,7 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
                 case RIGHT: collisionRight = false;
                     break;
             }
-            ((SensorStatus)contact.getFixtureA().getUserData()).setDrawSensor(false);
+            ((SensorStatus)contact.getFixtureB().getUserData()).setDrawSensor(false);
         }
     }
 
