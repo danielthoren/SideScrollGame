@@ -1,13 +1,12 @@
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextBuilder;
 import jdk.internal.util.xml.impl.Input;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.World;
 
-import java.util.AbstractMap;
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * The singgelton that loads and holds the map.
@@ -51,9 +50,13 @@ public final class LoadMap {
             gameObjects.add(new DynamicSquare(world, new Vec2(1.3f, 1.5f), 0.3f, Color.AZURE, 0.4d, 0.4d));
             gameObjects.add(new Square(world, new Vec2(0f, 3f), 1f, Color.BEIGE, 0.4d, 6d));
             gameObjects.add(new Square(world, new Vec2(7f, 3f), 1f, Color.BEIGE, 0.4d, 6d));
+
             gameObjects.add(new MovingPlatform(world, new Vec2(0f, 3f), 1f, Color.WHEAT, 1d, 0.1d, new Vec2(7f, 4f)));
             gameObjects.add(new MovingPlatform(world, new Vec2(1f, 3f), 1f, Color.BISQUE, 1d, 0.1d, new Vec2(1f, 5f)));
-            gameObjects.add(new Coin(world, new Vec2(2f, 4f), 1f, Color.GOLD, 0.2d));
+
+            Coin coin = (new Coin(world, new Vec2(2f, 4f), 1f, Color.GOLD, 0.2d, objectID++));
+            gameObjectsCollision.add(coin);
+            gameObjects.add(coin);
 
             Square bottomSquare = new Square(world, new Vec2(0f, 5.5f), 0.8f, Color.AZURE, 14.35d, 0.4d);
             //bottomSquare.body.setTransform(bottomSquare.center, -0.2f);

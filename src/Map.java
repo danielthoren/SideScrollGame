@@ -34,4 +34,8 @@ public class Map
     public List<CollisionListener> getGameObjectsCollision() {return gameObjectsCollision;}
 
     public Vec2 getGravity() {return gravity;}
+
+    public void removeSolidObject(Object object){
+        gameObjects.remove(object);
+    }
 }

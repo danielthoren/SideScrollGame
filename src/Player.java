@@ -152,6 +152,7 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
     }
 
     public void update(){
+        System.out.println(score);
         if (!isRunning){
             if (direction == Direction.RIGHT && body.getLinearVelocity().x > 0){
                 body.applyForceToCenter(new Vec2(-deceleration.x, 0));
@@ -245,7 +246,6 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
 
     public void endContact(Contact contact){
         if (contact.getFixtureA().getBody().getUserData().equals(this) && contact.getFixtureA().isSensor()){
-            System.out.println(((SensorStatus)contact.getFixtureA().getUserData()).getPosition());
             switch (((SensorStatus)contact.getFixtureA().getUserData()).getPosition()){
                 case DOWN : grounded = false;
                     break;
@@ -257,7 +257,6 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
             ((SensorStatus)contact.getFixtureA().getUserData()).setDrawSensor(false);
         }
         if (contact.getFixtureB().getBody().getUserData().equals(this) && contact.getFixtureB().isSensor()){
-            System.out.println(((SensorStatus)contact.getFixtureB().getUserData()).getPosition());
             switch (((SensorStatus)contact.getFixtureB().getUserData()).getPosition()){
                 case DOWN : grounded = false;
                     break;
@@ -294,4 +293,8 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
     }
 
     public int getID() {return ID;}
+
+    public void addScore(int score){
+        this.score += score;
+    }
 }

@@ -112,4 +112,5 @@ public class GameComponent extends Parent
     public static int getCurrentMapNumber() {
         return currentMapNumber;
     }
+
 }
