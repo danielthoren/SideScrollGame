@@ -51,8 +51,8 @@ public final class LoadMap {
             gameObjects.add(new DynamicSquare(world, new Vec2(1.3f, 1.5f), 0.3f, Color.AZURE, 0.4d, 0.4d));
             gameObjects.add(new Square(world, new Vec2(0f, 3f), 1f, Color.BEIGE, 0.4d, 6d));
             gameObjects.add(new Square(world, new Vec2(7f, 3f), 1f, Color.BEIGE, 0.4d, 6d));
-            gameObjects.add(new MovingPlatform(world, new Vec2(0f, 3f), 1f, Color.WHEAT, 1d, 0.1d, new Vec2(7f, 4f)));
-            gameObjects.add(new MovingPlatform(world, new Vec2(1f, 3f), 1f, Color.BISQUE, 1d, 0.1d, new Vec2(1f, 5f)));
+            gameObjects.add(new MovingPlatform(world, new Vec2(0f, 3f), 0.8f, Color.WHEAT, 1d, 0.1d, new Vec2(7f, 4f)));
+            gameObjects.add(new MovingPlatform(world, new Vec2(1f, 3f), 0.8f, Color.BISQUE, 1d, 0.1d, new Vec2(1f, 5f)));
             gameObjects.add(new Coin(world, new Vec2(2f, 4f), 1f, Color.GOLD, 0.2d));
 
             Square bottomSquare = new Square(world, new Vec2(0f, 5.5f), 0.8f, Color.AZURE, 14.35d, 0.4d);
@@ -64,9 +64,9 @@ public final class LoadMap {
             Vec2 position = new Vec2(6f, 0f);
             Vec2 acceleration = new Vec2(50f, 800f);
             Vec2 deceleration = new Vec2(100f, 0f);
-            Vec2 size = new Vec2(0.4f, 0.9f); //Must have a ration bigger than 1:2
-            float friction = 0.3f;
-            float density = 2f;
+            Vec2 size = new Vec2(0.3f, 0.8f); //Must have a ration bigger than 1:2
+            float friction = 1f;
+            float density = 1f;
 
             gameObjects.add(new DynamicSquare(world, new Vec2(position.x - 0.03f, position.y - 0.5f), 0.3f, Color.BROWN, 0.4d, 0.4d));
 
