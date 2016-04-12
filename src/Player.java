@@ -252,65 +252,36 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
 
     public void beginContact(Contact contact){
         if (contact.getFixtureA().getBody().getUserData().equals(this) && contact.getFixtureA().isSensor()){
-            switch (((SensorStatus)contact.getFixtureA().getUserData()).getPosition()){
-                case DOWN :
-                    grounded = true;
-                    contact.setFriction(100);
-                    break;
-                case LEFT:
-                    collisionLeft = true;
-                    contact.setFriction(0);
-                    break;
-                case RIGHT:
-                    collisionRight = true;
-                    contact.setFriction(0);
-                    break;
-            }
+            ((SensorStatus)contact.getFixtureA().getUserData()).setDrawSensor(true);
             ((SensorStatus)contact.getFixtureA().getUserData()).setDrawSensor(true);
 
             contact.setFriction(100);
         }
        	if (contact.getFixtureB().getBody().getUserData().equals(this) && contact.getFixtureB().isSensor()){
-            switch (((SensorStatus)contact.getFixtureB().getUserData()).getPosition()){
-                case DOWN :
-                    grounded = true;
-                    contact.setFriction(100);
-                    break;
-                case LEFT:
-                    collisionLeft = true;
-                    contact.setFriction(0);
-                    break;
-                case RIGHT:
-                    collisionRight = true;
-                    contact.setFriction(0);
-                    break;
-            }
+            ((SensorStatus)contact.getFixtureB().getUserData()).setDrawSensor(true);
             ((SensorStatus)contact.getFixtureB().getUserData()).setDrawSensor(true);
        	}
     }
 
     public void endContact(Contact contact){
         if (contact.getFixtureA().getBody().getUserData().equals(this) && contact.getFixtureA().isSensor()){
-            switch (((SensorStatus)contact.getFixtureA().getUserData()).getPosition()){
-                case DOWN : grounded = false;
-                    break;
-                case LEFT: collisionLeft = false;
-                    break;
-                case RIGHT: collisionRight = false;
-                    break;
-            }
+            sensorSwitch(contact.getFixtureA(), false);
             ((SensorStatus)contact.getFixtureA().getUserData()).setDrawSensor(false);
         }
         if (contact.getFixtureB().getBody().getUserData().equals(this) && contact.getFixtureB().isSensor()){
-            switch (((SensorStatus)contact.getFixtureB().getUserData()).getPosition()){
-                case DOWN : grounded = false;
-                    break;
-                case LEFT: collisionLeft = false;
-                    break;
-                case RIGHT: collisionRight = false;
-                    break;
-            }
+            sensorSwitch(contact.getFixtureB(), false);
             ((SensorStatus)contact.getFixtureB().getUserData()).setDrawSensor(false);
+            }
+    }
+
+    private void sensorSwitch(Fixture fixture, boolean setValue){
+        switch (((SensorStatus)fixture.getUserData()).getPosition()){
+            case DOWN : grounded = setValue;
+                break;
+            case LEFT: collisionLeft = setValue;
+                break;
+            case RIGHT: collisionRight = setValue;
+                break;
         }
     }
 
