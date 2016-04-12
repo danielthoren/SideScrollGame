@@ -1,3 +1,4 @@
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.World;
@@ -30,15 +31,17 @@ public final class LoadMap {
 
         World world = new World(getMapGravity(mapNumber));
 
-        List<DrawAndUpdateObject> gameObjects;
-        List<InputListener> gameObjectsListen;
-        List<CollisionListener> gameObjectsCollision;
         if (!maps.containsKey(mapNumber)){
+
+            List<DrawAndUpdateObject> gameObjects;
+            List<InputListener> gameObjectsListen;
+            List<CollisionListener> gameObjectsCollision;
+
             gameObjects = new ArrayList<DrawAndUpdateObject>(10);
             gameObjectsListen = new ArrayList<InputListener>(2);
             gameObjectsCollision = new ArrayList<CollisionListener>(2);
 
-
+            /*
             gameObjects.add(new DynamicSquare(world, new Vec2(1f, 2f), 0.3f, Color.BLUE, 0.4d, 0.4d));
             gameObjects.add(new DynamicSquare(world, new Vec2(1.5f, 2f), 0.3f, Color.AQUA, 0.4d, 0.4d));
             gameObjects.add(new DynamicSquare(world, new Vec2(1.3f, 0.5f), 0.3f, Color.AZURE, 0.4d, 0.4d));
@@ -47,9 +50,12 @@ public final class LoadMap {
             gameObjects.add(new DynamicSquare(world, new Vec2(2.3f, 0.5f), 0.3f, Color.AZURE, 0.4d, 0.4d));
             gameObjects.add(new DynamicSquare(world, new Vec2(1f, 3f), 0.3f, Color.BLUE, 0.4d, 0.4d));
             gameObjects.add(new DynamicSquare(world, new Vec2(1.5f, 3f), 0.3f, Color.AQUA, 0.4d, 0.4d));
-            gameObjects.add(new DynamicSquare(world, new Vec2(1.3f, 1.5f), 0.3f, Color.AZURE, 0.4d, 0.4d));
+            */
+            gameObjects.add(new DynamicSquare(world, new Vec2(1.3f, 1.5f), 0.3f, loadImage("textures/squareTextures/DessertSquare.jpg", new Vec2(0.4f, 0.4f))));
             gameObjects.add(new Square(world, new Vec2(0f, 3f), 1f, Color.BEIGE, 0.4d, 6d));
-            gameObjects.add(new Square(world, new Vec2(7f, 3f), 1f, Color.BEIGE, 0.4d, 6d));
+            gameObjects.add(new Square(world, new Vec2(7f, 3f), 1f, loadImage("/textures/squareTextures/DessertSquare.jpg", new Vec2(0.4f, 0.4f))));
+            Square bottomSquare = new Square(world, new Vec2(0f, 5.5f), 0.8f, Color.AZURE, 14.35d, 0.4d);
+            gameObjects.add(bottomSquare);
 
             gameObjects.add(new MovingPlatform(world, new Vec2(0f, 3f), 1f, Color.WHEAT, 1d, 0.1d, new Vec2(7f, 4f)));
             gameObjects.add(new MovingPlatform(world, new Vec2(1f, 3f), 1f, Color.BISQUE, 1d, 0.1d, new Vec2(1f, 5f)));
@@ -57,12 +63,6 @@ public final class LoadMap {
             Coin coin = (new Coin(world, new Vec2(2f, 4f), 1f, Color.GOLD, 0.2d, objectID++));
             gameObjectsCollision.add(coin);
             gameObjects.add(coin);
-
-            Square bottomSquare = new Square(world, new Vec2(0f, 5.5f), 0.8f, Color.AZURE, 14.35d, 0.4d);
-            //bottomSquare.body.setTransform(bottomSquare.center, -0.2f);
-            gameObjects.add(bottomSquare);
-
-            //gameObjects.add(new DynamicCircle(world, new Vec2(2f, 1f), 0.3f, 0.3f, 0.3f, Color.RED, 0.2d));
 
             Vec2 position = new Vec2(6f, 0f);
             Vec2 acceleration = new Vec2(50f, 800f);
@@ -81,6 +81,17 @@ public final class LoadMap {
             Map map = new Map(world, gameObjects, gameObjectsListen, gameObjectsCollision, getMapGravity(mapNumber));
             maps.put(mapNumber, map);
         }
+    }
+
+    private Image loadImage(String path, Vec2 size){
+        Image image;
+        try{
+            image = new Image("/textures/squareTextures/DessertSquare.jpg", GameComponent.metersToPix(size.x), GameComponent.metersToPix(size.y), false, false);
+        }
+        catch (NullPointerException | IllegalArgumentException e ){
+            image = new Image("textures/squareTextures/ErrorSquare.png", GameComponent.metersToPix(size.x), GameComponent.metersToPix(size.y), false, false);
+        }
+        return image;
     }
 
     public Vec2 getMapGravity(int mapNumber){
