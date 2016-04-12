@@ -23,7 +23,7 @@ public final class LoadMap {
     private LoadMap() {
         maps = new HashMap<Integer, Map>();
         objectID = 0;
-        pixPerMeter = 100;                                      //should be read from file in the future
+        pixPerMeter = 100;                                 //should be read from file in the future
     }
 
     public static LoadMap getInstance(){
