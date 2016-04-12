@@ -1,15 +1,11 @@
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextBuilder;
-import jdk.internal.util.xml.impl.Input;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.World;
 
 import java.util.*;
 
 /**
- * The singgelton that loads and holds the map.
+ * The singelton that loads and holds the map.
  */
 public final class LoadMap {
 
@@ -19,6 +15,7 @@ public final class LoadMap {
 
     private static float pixPerMeter;
     private static int objectID;
+
     private LoadMap() {
         maps = new HashMap<Integer, Map>();
         objectID = 0;
@@ -29,7 +26,10 @@ public final class LoadMap {
         return instance;
     }
 
-    public void loadMap(World world, Integer mapNumber){
+    public void loadMap(Integer mapNumber){
+
+        World world = new World(getMapGravity(mapNumber));
+
         List<DrawAndUpdateObject> gameObjects;
         List<InputListener> gameObjectsListen;
         List<CollisionListener> gameObjectsCollision;
@@ -78,7 +78,7 @@ public final class LoadMap {
             gameObjects.add(player);
             gameObjectsCollision.add(player);
 
-            Map map = new Map(gameObjects, gameObjectsListen, gameObjectsCollision, getMapGravity(mapNumber));
+            Map map = new Map(world, gameObjects, gameObjectsListen, gameObjectsCollision, getMapGravity(mapNumber));
             maps.put(mapNumber, map);
         }
     }
@@ -89,7 +89,7 @@ public final class LoadMap {
 
     public float getPixPerMeter(){return pixPerMeter;}
 
-    public Map getMap(Integer mapNumber){
+    public Map getMap(int mapNumber){
         return maps.get(mapNumber);
     }
 }

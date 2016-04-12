@@ -152,7 +152,6 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
     }
 
     public void update(){
-        System.out.println(score);
         if (!isRunning){
             if (direction == Direction.RIGHT && body.getLinearVelocity().x > 0){
                 body.applyForceToCenter(new Vec2(-deceleration.x, 0));
