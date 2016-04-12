@@ -13,31 +13,34 @@ import org.jbox2d.dynamics.FixtureDef;
 import org.jbox2d.dynamics.World;
 import org.jbox2d.dynamics.contacts.Contact;
 
+import java.sql.Time;
+
 public class Player extends SolidObject implements InputListener, DrawAndUpdateObject, CollisionListener
 {
     private Square playerSquare;
     private Direction direction;
     private World world;
-    Fixture groundSensor;
+    private JumpHandler currentJumpHandler;
     private Vec2 maxVelocity;
     private Vec2 acceleration;
     private Vec2 deceleration;
     private Vec2 size;
     private float restitution;
     private float density;
+    private final float sensorThickness;
     private int jumpCount;                                     //Keeps track of the times the player has jumped since last on the ground
     private boolean isRunning;
     private Boolean grounded;
     private Boolean collisionLeft;
     private Boolean collisionRight;
-    private static boolean drawSensors = true;                 //Used for debugging, draws the sensorFixtures of the player
-    private final int ID;
+    private static boolean drawSensors = true;                //Used for debugging, draws the sensorFixtures of the player
+    private final int ID;                                     //The unique id of the specific instance of player
     private int score;                                        // The score of the player
+    private long velocityZeroTimer;                            //Keeps track of how long the bodys y velocity has been 0
 
     public Player(int ID, World world, Vec2 position, float friction, float density, Vec2 acceleration, Vec2 deceleration, Vec2 size, Color color) {
         super(position, friction, color);
         this.ID = ID;
-        center = new Vec2(position.x + size.x/2, position.y + size.y/2);
         this.acceleration = acceleration;
         this.deceleration = deceleration;
         this.world = world;
@@ -46,6 +49,9 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
         this.density = density;
         restitution = 0;
         jumpCount = 0;
+        score = 0;
+        sensorThickness = size.x / 10;
+        velocityZeroTimer = -1;
         direction = Direction.NONE;
         isRunning = false;
         grounded = false;
@@ -54,8 +60,7 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
         //Default values, can be changed with setters
         maxVelocity = new Vec2(10f, 20f);
         createBody(world);
-        body.setUserData(this);
-        score = 0;
+        currentJumpHandler = new WallJumpHandler();
     }
 
     private void createBody(World world){
@@ -76,21 +81,21 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
         //Do note that the SetAsBox takes half of the width and half of the height then spanning said measurments
         //out on both sides of the centerpoint (bodyposition). The height of each element is first divided by two
         //(because the shapes takes half width and height) and then by 3 since there are 3 elements on a player.
-        float middleBoxHeight = (size.y - size.x);
+        Vec2 middleBoxSize = new Vec2(size.x - size.x / 50 , size.y - size.x);
         float radious = size.x/2;
         Vec2 upperCirclePos = new Vec2(0f, -((size.y - radious*4)/2) - radious);
         Vec2 bottomCirclePos = new Vec2(0f, ((size.y - radious*4)/2) + radious);
         Vec2 bottomSensorPos = new Vec2(0f, bottomCirclePos.y + radious);
-        Vec2 bottomSensorSize = new Vec2(size.x - size.x/2 , sensorThickness);
-        Vec2 leftSensorPos = new Vec2(-size.x, 0f);
+        Vec2 bottomSensorSize = new Vec2(size.x - size.x/4 , sensorThickness * 2);
+        Vec2 leftSensorPos = new Vec2(-size.x / 2 - sensorThickness, 0f);
         Vec2 leftSensorSize = new Vec2(sensorThickness, size.y - size.y/5);
-        Vec2 rightSensorPos = new Vec2(size.x, 0f);
+        Vec2 rightSensorPos = new Vec2(size.x/2 + sensorThickness, 0f);
         Vec2 rightSensorSize = new Vec2(sensorThickness, size.y - size.y/5);
 
         //Initializing the shapes
         upperCircleShape.setRadius(size.x/2);
         bottomCircleShape.setRadius(size.x/2);
-        middleBoxShape.setAsBox(size.x/2, middleBoxHeight / 2);
+        middleBoxShape.setAsBox(middleBoxSize.x/2, middleBoxSize.y / 2);
         bottomSensorShape.setAsBox(bottomSensorSize.x / 2, bottomSensorSize.y / 2, bottomSensorPos, 0);
         leftSensorShape.setAsBox(leftSensorSize.x / 2, leftSensorSize.y / 2, leftSensorPos, 0);
         rightSensorShape.setAsBox(rightSensorSize.x / 2, rightSensorSize.y / 2, rightSensorPos, 0);
@@ -110,7 +115,6 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
         middleBox.density = density;
         middleBox.friction = 0;
         middleBox.restitution = restitution;
-        middleBox.userData = new Vec2(size.x, middleBoxHeight);
         middleBox.isSensor = false;
         bottomCircle.shape = bottomCircleShape;
         bottomCircle.density = density;
@@ -136,9 +140,9 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
 
         //Creating the body using the fixtureDef and the BodyDef created beneath
         BodyDef bodyDef = new BodyDef();
-        bodyDef.position.set(center);
+        bodyDef.position.set(pos);
         body = world.createBody(bodyDef);
-        if (middleBoxHeight > 0){body.createFixture(middleBox);}
+        if (middleBoxSize.y > 0){body.createFixture(middleBox);}
         body.createFixture(upperCircle);
         body.createFixture(bottomCircle);
         body.createFixture(bottomSensor);
@@ -152,24 +156,53 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
     }
 
     public void update(){
-        if (!isRunning){
-            if (direction == Direction.RIGHT && body.getLinearVelocity().x > 0){
+        runHandler();
+
+        //Ensures that the sensorvalue is not wrong. If velocity.y is 0 for two frames then the character is grounded
+        if (body.getLinearVelocity().y > -0.000001 && body.getLinearVelocity().y < 0.000001 && !grounded){
+            if (velocityZeroTimer == -1){velocityZeroTimer = System.currentTimeMillis();}
+            else if (System.currentTimeMillis() - velocityZeroTimer >= 32){
+                velocityZeroTimer = -1;
+                grounded = true;
+            }
+        }
+        else{
+            velocityZeroTimer = -1;
+        }
+    }
+
+    /**
+     * Handles the acceleration and deceleration of the character
+     */
+    private void runHandler(){
+        //Decelerating the player from running to a stop
+        if (!isRunning && grounded){
+            if (body.getLinearVelocity().x > deceleration.x / 4){
                 body.applyForceToCenter(new Vec2(-deceleration.x, 0));
             }
-            else if (direction == Direction.LEFT && body.getLinearVelocity().x < 0){
+            else if (body.getLinearVelocity().x < -deceleration.x / 4){
                 body.applyForceToCenter(new Vec2(deceleration.x, 0));
             }
             else{
                 body.setLinearVelocity(new Vec2(0f, body.getLinearVelocity().y));
             }
         }
-        else{
-            //Code for smooth dexeleration when keys released
+        if (isRunning && grounded){
+            //Code for smooth acceleration when on the ground
             if (direction == Direction.RIGHT && body.getLinearVelocity().x < maxVelocity.x){
                 body.applyForceToCenter(new Vec2(acceleration.x, 0));
             }
             else if (direction == Direction.LEFT && body.getLinearVelocity().x > -maxVelocity.x){
                 body.applyForceToCenter(new Vec2(-acceleration.x, 0));
+            }
+        }
+        else if (isRunning && !grounded){
+            //Code for smooth acceleration when in the air
+            if (direction == Direction.RIGHT && body.getLinearVelocity().x < maxVelocity.x){
+                body.applyForceToCenter(new Vec2(acceleration.x / 10, 0));
+            }
+            else if (direction == Direction.LEFT && body.getLinearVelocity().x > -maxVelocity.x){
+                body.applyForceToCenter(new Vec2(-acceleration.x / 10, 0));
             }
         }
     }
@@ -222,21 +255,34 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
             switch (((SensorStatus)contact.getFixtureA().getUserData()).getPosition()){
                 case DOWN :
                     grounded = true;
+                    contact.setFriction(100);
                     break;
-                case LEFT: collisionLeft = true;
+                case LEFT:
+                    collisionLeft = true;
+                    contact.setFriction(0);
                     break;
-                case RIGHT: collisionRight = true;
+                case RIGHT:
+                    collisionRight = true;
+                    contact.setFriction(0);
                     break;
             }
             ((SensorStatus)contact.getFixtureA().getUserData()).setDrawSensor(true);
+
+            contact.setFriction(100);
         }
        	if (contact.getFixtureB().getBody().getUserData().equals(this) && contact.getFixtureB().isSensor()){
             switch (((SensorStatus)contact.getFixtureB().getUserData()).getPosition()){
-                case DOWN : grounded = true;
+                case DOWN :
+                    grounded = true;
+                    contact.setFriction(100);
                     break;
-                case LEFT: collisionLeft = true;
+                case LEFT:
+                    collisionLeft = true;
+                    contact.setFriction(0);
                     break;
-                case RIGHT: collisionRight = true;
+                case RIGHT:
+                    collisionRight = true;
+                    contact.setFriction(0);
                     break;
             }
             ((SensorStatus)contact.getFixtureB().getUserData()).setDrawSensor(true);
@@ -269,8 +315,7 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
     }
 
     private void jump(){
-        float impulse = body.getMass() * 5;
-        body.applyLinearImpulse(new Vec2(0f, -impulse), body.getWorldCenter());
+        currentJumpHandler.jump(this);
     }
 
     /**
@@ -290,6 +335,12 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
     public void setMaxVelocity(Vec2 maxVelocity){
         this.maxVelocity = maxVelocity;
     }
+
+    public boolean getGrounded() {return grounded;}
+
+    public boolean getLeftCollision() {return collisionLeft;}
+
+    public boolean getRightCollision() {return collisionRight;}
 
     public int getID() {return ID;}
 

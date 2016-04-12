@@ -67,9 +67,9 @@ public final class LoadMap {
             Vec2 position = new Vec2(6f, 0f);
             Vec2 acceleration = new Vec2(50f, 800f);
             Vec2 deceleration = new Vec2(100f, 0f);
-            Vec2 size = new Vec2(0.4f, 0.9f); //Must have a ration bigger than 1:2
-            float friction = 0.3f;
-            float density = 2f;
+            Vec2 size = new Vec2(0.3f, 0.8f); //Must have a ration bigger than 1:2
+            float friction = 1f;
+            float density = 1f;
 
             gameObjects.add(new DynamicSquare(world, new Vec2(position.x - 0.03f, position.y - 0.5f), 0.3f, Color.BROWN, 0.4d, 0.4d));
 

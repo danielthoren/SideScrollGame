@@ -20,8 +20,6 @@ public class SolidObject {
     protected Color color;    //The color of the square (=none if no color)
     protected float friction; //The friction of the square´s body
 
-    protected static final float sensorThickness = 0.05f;       //Holds the constant sensor thickness
-
     /**
      * The default constructor of the class. Should never be used!
      */
