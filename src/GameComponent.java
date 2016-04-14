@@ -32,13 +32,12 @@ public class GameComponent extends Parent
         this.height = height;
         this.width = width;
 
-        world = new World(LoadMap.getInstance().getMapGravity(currentMapNumber));
+        LoadMap.getInstance().loadMap(currentMapNumber);
+        currentMap = LoadMap.getInstance().getMap(currentMapNumber);
+        world = currentMap.getWorld();
+
         contactListenerGame = new ContactListenerGame();
         world.setContactListener(contactListenerGame);
-        world.setAllowSleep(false);
-
-        LoadMap.getInstance().loadMap(world, currentMapNumber);
-        currentMap = LoadMap.getInstance().getMap(currentMapNumber);
 
         velocityIterations = 6;  //Accuracy of jbox2d velocity simulation
         positionIterations = 3;  //Accuracy of jbox2d position simulation
@@ -112,4 +111,5 @@ public class GameComponent extends Parent
     public static int getCurrentMapNumber() {
         return currentMapNumber;
     }
+
 }

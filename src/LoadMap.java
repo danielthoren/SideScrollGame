@@ -1,16 +1,11 @@
 import javafx.scene.paint.Color;
-import jdk.internal.util.xml.impl.Input;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.World;
 
-import java.util.AbstractMap;
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 /**
- * The singgelton that loads and holds the map.
+ * The singelton that loads and holds the map.
  */
 public final class LoadMap {
 
@@ -20,6 +15,7 @@ public final class LoadMap {
 
     private static float pixPerMeter;
     private static int objectID;
+
     private LoadMap() {
         maps = new HashMap<Integer, Map>();
         objectID = 0;
@@ -30,7 +26,10 @@ public final class LoadMap {
         return instance;
     }
 
-    public void loadMap(World world, Integer mapNumber){
+    public void loadMap(Integer mapNumber){
+
+        World world = new World(getMapGravity(mapNumber));
+
         List<DrawAndUpdateObject> gameObjects;
         List<InputListener> gameObjectsListen;
         List<CollisionListener> gameObjectsCollision;
@@ -51,9 +50,13 @@ public final class LoadMap {
             gameObjects.add(new DynamicSquare(world, new Vec2(1.3f, 1.5f), 0.3f, Color.AZURE, 0.4d, 0.4d));
             gameObjects.add(new Square(world, new Vec2(0f, 3f), 1f, Color.BEIGE, 0.4d, 6d));
             gameObjects.add(new Square(world, new Vec2(7f, 3f), 1f, Color.BEIGE, 0.4d, 6d));
-            gameObjects.add(new MovingPlatform(world, new Vec2(0f, 3f), 0.8f, Color.WHEAT, 1d, 0.1d, new Vec2(7f, 4f)));
-            gameObjects.add(new MovingPlatform(world, new Vec2(1f, 3f), 0.8f, Color.BISQUE, 1d, 0.1d, new Vec2(1f, 5f)));
-            gameObjects.add(new Coin(world, new Vec2(2f, 4f), 1f, Color.GOLD, 0.2d));
+
+            gameObjects.add(new MovingPlatform(world, new Vec2(0f, 3f), 1f, Color.WHEAT, 1d, 0.1d, new Vec2(7f, 4f)));
+            gameObjects.add(new MovingPlatform(world, new Vec2(1f, 3f), 1f, Color.BISQUE, 1d, 0.1d, new Vec2(1f, 5f)));
+
+            Coin coin = (new Coin(world, new Vec2(2f, 4f), 1f, Color.GOLD, 0.2d, objectID++));
+            gameObjectsCollision.add(coin);
+            gameObjects.add(coin);
 
             Square bottomSquare = new Square(world, new Vec2(0f, 5.5f), 0.8f, Color.AZURE, 14.35d, 0.4d);
             //bottomSquare.body.setTransform(bottomSquare.center, -0.2f);
@@ -75,7 +78,7 @@ public final class LoadMap {
             gameObjects.add(player);
             gameObjectsCollision.add(player);
 
-            Map map = new Map(gameObjects, gameObjectsListen, gameObjectsCollision, getMapGravity(mapNumber));
+            Map map = new Map(world, gameObjects, gameObjectsListen, gameObjectsCollision, getMapGravity(mapNumber));
             maps.put(mapNumber, map);
         }
     }
@@ -86,7 +89,7 @@ public final class LoadMap {
 
     public float getPixPerMeter(){return pixPerMeter;}
 
-    public Map getMap(Integer mapNumber){
+    public Map getMap(int mapNumber){
         return maps.get(mapNumber);
     }
 }

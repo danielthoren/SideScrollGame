@@ -343,4 +343,8 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
     public boolean getRightCollision() {return collisionRight;}
 
     public int getID() {return ID;}
+
+    public void addScore(int score){
+        this.score += score;
+    }
 }
