@@ -95,7 +95,6 @@ public class MovingPlatform extends Square{
      * is equal to the platform speed.
      */
     private void calculateVelocity() {
-        System.out.println(endPos.x-startPos.x);
         //If endpos.x == startpos.x it means that the platform will only move
         //in the y-direction. Therefore setting this speed in a different if-statement
         // so we dont get division by zero.

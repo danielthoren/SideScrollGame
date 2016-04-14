@@ -30,9 +30,9 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
     private final float sensorThickness;
     private int jumpCount;                                     //Keeps track of the times the player has jumped since last on the ground
     private boolean isRunning;
-    private Boolean grounded;
-    private Boolean collisionLeft;
-    private Boolean collisionRight;
+    private boolean grounded;
+    private boolean collisionLeft;
+    private boolean collisionRight;
     private static boolean drawSensors = true;                //Used for debugging, draws the sensorFixtures of the player
     private final int ID;                                     //The unique id of the specific instance of player
     private int score;                                        // The score of the player
