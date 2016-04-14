@@ -71,10 +71,10 @@ public final class LoadMap {
             Vec2 size = new Vec2(0.3f, 0.8f); //Must have a ration bigger than 1:2
             float friction = 1f;
             float density = 1f;
+            Sprite sprite = new Sprite(loadImage("/textures/sprites/ExplosionSprite.png", new Vec2(0,0)), 5, 5, 25, 2);
 
-            gameObjects.add(new DynamicSquare(world, new Vec2(position.x - 0.03f, position.y - 0.5f), 0.3f, Color.BROWN, 0.4d, 0.4d));
-
-            Player player = new Player(objectID++, world, position, friction, density, acceleration, deceleration, size, Color.BLUE);
+            //Player player = new Player(objectID++, world, position, friction, density, acceleration, deceleration, size, Color.BLUE);
+            Player player = new Player(objectID++, world, position, friction, density, acceleration, deceleration, sprite);
             gameObjectsListen.add(player);
             gameObjects.add(player);
             gameObjectsCollision.add(player);
@@ -87,7 +87,12 @@ public final class LoadMap {
     private Image loadImage(String path, Vec2 size){
         Image image;
         try{
-            image = new Image(path, GameComponent.metersToPix(size.x), GameComponent.metersToPix(size.y), false, false);
+            if (size.x == 0 || size.y == 0){
+                image = new Image(path);
+            }
+            else {
+                image = new Image(path, GameComponent.metersToPix(size.x), GameComponent.metersToPix(size.y), false, false);
+            }
         }
         catch (NullPointerException | IllegalArgumentException e ){
             image = new Image("textures/squareTextures/ErrorSquare.png", GameComponent.metersToPix(size.x), GameComponent.metersToPix(size.y), false, false);

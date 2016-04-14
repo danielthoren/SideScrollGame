@@ -21,6 +21,7 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
     private Direction direction;
     private World world;
     private JumpHandler currentJumpHandler;
+    private Sprite sprite;
     private Vec2 maxVelocity;
     private Vec2 acceleration;
     private Vec2 deceleration;
@@ -36,7 +37,32 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
     private static boolean drawSensors = true;                //Used for debugging, draws the sensorFixtures of the player
     private final int ID;                                     //The unique id of the specific instance of player
     private int score;                                        // The score of the player
-    private long velocityZeroTimer;                            //Keeps track of how long the bodys y velocity has been 0
+    private long velocityZeroTimer;                           //Keeps track of how long the bodys y velocity has been 0
+
+    public Player(int ID, World world, Vec2 position, float friction, float density, Vec2 acceleration, Vec2 deceleration, Sprite sprite) {
+        super(position, friction, sprite.getImageView().getImage());
+        this.ID = ID;
+        this.acceleration = acceleration;
+        this.deceleration = deceleration;
+        this.world = world;
+        this.size = new Vec2((float) sprite.getImageView().getX(), (float) sprite.getImageView().getY());
+        this.density = density;
+        restitution = 0;
+        jumpCount = 0;
+        score = 0;
+        sprite = sprite;
+        sensorThickness = size.x / 10;
+        velocityZeroTimer = -1;
+        direction = Direction.NONE;
+        isRunning = false;
+        grounded = false;
+        collisionLeft = false;
+        collisionRight = false;
+        //Default values, can be changed with setters
+        maxVelocity = new Vec2(10f, 20f);
+        createBody(world);
+        currentJumpHandler = new WallJumpHandler();
+    }
 
     public Player(int ID, World world, Vec2 position, float friction, float density, Vec2 acceleration, Vec2 deceleration, Vec2 size, Color color) {
         super(position, friction, color);
@@ -50,6 +76,7 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
         restitution = 0;
         jumpCount = 0;
         score = 0;
+        sprite = null;
         sensorThickness = size.x / 10;
         velocityZeroTimer = -1;
         direction = Direction.NONE;
@@ -209,18 +236,18 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
 
     @Override
     public void draw(GraphicsContext gc) {
-        if (body == null) {
-            playerSquare.draw(gc);
-        } else {
+        if (sprite != null){
+            this.image = sprite.getImageView().getImage();
+            super.drawSquare(gc, pos, (double) size.x, (double) size.y);
+        }
+        else {
             for (Fixture fixture = body.getFixtureList(); fixture != null; fixture = fixture.getNext()) {
-                if (fixture.getType() == ShapeType.CIRCLE){
+                if (fixture.getType() == ShapeType.CIRCLE) {
                     drawCircleFixture(gc, fixture);
-                }
-                else if (fixture.getType() == ShapeType.POLYGON && !fixture.isSensor()){
+                } else if (fixture.getType() == ShapeType.POLYGON && !fixture.isSensor()) {
                     drawBoxPolygonFixture(gc, fixture);
-                }
-                else if (fixture.getType() == ShapeType.POLYGON && fixture.isSensor() && drawSensors){
-                    drawSensor(gc, fixture, ((SensorStatus)fixture.getUserData()).isDrawSensor());
+                } else if (fixture.getType() == ShapeType.POLYGON && fixture.isSensor() && drawSensors) {
+                    drawSensor(gc, fixture, ((SensorStatus) fixture.getUserData()).isDrawSensor());
                 }
             }
         }
