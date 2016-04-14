@@ -40,7 +40,6 @@ public class Circle extends SolidObject implements DrawAndUpdateObject {
 	public Circle(World world, Vec2 pos, float friction, Color color, double radious){
 		super(pos, friction, color);
 		this.radious = radious;
-		center = new Vec2(pos.x + this.radious.floatValue()/2, pos.y + this.radious.floatValue()/2);
 
 		createBody(world);
 		body.setUserData(this);
@@ -66,7 +65,7 @@ public class Circle extends SolidObject implements DrawAndUpdateObject {
 
 		//Creating the body using the fixtureDef and the BodyDef created beneath
 		BodyDef bodyDef = new BodyDef();
-		bodyDef.position.set(center);
+		bodyDef.position.set(pos);
 		body = world.createBody(bodyDef);
 		body.createFixture(fixtureDef);
 		body.setType(BodyType.STATIC);

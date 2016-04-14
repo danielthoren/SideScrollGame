@@ -54,7 +54,6 @@ public class Coin extends Circle implements CollisionListener {
      */
     public void beginContact(Contact contact){
         if (contact.getFixtureA().getBody().getUserData().equals(this) && contact.getFixtureB().getBody().getUserData() instanceof Player){
-            System.out.println("Ja");
             ((Player) contact.getFixtureB().getBody().getUserData()).addScore(points);
             Map map = LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber());
             map.removeBody(body);
@@ -62,7 +61,6 @@ public class Coin extends Circle implements CollisionListener {
             map.removeDrawAndUpdateObject(this);
         }
         else if (contact.getFixtureB().getBody().getUserData().equals(this) && contact.getFixtureA().getBody().getUserData() instanceof Player){
-            System.out.println("Ja");
             ((Player) contact.getFixtureA().getBody().getUserData()).addScore(points);
             Map map = LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber());
             map.removeBody(body);

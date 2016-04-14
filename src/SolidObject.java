@@ -14,7 +14,6 @@ import org.jbox2d.dynamics.contacts.ContactEdge;
  */
 public class SolidObject {
     protected Vec2 pos;     //The position of the upper left corner of the square in meters
-    protected Vec2 center;  //The center position of the square in meters (calculated using 'pos', 'height' and 'width')
     protected Body body;    //The body of the square
     protected Image image;    //The image representing the square in the visual realm (=none if no image)
     protected Color color;    //The color of the square (=none if no color)
@@ -25,7 +24,6 @@ public class SolidObject {
      */
     protected SolidObject(){                                                                                   //Why is a default constructor needed and what does it do ?
         this.pos = null;
-        this.center = null;
         this.body = null;
         this.image = null;
         this.color = null;
@@ -42,9 +40,6 @@ public class SolidObject {
         this.friction = friction;
         this.pos = pos;
         color = null;
-        Double imHeight = image.getHeight();
-        Double imWIdth = image.getWidth();
-        center = new Vec2(pos.x + (imWIdth.floatValue()/2), pos.y + (imHeight.floatValue()/2));
     }
 
     /**
@@ -58,7 +53,6 @@ public class SolidObject {
         this.pos = pos;
         this.color = color;
         this.image = null;
-        center = null;
     }
 
     /**
