@@ -40,17 +40,18 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
     private long velocityZeroTimer;                           //Keeps track of how long the bodys y velocity has been 0
 
     public Player(int ID, World world, Vec2 position, float friction, float density, Vec2 acceleration, Vec2 deceleration, Sprite sprite) {
-        super(position, friction, sprite.getImageView().getImage());
+        super(position, friction);
         this.ID = ID;
         this.acceleration = acceleration;
         this.deceleration = deceleration;
         this.world = world;
-        this.size = new Vec2((float) sprite.getImageView().getX(), (float) sprite.getImageView().getY());
+        System.out.println(sprite.getSpriteWindowSize());
+        this.size = new Vec2(GameComponent.pixToMeters(sprite.getSpriteWindowSize().x), GameComponent.pixToMeters(sprite.getSpriteWindowSize().y));
         this.density = density;
+        this.sprite = sprite;
         restitution = 0;
         jumpCount = 0;
         score = 0;
-        sprite = sprite;
         sensorThickness = size.x / 10;
         velocityZeroTimer = -1;
         direction = Direction.NONE;
@@ -186,7 +187,7 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
         runHandler();
 
         //Ensures that the sensorvalue is not wrong. If velocity.y is 0 for two frames then the character is grounded
-        if (body.getLinearVelocity().y > -0.000001 && body.getLinearVelocity().y < 0.000001 && !grounded){
+        if (body.getLinearVelocity().y > -0.01 && body.getLinearVelocity().y < 0.01 && !grounded){
             if (velocityZeroTimer == -1){velocityZeroTimer = System.currentTimeMillis();}
             else if (System.currentTimeMillis() - velocityZeroTimer >= 32){
                 velocityZeroTimer = -1;
@@ -195,6 +196,18 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
         }
         else{
             velocityZeroTimer = -1;
+        }
+
+        //Handling updates for the sprite if the player has one.
+        if (sprite != null){
+
+            if (!isRunning){sprite.freezeOnFrame(8, 1);}
+            else{sprite.startSprite();}
+            //Updating the sprites position so that the sprite is drawn over the player body.
+            sprite.setPosition(body.getPosition());
+            //Flips the sprite to make the playerSprite appear to be facing the correct direction.
+            if (direction == Direction.LEFT){sprite.setFlip(false);}
+            else {sprite.setFlip(true);}
         }
     }
 
@@ -237,8 +250,6 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
     @Override
     public void draw(GraphicsContext gc) {
         if (sprite != null){
-            this.image = sprite.getImageView().getImage();
-            super.drawSquare(gc, pos, (double) size.x, (double) size.y);
         }
         else {
             for (Fixture fixture = body.getFixtureList(); fixture != null; fixture = fixture.getNext()) {

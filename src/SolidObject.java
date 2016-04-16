@@ -30,6 +30,19 @@ public class SolidObject {
     }
 
     /**
+     * Sets variables for a Solid Object with static position and collision properites. Note that the object will not
+     * be drawn unless a image or color is added first.
+     * @param pos The position at wich to place the Object (units in meters)
+     * @param friction The friction of the body
+     */
+    public SolidObject(Vec2 pos, float friction) {
+        this.friction = friction;
+        this.pos = pos;
+        color = null;
+        image = null;
+    }
+
+    /**
      * Sets variables for a Solid Object with static position and collision properites.
      * @param pos The position at wich to place the Object (units in meters)
      * @param friction The friction of the body
@@ -74,23 +87,7 @@ public class SolidObject {
         float halfWidth = GameComponent.metersToPix(width.floatValue()) / 2;
         float halfHeight = GameComponent.metersToPix(height.floatValue()) / 2;
         if (image == null){gc.fillRect(-halfWidth, -halfHeight, 2 * halfWidth, 2 * halfHeight);}
-        else{gc.drawImage(image, -halfWidth, -halfHeight, 2 * halfWidth, 2 * halfHeight);}
-        //Popping the stack, removing the top element, thus leaving the original xy-plane at the top
-        gc.restore();
-    }
-
-    public static void drawImage(GraphicsContext gc, Image image, Vec2 pos, float angle){
-        //Saving the current xy-plane to the gc stack
-        gc.save();
-        //Translating the original gc xy-plane to a new xy-plane with its origin in the center of this body and saving the
-        //new xy-plane on top of the stack
-        gc.translate(GameComponent.metersToPix(pos.x), GameComponent.metersToPix(pos.y));
-        //Rotating the top xy-plane of the stack (the one created above) to the current degree of the body
-        gc.rotate(Math.toDegrees(angle));
-        //Drawing the image
-        double halfWidth = image.getWidth()/2;
-        double halfHeight = image.getHeight()/2;
-        gc.drawImage(image, -halfWidth, -halfHeight);
+        else if (color != null){gc.drawImage(image, -halfWidth, -halfHeight, 2 * halfWidth, 2 * halfHeight);}
         //Popping the stack, removing the top element, thus leaving the original xy-plane at the top
         gc.restore();
     }
@@ -113,7 +110,7 @@ public class SolidObject {
         gc.setFill(color);
         float pixRadious  = GameComponent.metersToPix(radious.floatValue());
         if (image == null) {gc.fillOval(-pixRadious, -pixRadious, 2 * pixRadious, 2 * pixRadious);}
-        else {gc.drawImage(image, -pixRadious/2, pixRadious/2);}
+        else if (color != null) {gc.drawImage(image, -pixRadious/2, pixRadious/2);}
         //Popping the stack, removing the top element, thus leaving the original xy-plane at the top
         gc.restore();
     }
@@ -153,7 +150,13 @@ public class SolidObject {
         drawCircle(gc, fixturePos, radious.doubleValue());
     }
 
-
+    /**
+     * Function that draws a given sensor. The sensor is drawn green if 'isTriggered' is false, else the sensor is drawn
+     * red.
+     * @param gc The graphicsContext with wich to draw.
+     * @param sensor The 'Fixture' of the sensor to draw.
+     * @param isTriggered A boolean value that is true if the sensor is currently colliding, and false otherwise.
+     */
     protected void drawSensor(GraphicsContext gc, Fixture sensor, boolean isTriggered){
         Color tmpColor = color;
         if (isTriggered) {color = Color.GREEN;}

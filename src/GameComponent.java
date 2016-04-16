@@ -2,7 +2,9 @@ import javafx.event.EventHandler;
 import javafx.scene.Parent;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
+import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.World;
 
 /**
@@ -88,6 +90,22 @@ public class GameComponent extends Parent
         }
     }
 
+    public static void drawImage(GraphicsContext gc, Image image, Vec2 pos, float angle){
+        //Saving the current xy-plane to the gc stack
+        gc.save();
+        //Translating the original gc xy-plane to a new xy-plane with its origin in the center of this body and saving the
+        //new xy-plane on top of the stack
+        gc.translate(GameComponent.metersToPix(pos.x), GameComponent.metersToPix(pos.y));
+        //Rotating the top xy-plane of the stack (the one created above) to the current degree of the body
+        gc.rotate(Math.toDegrees(angle));
+        //Drawing the image
+        double halfWidth = image.getWidth()/2;
+        double halfHeight = image.getHeight()/2;
+        gc.drawImage(image, -halfWidth, -halfHeight);
+        //Popping the stack, removing the top element, thus leaving the original xy-plane at the top
+        gc.restore();
+    }
+
     /**
      * Converts the input meters (world coordinates) to pixels (java Fx coordinates) using the scale factor loaded in
      * the 'MapLoader' singgelton.
@@ -97,6 +115,7 @@ public class GameComponent extends Parent
     public static float metersToPix(float meters){
         return meters * LoadMap.getInstance().getPixPerMeter();
     }
+
 
     /**
      * Converts the input pixels (java Fx coordinates) to meters (world coordinates) using the scale factor loaded in

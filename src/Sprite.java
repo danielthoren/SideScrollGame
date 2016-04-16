@@ -10,53 +10,96 @@ import org.jbox2d.common.Vec2;
  */
 public class Sprite implements DrawAndUpdateObject {
 
-    private Image image;          //Holds the SpriteImage
-    private int columns;          //Holds the amount of columns in the image
-    private int rows;             //Holds the amount of rows in the image
+    private final Image image;          //Holds the SpriteImage
+    private final int columns;          //Holds the amount of columns in the image
+    private final int rows;             //Holds the amount of rows in the image
     private int updateInterval;   //Holds the amount of frames before changing image
     private int numberOfFrames;
     private int currFrameNumber;
     private int currFramesSinceUpdate;
-    private Animation animation;
-    private ImageView imageView;
     private Vec2 currentOffset;
+    private Vec2 stopFrame;
     private final Vec2 spriteWindowSize;
     private Vec2 position;
+    private float angle;
+    private boolean flip;
+    private boolean freeze;
 
-    public Sprite(Image image, int columns, int rows, int numberOfFrames, int updateInterval) {
+    public Sprite(Image image, int columns, int rows, int numberOfFrames, int updateInterval, Vec2 position, float angle) {
         this.columns = columns;
+        this.angle = angle;
         this.image = image;
+        this.position = position;
         this.rows = rows;
         this.numberOfFrames = numberOfFrames;
         this.updateInterval = updateInterval;
-        position = new Vec2(0,0);
-        currentOffset = new Vec2(1,1);
+        currentOffset = new Vec2(0,0);
+        stopFrame = new Vec2(0,0);
+        flip = false;
+        freeze = false;
         spriteWindowSize = new Vec2((float) image.getWidth() / columns, (float) image.getHeight() / rows);
         currFramesSinceUpdate = 0;
-        imageView = new ImageView(image);
-        imageView.setViewport(new Rectangle2D(0, 0, spriteWindowSize.x, spriteWindowSize.y));
     }
 
     public void update(){
-        currFramesSinceUpdate++;
-        if (currFrameNumber > updateInterval){
-            if (currFrameNumber >= numberOfFrames){
-                currentOffset.x = 0;
-                currentOffset.y = 0;
-                currFrameNumber = 0;
+        if (!freeze) {
+            currFramesSinceUpdate++;
+            if (currFramesSinceUpdate > updateInterval) {
+                //Checking if the end of the spriteanimation has been reached. If so then reset all parameters.
+                if (currFrameNumber >= numberOfFrames - 1) {
+                    currentOffset.x = 0;
+                    currentOffset.y = 0;
+                    currFrameNumber = 0;
+                }
+                //Checking if the end of the columns has been reached, if so add one to rowOffset and reset columnOffset.
+                if (currentOffset.x >= columns - 1) {
+                    currentOffset.x = 0;
+                    currentOffset.y += 1;
+                } else {
+                    currentOffset.x++;
+                }
+                currFramesSinceUpdate = 0;
+                currFrameNumber++;
             }
-            currentOffset.x += spriteWindowSize.x;
-            currentOffset.y += spriteWindowSize.y;
-            imageView.getViewport().contains(currentOffset.x, currentOffset.y, spriteWindowSize.x, spriteWindowSize.y);
-            //imageView.setViewport(new Rectangle2D(currentOffset.x, currentOffset.y, spriteWindowSize.x, spriteWindowSize.y));
         }
     }
 
     public void draw(GraphicsContext gc){
-        SolidObject.drawImage(gc, , position, 0);
+        //Saving the current xy-plane to the gc stack
+        gc.save();
+        //Translating the original gc xy-plane to a new xy-plane with its origin in the center of this body and saving the
+        //new xy-plane on top of the stack
+        gc.translate(GameComponent.metersToPix(position.x), GameComponent.metersToPix(position.y));
+        //Rotating the top xy-plane of the stack (the one created above) to the current degree of the body
+        gc.rotate(Math.toDegrees(angle));
+        //Drawing the body so that the center of the visual representation is in the new xy-planes origin
+
+        if (flip){
+            gc.drawImage(image, currentOffset.x * spriteWindowSize.x, currentOffset.y * spriteWindowSize.y, spriteWindowSize.x, spriteWindowSize.y,
+                    spriteWindowSize.x / 2, -spriteWindowSize.y / 2, -spriteWindowSize.x, spriteWindowSize.y);
+        }
+        else {
+            gc.drawImage(image, currentOffset.x * spriteWindowSize.x, currentOffset.y * spriteWindowSize.y, spriteWindowSize.x, spriteWindowSize.y,
+                    -spriteWindowSize.x / 2, -spriteWindowSize.y / 2, spriteWindowSize.x, spriteWindowSize.y);
+        }
+        //Popping the stack, removing the top element, thus leaving the original xy-plane at the top
+        gc.restore();
     }
 
-    public ImageView getImageView() {
-        return imageView;
+    public void freezeOnFrame(int column, int row){
+        freeze = true;
+        currentOffset.x = column - 1;
+        currentOffset.y = row - 1;
+        currFrameNumber = (row - 1)*columns + column;
     }
+
+    public void startSprite(){
+        freeze = false;
+    }
+
+    public void setFlip(boolean flip) {this.flip = flip;}
+
+    public Vec2 getSpriteWindowSize() {return spriteWindowSize;}
+
+    public void setPosition(Vec2 position) {this.position = position;}
 }
