@@ -47,21 +47,21 @@ public final class LoadMap {
             gameObjects.add(new DynamicSquare(world, new Vec2(1f, 2f), 0.3f, Color.BLUE, 0.4d, 0.4d));
             gameObjects.add(new DynamicSquare(world, new Vec2(1.5f, 2f), 0.3f, Color.AQUA, 0.4d, 0.4d));
             gameObjects.add(new DynamicSquare(world, new Vec2(1.3f, 0.5f), 0.3f, Color.AZURE, 0.4d, 0.4d));
-            /*
+
             gameObjects.add(new DynamicSquare(world, new Vec2(2f, 2f), 0.3f, loadImage("textures/squareTextures/StoneBrickWall.jpg", new Vec2(0.4f, 0.4f))));
             gameObjects.add(new DynamicSquare(world, new Vec2(2.5f, 2f), 0.3f, loadImage("textures/squareTextures/StoneBrickWall.jpg", new Vec2(0.4f, 0.4f))));
             gameObjects.add(new DynamicSquare(world, new Vec2(2.3f, 0.5f), 0.3f, loadImage("textures/squareTextures/StoneBrickWall.jpg", new Vec2(0.4f, 0.4f))));
             gameObjects.add(new DynamicSquare(world, new Vec2(1f, 3f), 0.3f, loadImage("textures/squareTextures/StoneBrickWall.jpg", new Vec2(0.4f, 0.4f))));
             gameObjects.add(new DynamicSquare(world, new Vec2(1.5f, 3f), 0.3f, loadImage("textures/squareTextures/DessertSquare.jpg", new Vec2(0.4f, 0.4f))));
             gameObjects.add(new DynamicSquare(world, new Vec2(1.3f, 1.5f), 0.3f, loadImage("textures/squareTextures/DessertSquare.jpg", new Vec2(0.4f, 0.4f))));
-            */
+            
             gameObjects.add(new Square(world, new Vec2(0f, 3f), 1f, Color.BEIGE, 0.4d, 6d));
             gameObjects.add(new Square(world, new Vec2(7f, 3f), 1f, Color.BEIGE, 0.4f, 6f));
             Square bottomSquare = new Square(world, new Vec2(0f, 5.5f), 0.8f, Color.AZURE, 14.35d, 0.4d);
             gameObjects.add(bottomSquare);
 
-            //gameObjects.add(new MovingPlatform(world, new Vec2(0f, 3f), 1f, Color.WHEAT, 1d, 0.1d, new Vec2(7f, 4f)));
-            //gameObjects.add(new MovingPlatform(world, new Vec2(1f, 3f), 1f, Color.BISQUE, 1d, 0.1d, new Vec2(1f, 5f)));
+            gameObjects.add(new MovingPlatform(world, new Vec2(0f, 3f), 1f, Color.WHEAT, 1d, 0.1d, new Vec2(7f, 4f)));
+            gameObjects.add(new MovingPlatform(world, new Vec2(1f, 3f), 1f, Color.BISQUE, 1d, 0.1d, new Vec2(1f, 5f)));
 
             Coin coin = (new Coin(world, new Vec2(2f, 4f), 1f, Color.GOLD, 0.2d, objectID++));
             gameObjectsCollision.add(coin);
@@ -74,10 +74,8 @@ public final class LoadMap {
             float friction = 1f;
             float density = 1f;
 
-            gameObjects.add(new Square(world, new Vec2(3,0), friction, Color.RED, 0.4d, 0.4d));
-            Sprite sprite = new Sprite(loadImage("/textures/sprites/ExplosionSprite.png", new Vec2(0,0)), 5, 5, 25, 5, new Vec2(3,1), 0);
+            //Sprite sprite = new Sprite(loadImage("/textures/sprites/ExplosionSprite.png", new Vec2(0,0)), 5, 5, 25, 5, new Vec2(3,1), 0);
             Sprite sprite2 = new Sprite(loadImage("/textures/sprites/AgentSprite.png", new Vec2(0,0)), 10, 1, 10, 3, new Vec2(3,2), 0);
-            gameObjects.add(sprite);
             gameObjects.add(sprite2);
 
             //Player player = new Player(objectID++, world, position, friction, density, acceleration, deceleration, size, Color.BLUE);

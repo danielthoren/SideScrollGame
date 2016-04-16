@@ -13,7 +13,7 @@ public class Sprite implements DrawAndUpdateObject {
     private final Image image;          //Holds the SpriteImage
     private final int columns;          //Holds the amount of columns in the image
     private final int rows;             //Holds the amount of rows in the image
-    private int updateInterval;   //Holds the amount of frames before changing image
+    private int updateInterval;         //Holds the amount of frames before changing image
     private int numberOfFrames;
     private int currFrameNumber;
     private int currFramesSinceUpdate;
@@ -25,6 +25,16 @@ public class Sprite implements DrawAndUpdateObject {
     private boolean flip;
     private boolean freeze;
 
+    /**
+     * Creates a spriteobject that draws a spritesheet with even spacing.
+     * @param image The spriteSheet
+     * @param columns The amount of columns in the spritesheet
+     * @param rows The amount of rows in the spritesheet
+     * @param numberOfFrames The number of frames in the spritesheet
+     * @param updateInterval The amount of frames to wait before changing frame
+     * @param position The center-position of the sprite in world coordinates
+     * @param angle The angle of the sprite
+     */
     public Sprite(Image image, int columns, int rows, int numberOfFrames, int updateInterval, Vec2 position, float angle) {
         this.columns = columns;
         this.angle = angle;
@@ -41,6 +51,9 @@ public class Sprite implements DrawAndUpdateObject {
         currFramesSinceUpdate = 0;
     }
 
+    /**
+     * Updates the current frame, meaning the current column and row.
+     */
     public void update(){
         if (!freeze) {
             currFramesSinceUpdate++;
@@ -64,6 +77,11 @@ public class Sprite implements DrawAndUpdateObject {
         }
     }
 
+    /**
+     * Draws the sprite at the given position. If the 'flip' boolean is true the image is flipped over but stays
+     * in the same position.
+     * @param gc The GraphicsContext with wich to draw
+     */
     public void draw(GraphicsContext gc){
         //Saving the current xy-plane to the gc stack
         gc.save();
@@ -86,6 +104,11 @@ public class Sprite implements DrawAndUpdateObject {
         gc.restore();
     }
 
+    /**
+     * Freezes the sprite on the specified frame
+     * @param column The column of the frame to freeze on
+     * @param row The row of the frame to freeze on
+     */
     public void freezeOnFrame(int column, int row){
         freeze = true;
         currentOffset.x = column - 1;
@@ -93,6 +116,9 @@ public class Sprite implements DrawAndUpdateObject {
         currFrameNumber = (row - 1)*columns + column;
     }
 
+    /**
+     * Starts the sprite if it is frozen
+     */
     public void startSprite(){
         freeze = false;
     }
