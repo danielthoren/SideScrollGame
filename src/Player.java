@@ -37,6 +37,9 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
     private final int ID;                                     //The unique id of the specific instance of player
     private int score;                                        // The score of the player
     private long velocityZeroTimer;                            //Keeps track of how long the bodys y velocity has been 0
+    private KeyCode left;
+    private KeyCode right;
+    private KeyCode jump;
 
     public Player(int ID, World world, Vec2 position, float friction, float density, Vec2 acceleration, Vec2 deceleration, Vec2 size, Color color) {
         super(position, friction, color);
@@ -211,7 +214,8 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
     public void draw(GraphicsContext gc) {
         if (body == null) {
             playerSquare.draw(gc);
-        } else {
+        }
+        else {
             for (Fixture fixture = body.getFixtureList(); fixture != null; fixture = fixture.getNext()) {
                 if (fixture.getType() == ShapeType.CIRCLE){
                     drawCircleFixture(gc, fixture);
@@ -228,23 +232,23 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
 
     public void inputAction(KeyEvent event){
         if (event.getEventType().equals(KeyEvent.KEY_PRESSED)) {
-            if (event.getCode() == KeyCode.A || event.getCode() == KeyCode.LEFT) {
+            if (event.getCode() == left) {
                 isRunning = true;
                 direction = Direction.LEFT;
             }
-            if (event.getCode() == KeyCode.D || event.getCode() == KeyCode.RIGHT) {
+            if (event.getCode() == right) {
                 isRunning = true;
                 direction = Direction.RIGHT;
             }
-            if (event.getCode() == KeyCode.W || event.getCode() == KeyCode.UP){
+            if (event.getCode() == jump){
                 jump();
             }
         }
         else if (event.getEventType().equals(KeyEvent.KEY_RELEASED)){
-            if (event.getCode() == KeyCode.A || event.getCode() == KeyCode.LEFT){
+            if (event.getCode() == left){
                 isRunning = false;
             }
-            if (event.getCode() == KeyCode.D || event.getCode() == KeyCode.RIGHT){
+            if (event.getCode() == right){
                 isRunning = false;
             }
         }
@@ -317,5 +321,21 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
 
     public void addScore(int score){
         this.score += score;
+    }
+
+    public void setRight(KeyCode right) {
+        this.right = right;
+    }
+
+    public void setLeft(KeyCode left) {
+        this.left = left;
+    }
+
+    public void setJump(KeyCode jump) {
+        this.jump = jump;
+    }
+
+    public int getScore() {
+        return score;
     }
 }

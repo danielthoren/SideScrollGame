@@ -1,4 +1,5 @@
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.World;
@@ -75,9 +76,24 @@ public final class LoadMap {
             gameObjects.add(new DynamicSquare(world, new Vec2(position.x - 0.03f, position.y - 0.5f), 0.3f, Color.BROWN, 0.4d, 0.4d));
 
             Player player = new Player(objectID++, world, position, friction, density, acceleration, deceleration, size, Color.BLUE);
+            ScoreBoard.getInstance().addPlayers(player);
+            player.setJump(KeyCode.W);
+            player.setLeft(KeyCode.A);
+            player.setRight(KeyCode.D);
             gameObjectsListen.add(player);
             gameObjects.add(player);
             gameObjectsCollision.add(player);
+
+            Player player2 = new Player(objectID++, world, position, friction, density, acceleration, deceleration, size, Color.BLANCHEDALMOND);
+            ScoreBoard.getInstance().addPlayers(player2);
+            player2.setJump(KeyCode.UP);
+            player2.setRight(KeyCode.RIGHT);
+            player2.setLeft(KeyCode.LEFT);
+            gameObjectsListen.add(player2);
+            gameObjects.add(player2);
+            gameObjectsCollision.add(player2);
+
+            gameObjects.add(ScoreBoard.getInstance());
 
             Map map = new Map(world, gameObjects, gameObjectsListen, gameObjectsCollision, getMapGravity(mapNumber));
             maps.put(mapNumber, map);
