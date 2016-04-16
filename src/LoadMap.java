@@ -1,4 +1,5 @@
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.World;
@@ -75,14 +76,33 @@ public final class LoadMap {
             float density = 1f;
 
             //Sprite sprite = new Sprite(loadImage("/textures/sprites/ExplosionSprite.png", new Vec2(0,0)), 5, 5, 25, 5, new Vec2(3,1), 0);
-            Sprite sprite2 = new Sprite(loadImage("/textures/sprites/AgentSprite.png", new Vec2(0,0)), 10, 1, 10, 3, new Vec2(3,2), 0);
+            Image agentSprite = loadImage("/textures/sprites/AgentSprite.png", new Vec2(0,0));
+            Sprite sprite = new Sprite(agentSprite, 10, 1, 10, 3, new Vec2(3,2), 0);
+            Sprite sprite2 = new Sprite(agentSprite, 10, 1, 10, 3, new Vec2(3,2), 0);
             gameObjects.add(sprite2);
+            gameObjects.add(sprite);
 
             //Player player = new Player(objectID++, world, position, friction, density, acceleration, deceleration, size, Color.BLUE);
-            Player player = new Player(objectID++, world, position, friction, density, acceleration, deceleration, sprite2);
+            Player player = new Player(objectID++, world, position, friction, density, acceleration, deceleration, sprite);
+
+            ScoreBoard.getInstance().addPlayers(player);
+            player.setJump(KeyCode.W);
+            player.setLeft(KeyCode.A);
+            player.setRight(KeyCode.D);
             gameObjectsListen.add(player);
             gameObjects.add(player);
             gameObjectsCollision.add(player);
+
+            Player player2 = new Player(objectID++, world, position, friction, density, acceleration, deceleration, sprite2);
+            ScoreBoard.getInstance().addPlayers(player2);
+            player2.setJump(KeyCode.UP);
+            player2.setRight(KeyCode.RIGHT);
+            player2.setLeft(KeyCode.LEFT);
+            gameObjectsListen.add(player2);
+            gameObjects.add(player2);
+            gameObjectsCollision.add(player2);
+
+            gameObjects.add(ScoreBoard.getInstance());
 
             Map map = new Map(world, gameObjects, gameObjectsListen, gameObjectsCollision, getMapGravity(mapNumber));
             maps.put(mapNumber, map);

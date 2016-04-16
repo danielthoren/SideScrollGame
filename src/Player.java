@@ -21,6 +21,9 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
     private Direction direction;
     private World world;
     private JumpHandler currentJumpHandler;
+    private KeyCode left;
+    private KeyCode right;
+    private KeyCode jump;
     private Sprite sprite;
     private Vec2 maxVelocity;
     private Vec2 acceleration;
@@ -266,23 +269,23 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
 
     public void inputAction(KeyEvent event){
         if (event.getEventType().equals(KeyEvent.KEY_PRESSED)) {
-            if (event.getCode() == KeyCode.A || event.getCode() == KeyCode.LEFT) {
+            if (event.getCode() == left) {
                 isRunning = true;
                 direction = Direction.LEFT;
             }
-            if (event.getCode() == KeyCode.D || event.getCode() == KeyCode.RIGHT) {
+            if (event.getCode() == right) {
                 isRunning = true;
                 direction = Direction.RIGHT;
             }
-            if (event.getCode() == KeyCode.W || event.getCode() == KeyCode.UP){
+            if (event.getCode() == jump){
                 jump();
             }
         }
         else if (event.getEventType().equals(KeyEvent.KEY_RELEASED)){
-            if (event.getCode() == KeyCode.A || event.getCode() == KeyCode.LEFT){
+            if (event.getCode() == left){
                 isRunning = false;
             }
-            if (event.getCode() == KeyCode.D || event.getCode() == KeyCode.RIGHT){
+            if (event.getCode() == right){
                 isRunning = false;
             }
         }
@@ -355,5 +358,21 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
 
     public void addScore(int score){
         this.score += score;
+    }
+
+    public void setRight(KeyCode right) {
+        this.right = right;
+    }
+
+    public void setLeft(KeyCode left) {
+        this.left = left;
+    }
+
+    public void setJump(KeyCode jump) {
+        this.jump = jump;
+    }
+
+    public int getScore() {
+        return score;
     }
 }
