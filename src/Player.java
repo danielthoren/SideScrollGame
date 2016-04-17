@@ -114,11 +114,12 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
         //Do note that the SetAsBox takes half of the width and half of the height then spanning said measurments
         //out on both sides of the centerpoint (bodyposition). The height of each element is first divided by two
         //(because the shapes takes half width and height) and then by 3 since there are 3 elements on a player.
-        float radious = size.x/2;
+        float radious;
         Vec2 middleBoxSize;
         Vec2 upperCirclePos;
         Vec2 bottomCirclePos;
         if (size.y / size.x >= 1) {
+            radious = size.x/2;
             middleBoxSize = new Vec2(size.x - size.x / 50 , size.x);
             upperCirclePos = ((size.y - radious*4)/2 > 0) ? (new Vec2(0f, -((size.y - radious * 4) / 2) - radious)) : (new Vec2(0f, -radious));
             bottomCirclePos = ((size.y - radious*4)/2 > 0) ? (new Vec2(0f, ((size.y - radious * 4) / 2) + radious)) : (new Vec2(0f, radious));
@@ -137,8 +138,8 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
         Vec2 rightSensorSize = new Vec2(sensorThickness, size.y - size.y/5);
 
         //Initializing the shapes
-        upperCircleShape.setRadius(size.x/2);
-        bottomCircleShape.setRadius(size.x/2);
+        upperCircleShape.setRadius(radious);
+        bottomCircleShape.setRadius(radious);
         middleBoxShape.setAsBox(middleBoxSize.x/2, middleBoxSize.y / 2);
         bottomSensorShape.setAsBox(bottomSensorSize.x / 2, bottomSensorSize.y / 2, bottomSensorPos, 0);
         leftSensorShape.setAsBox(leftSensorSize.x / 2, leftSensorSize.y / 2, leftSensorPos, 0);
