@@ -84,14 +84,14 @@ public final class LoadMap {
             gameObjects.add(player);
             gameObjectsCollision.add(player);
 
-            Player player2 = new Player(objectID++, world, position, friction, density, acceleration, deceleration, size, Color.BLANCHEDALMOND);
+            /*Player player2 = new Player(objectID++, world, position, friction, density, acceleration, deceleration, size, Color.BLANCHEDALMOND);
             ScoreBoard.getInstance().addPlayers(player2);
             player2.setJump(KeyCode.UP);
             player2.setRight(KeyCode.RIGHT);
             player2.setLeft(KeyCode.LEFT);
             gameObjectsListen.add(player2);
             gameObjects.add(player2);
-            gameObjectsCollision.add(player2);
+            gameObjectsCollision.add(player2);*/
 
             gameObjects.add(ScoreBoard.getInstance());
 

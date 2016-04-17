@@ -227,6 +227,7 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
                 visibleHealth -= 1;
                 if (visibleHealth == 0){
                     System.out.println("Dead");
+                    respawn(gc);
                 }
             }
             else if(actualHealth != visibleHealth){
@@ -280,6 +281,24 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
         gc.setFill(Color.GREEN);
         gc.fillRect(GameComponent.metersToPix(body.getPosition().x)-healthBarWidth/2,
                 GameComponent.metersToPix(body.getPosition().y-(size.y/2))-healthBarHeight, visibleHealth, healthBarHeight);
+    }
+    private void respawn(GraphicsContext gc){
+        Map map = LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber());
+        map.removeBody(body);
+        map.removeDrawAndUpdateObject(this);
+        createBody(world);
+        for (Fixture fixture = body.getFixtureList(); fixture != null; fixture = fixture.getNext()) {
+            if (fixture.getType() == ShapeType.CIRCLE){
+                drawCircleFixture(gc, fixture);
+            }
+            else if (fixture.getType() == ShapeType.POLYGON && !fixture.isSensor()){
+                drawBoxPolygonFixture(gc, fixture);
+            }
+            else if (fixture.getType() == ShapeType.POLYGON && fixture.isSensor() && drawSensors){
+                drawSensor(gc, fixture, ((SensorStatus)fixture.getUserData()).isDrawSensor());
+            }
+        }
+
     }
 
     public void inputAction(KeyEvent event){
