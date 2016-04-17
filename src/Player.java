@@ -50,6 +50,7 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
         this.world = world;
         System.out.println(sprite.getSpriteWindowSize());
         this.size = new Vec2(GameComponent.pixToMeters(sprite.getSpriteWindowSize().x), GameComponent.pixToMeters(sprite.getSpriteWindowSize().y));
+        System.out.println(size);
         this.density = density;
         this.sprite = sprite;
         restitution = 0;

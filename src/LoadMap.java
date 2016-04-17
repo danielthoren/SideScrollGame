@@ -79,7 +79,6 @@ public final class LoadMap {
             float friction = 1f;
             float density = 1f;
 
-            //Sprite sprite = new Sprite(loadImage("/textures/sprites/ExplosionSprite.png", new Vec2(0,0)), 5, 5, 25, 5, new Vec2(3,1), 0);
             Image agentSprite = loadImage("/textures/sprites/AgentSprite.png", new Vec2(0,0));
             Sprite sprite = new Sprite(agentSprite, 10, 1, 10, 3, new Vec2(3,2), 0);
             Sprite sprite2 = new Sprite(agentSprite, 10, 1, 10, 3, new Vec2(3,2), 0);
