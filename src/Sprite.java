@@ -128,4 +128,6 @@ public class Sprite implements DrawAndUpdateObject {
     public Vec2 getSpriteWindowSize() {return spriteWindowSize;}
 
     public void setPosition(Vec2 position) {this.position = position;}
+
+    public Image getImage() {return image;}
 }

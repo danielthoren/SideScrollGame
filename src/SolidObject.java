@@ -144,7 +144,7 @@ public class SolidObject {
         //Casting the attatched 'Shape' to CircleShape (this must be a circleshape for the Fixture to be a circle)
         CircleShape circle = (CircleShape) fixture.getShape();
         //Calculating the global coordinates of the circles center
-        Vec2 fixturePos = new Vec2(body.getPosition().x, body.getPosition().y - circle.m_p.y);
+        Vec2 fixturePos = new Vec2(body.getPosition().x - circle.m_p.x, body.getPosition().y - circle.m_p.y);
         Float radious = fixture.getShape().getRadius();
         //Drawing the circle
         drawCircle(gc, fixturePos, radious.doubleValue());

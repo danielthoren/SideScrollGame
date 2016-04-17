@@ -65,8 +65,8 @@ public final class LoadMap {
             Square bottomSquare = new Square(world, new Vec2(0f, 5.5f), 0.8f, Color.AZURE, 14.35d, 0.4d);
             gameObjects.add(bottomSquare);
 
-            gameObjects.add(new MovingPlatform(world, new Vec2(0f, 3f), 1f, Color.WHEAT, 1d, 0.1d, new Vec2(7f, 4f)));
-            gameObjects.add(new MovingPlatform(world, new Vec2(1f, 3f), 1f, Color.BISQUE, 1d, 0.1d, new Vec2(1f, 5f)));
+            //gameObjects.add(new MovingPlatform(world, new Vec2(0f, 3f), 1f, Color.WHEAT, 1d, 0.1d, new Vec2(7f, 4f)));
+            //gameObjects.add(new MovingPlatform(world, new Vec2(1f, 3f), 1f, Color.BISQUE, 1d, 0.1d, new Vec2(1f, 5f)));
 
             Coin coin = (new Coin(world, new Vec2(2f, 4f), 1f, Color.GOLD, 0.2d, objectID++));
             gameObjectsCollision.add(coin);
@@ -96,7 +96,7 @@ public final class LoadMap {
             gameObjects.add(player);
             gameObjectsCollision.add(player);
 
-            Player player2 = new Player(objectID++, world, position, friction, density, acceleration, deceleration, sprite2);
+            Player player2 = new Player(objectID++, world, position, friction, density, acceleration, deceleration, Color.BLUE, new Vec2(1f,0.4f));
             ScoreBoard.getInstance().addPlayers(player2);
             player2.setJump(KeyCode.UP);
             player2.setRight(KeyCode.RIGHT);

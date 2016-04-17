@@ -38,6 +38,7 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
     private boolean collisionLeft;
     private boolean collisionRight;
     private static boolean drawSensors = true;                //Used for debugging, draws the sensorFixtures of the player
+    private static boolean debugDraw = true;                  //Used for debugging, draws the bodyfixtures over the sprite
     private final int ID;                                     //The unique id of the specific instance of player
     private int score;                                        // The score of the player
     private long velocityZeroTimer;                           //Keeps track of how long the bodys y velocity has been 0
@@ -50,7 +51,7 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
         this.world = world;
         System.out.println(sprite.getSpriteWindowSize());
         this.size = new Vec2(GameComponent.pixToMeters(sprite.getSpriteWindowSize().x), GameComponent.pixToMeters(sprite.getSpriteWindowSize().y));
-        System.out.println(size);
+        System.out.println(sprite.getImage().getWidth());
         this.density = density;
         this.sprite = sprite;
         restitution = 0;
@@ -69,7 +70,7 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
         currentJumpHandler = new WallJumpHandler();
     }
 
-    public Player(int ID, World world, Vec2 position, float friction, float density, Vec2 acceleration, Vec2 deceleration, Vec2 size, Color color) {
+    public Player(int ID, World world, Vec2 position, float friction, float density, Vec2 acceleration, Vec2 deceleration, Color color, Vec2 size) {
         super(position, friction, color);
         this.ID = ID;
         this.acceleration = acceleration;
@@ -113,12 +114,23 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
         //Do note that the SetAsBox takes half of the width and half of the height then spanning said measurments
         //out on both sides of the centerpoint (bodyposition). The height of each element is first divided by two
         //(because the shapes takes half width and height) and then by 3 since there are 3 elements on a player.
-        Vec2 middleBoxSize = new Vec2(size.x - size.x / 50 , size.y - size.x);
         float radious = size.x/2;
-        Vec2 upperCirclePos = new Vec2(0f, -((size.y - radious*4)/2) - radious);
-        Vec2 bottomCirclePos = new Vec2(0f, ((size.y - radious*4)/2) + radious);
+        Vec2 middleBoxSize;
+        Vec2 upperCirclePos;
+        Vec2 bottomCirclePos;
+        if (size.y / size.x >= 1) {
+            middleBoxSize = new Vec2(size.x - size.x / 50 , size.x);
+            upperCirclePos = ((size.y - radious*4)/2 > 0) ? (new Vec2(0f, -((size.y - radious * 4) / 2) - radious)) : (new Vec2(0f, -radious));
+            bottomCirclePos = ((size.y - radious*4)/2 > 0) ? (new Vec2(0f, ((size.y - radious * 4) / 2) + radious)) : (new Vec2(0f, radious));
+        }
+        else{
+            radious = size.y/2;
+            middleBoxSize = new Vec2(size.y - size.y / 50, size.y);
+            upperCirclePos = ((size.x - radious*4)/2 > 0) ? (new Vec2(-((size.x - radious * 4) / 2) - radious, 0f)) : (new Vec2(-radious, 0f));
+            bottomCirclePos = ((size.x - radious*4)/2 > 0) ? (new Vec2(((size.x - radious * 4) / 2) + radious, 0f)) : (new Vec2(radious, 0f));
+        }
         Vec2 bottomSensorPos = new Vec2(0f, bottomCirclePos.y + radious);
-        Vec2 bottomSensorSize = new Vec2(size.x - size.x/4 , sensorThickness * 2);
+        Vec2 bottomSensorSize = new Vec2(size.x - size.x / 4, sensorThickness * 2);
         Vec2 leftSensorPos = new Vec2(-size.x / 2 - sensorThickness, 0f);
         Vec2 leftSensorSize = new Vec2(sensorThickness, size.y - size.y/5);
         Vec2 rightSensorPos = new Vec2(size.x/2 + sensorThickness, 0f);
@@ -253,9 +265,7 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
 
     @Override
     public void draw(GraphicsContext gc) {
-        if (sprite != null){
-        }
-        else {
+        if (sprite != null || debugDraw){
             for (Fixture fixture = body.getFixtureList(); fixture != null; fixture = fixture.getNext()) {
                 if (fixture.getType() == ShapeType.CIRCLE) {
                     drawCircleFixture(gc, fixture);
