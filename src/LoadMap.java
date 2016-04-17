@@ -3,6 +3,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.World;
+import sun.applet.Main;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -49,12 +50,15 @@ public final class LoadMap {
             gameObjects.add(new DynamicSquare(world, new Vec2(1.5f, 2f), 0.3f, Color.AQUA, 0.4d, 0.4d));
             gameObjects.add(new DynamicSquare(world, new Vec2(1.3f, 0.5f), 0.3f, Color.AZURE, 0.4d, 0.4d));
 
-            gameObjects.add(new DynamicSquare(world, new Vec2(2f, 2f), 0.3f, loadImage("textures/squareTextures/StoneBrickWall.jpg", new Vec2(0.4f, 0.4f))));
-            gameObjects.add(new DynamicSquare(world, new Vec2(2.5f, 2f), 0.3f, loadImage("textures/squareTextures/StoneBrickWall.jpg", new Vec2(0.4f, 0.4f))));
-            gameObjects.add(new DynamicSquare(world, new Vec2(2.3f, 0.5f), 0.3f, loadImage("textures/squareTextures/StoneBrickWall.jpg", new Vec2(0.4f, 0.4f))));
-            gameObjects.add(new DynamicSquare(world, new Vec2(1f, 3f), 0.3f, loadImage("textures/squareTextures/StoneBrickWall.jpg", new Vec2(0.4f, 0.4f))));
-            gameObjects.add(new DynamicSquare(world, new Vec2(1.5f, 3f), 0.3f, loadImage("textures/squareTextures/DessertSquare.jpg", new Vec2(0.4f, 0.4f))));
-            gameObjects.add(new DynamicSquare(world, new Vec2(1.3f, 1.5f), 0.3f, loadImage("textures/squareTextures/DessertSquare.jpg", new Vec2(0.4f, 0.4f))));
+            Image stoneBrickWall = loadImage("/textures/squareTextures/StoneBrickWall.jpg", new Vec2(0.4f, 0.4f));
+            Image dessertSquare = loadImage("/textures/squareTextures/DessertSquare.jpg", new Vec2(0.4f, 0.4f));
+            Image grayHexagons = loadImage("/textures/squareTextures/GrayHexagons.png", new Vec2(0.4f, 0.4f));
+            gameObjects.add(new DynamicSquare(world, new Vec2(2f, 2f), 0.3f, stoneBrickWall));
+            gameObjects.add(new DynamicSquare(world, new Vec2(2.5f, 2f), 0.3f, stoneBrickWall));
+            gameObjects.add(new DynamicSquare(world, new Vec2(2.3f, 0.5f), 0.3f, grayHexagons));
+            gameObjects.add(new DynamicSquare(world, new Vec2(1f, 3f), 0.3f, grayHexagons));
+            gameObjects.add(new DynamicSquare(world, new Vec2(1.5f, 3f), 0.3f, dessertSquare));
+            gameObjects.add(new DynamicSquare(world, new Vec2(1.3f, 1.5f), 0.3f, dessertSquare));
             
             gameObjects.add(new Square(world, new Vec2(0f, 3f), 1f, Color.BEIGE, 0.4d, 6d));
             gameObjects.add(new Square(world, new Vec2(7f, 3f), 1f, Color.BEIGE, 0.4f, 6f));
@@ -113,14 +117,14 @@ public final class LoadMap {
         Image image;
         try{
             if (size.x == 0 || size.y == 0){
-                image = new Image(path);
+                image = new Image(Main.class.getResourceAsStream(path));
             }
             else {
-                image = new Image(path, GameComponent.metersToPix(size.x), GameComponent.metersToPix(size.y), false, false);
+                image = new Image(Main.class.getResourceAsStream(path), GameComponent.metersToPix(size.x), GameComponent.metersToPix(size.y), false, false);
             }
         }
         catch (NullPointerException | IllegalArgumentException e ){
-            image = new Image("textures/squareTextures/ErrorSquare.png", GameComponent.metersToPix(size.x), GameComponent.metersToPix(size.y), false, false);
+            image = new Image(Main.class.getResourceAsStream("textures/squareTextures/ErrorSquare.png"), GameComponent.metersToPix(size.x), GameComponent.metersToPix(size.y), false, false);
         }
         return image;
     }

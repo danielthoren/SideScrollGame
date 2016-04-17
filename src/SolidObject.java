@@ -87,7 +87,7 @@ public class SolidObject {
         float halfWidth = GameComponent.metersToPix(width.floatValue()) / 2;
         float halfHeight = GameComponent.metersToPix(height.floatValue()) / 2;
         if (image == null){gc.fillRect(-halfWidth, -halfHeight, 2 * halfWidth, 2 * halfHeight);}
-        else if (color != null){gc.drawImage(image, -halfWidth, -halfHeight, 2 * halfWidth, 2 * halfHeight);}
+        else{gc.drawImage(image, -halfWidth, -halfHeight, 2 * halfWidth, 2 * halfHeight);}
         //Popping the stack, removing the top element, thus leaving the original xy-plane at the top
         gc.restore();
     }
