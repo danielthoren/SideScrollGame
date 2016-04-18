@@ -82,6 +82,8 @@ public final class LoadMap {
             Image agentSprite = loadImage("/textures/sprites/AgentSprite.png", new Vec2(0,0));
             Sprite sprite = new Sprite(agentSprite, 10, 1, 10, 3, new Vec2(3,2), 0);
             Sprite sprite2 = new Sprite(agentSprite, 10, 1, 10, 3, new Vec2(3,2), 0);
+            sprite.setActualSizeOfSprite(new Vec2(0.48f, 0.90f));
+            sprite2.setActualSizeOfSprite(new Vec2(0.48f, 0.90f));
             gameObjects.add(sprite2);
             gameObjects.add(sprite);
 
@@ -96,7 +98,7 @@ public final class LoadMap {
             gameObjects.add(player);
             gameObjectsCollision.add(player);
 
-            Player player2 = new Player(objectID++, world, position, friction, density, acceleration, deceleration, Color.BLUE, new Vec2(1f,0.4f));
+            Player player2 = new Player(objectID++, world, position, friction, density, acceleration, deceleration, sprite2);
             ScoreBoard.getInstance().addPlayers(player2);
             player2.setJump(KeyCode.UP);
             player2.setRight(KeyCode.RIGHT);
