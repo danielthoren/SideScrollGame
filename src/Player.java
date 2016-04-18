@@ -38,6 +38,7 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
     private boolean collisionLeft;
     private boolean collisionRight;
     private static boolean drawSensors = true;                //Used for debugging, draws the sensorFixtures of the player
+    private static boolean debugDraw = true;
     private final int ID;                                     //The unique id of the specific instance of player
     private int score;                                        // The score of the player
     private long velocityZeroTimer;                           //Keeps track of how long the bodys y velocity has been 0
@@ -49,7 +50,7 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
         this.deceleration = deceleration;
         this.world = world;
         System.out.println(sprite.getSpriteWindowSize());
-        this.size = new Vec2(GameComponent.pixToMeters(sprite.getSpriteWindowSize().x), GameComponent.pixToMeters(sprite.getSpriteWindowSize().y));
+        this.size = sprite.getActualSizeOfSprite();
         this.density = density;
         this.sprite = sprite;
         restitution = 0;
@@ -252,9 +253,7 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
 
     @Override
     public void draw(GraphicsContext gc) {
-        if (sprite != null){
-        }
-        else {
+        if (sprite == null || debugDraw) {
             for (Fixture fixture = body.getFixtureList(); fixture != null; fixture = fixture.getNext()) {
                 if (fixture.getType() == ShapeType.CIRCLE) {
                     drawCircleFixture(gc, fixture);

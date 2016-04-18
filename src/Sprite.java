@@ -19,8 +19,9 @@ public class Sprite implements DrawAndUpdateObject {
     private int currFramesSinceUpdate;
     private Vec2 currentOffset;
     private Vec2 stopFrame;
-    private final Vec2 spriteWindowSize;
     private Vec2 position;
+    private Vec2 actualSizeOfSprite;    //Holds an approximate value of the actual imagesize inside of the spriteImages
+    private final Vec2 spriteWindowSize;
     private float angle;
     private boolean flip;
     private boolean freeze;
@@ -48,6 +49,7 @@ public class Sprite implements DrawAndUpdateObject {
         flip = false;
         freeze = false;
         spriteWindowSize = new Vec2((float) image.getWidth() / columns, (float) image.getHeight() / rows);
+        actualSizeOfSprite = new Vec2(GameComponent.pixToMeters(spriteWindowSize.x), GameComponent.pixToMeters(spriteWindowSize.y));
         currFramesSinceUpdate = 0;
     }
 
@@ -128,4 +130,8 @@ public class Sprite implements DrawAndUpdateObject {
     public Vec2 getSpriteWindowSize() {return spriteWindowSize;}
 
     public void setPosition(Vec2 position) {this.position = position;}
+
+    public Vec2 getActualSizeOfSprite() {return actualSizeOfSprite;}
+
+    public void setActualSizeOfSprite(Vec2 actualSizeOfSprite) {this.actualSizeOfSprite = actualSizeOfSprite;}
 }

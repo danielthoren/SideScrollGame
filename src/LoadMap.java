@@ -83,6 +83,8 @@ public final class LoadMap {
             Image agentSprite = loadImage("/textures/sprites/AgentSprite.png", new Vec2(0,0));
             Sprite sprite = new Sprite(agentSprite, 10, 1, 10, 3, new Vec2(3,2), 0);
             Sprite sprite2 = new Sprite(agentSprite, 10, 1, 10, 3, new Vec2(3,2), 0);
+            sprite.setActualSizeOfSprite(new Vec2(0.48f, 0.90f));
+            sprite2.setActualSizeOfSprite(new Vec2(0.48f, 0.90f));
             gameObjects.add(sprite2);
             gameObjects.add(sprite);
 
