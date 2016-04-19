@@ -21,6 +21,10 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
     private Direction direction;
     private World world;
     private JumpHandler currentJumpHandler;
+    private KeyCode left;
+    private KeyCode right;
+    private KeyCode jump;
+    private Sprite sprite;
     private Vec2 maxVelocity;
     private Vec2 acceleration;
     private Vec2 deceleration;
@@ -34,16 +38,45 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
     private boolean collisionLeft;
     private boolean collisionRight;
     private static boolean drawSensors = true;                //Used for debugging, draws the sensorFixtures of the player
+    private static boolean debugDraw = false;                  //Used for debugging, draws the bodyfixtures over the sprite
     private final int ID;                                     //The unique id of the specific instance of player
     private int score;                                        // The score of the player
-    private long velocityZeroTimer;                            //Keeps track of how long the bodys y velocity has been 0
+<<<<<<< HEAD
     private KeyCode left;
     private KeyCode right;
     private KeyCode jump;
     private int actualHealth;                                   //Here we apply the gamelogic.
     private int visibleHealth;                                  //This is the health we are showing.
+    private long velocityZeroTimer;                           //Keeps track of how long the bodys y velocity has been 0
 
-    public Player(int ID, World world, Vec2 position, float friction, float density, Vec2 acceleration, Vec2 deceleration, Vec2 size, Color color) {
+    public Player(int ID, World world, Vec2 position, float friction, float density, Vec2 acceleration, Vec2 deceleration, Sprite sprite) {
+        super(position, friction);
+        this.ID = ID;
+        this.acceleration = acceleration;
+        this.deceleration = deceleration;
+        this.world = world;
+        System.out.println(sprite.getSpriteWindowSize());
+        this.size = sprite.getActualSizeOfSprite();
+        this.density = density;
+        this.sprite = sprite;
+        restitution = 0;
+        jumpCount = 0;
+        score = 0;
+        sensorThickness = size.x / 10;
+        velocityZeroTimer = -1;
+        direction = Direction.NONE;
+        isRunning = false;
+        grounded = false;
+        collisionLeft = false;
+        collisionRight = false;
+        //Default values, can be changed with setters
+        maxVelocity = new Vec2(10f, 20f);
+        createBody(world);
+        currentJumpHandler = new WallJumpHandler();
+    }
+>>>>>>> Develop
+
+    public Player(int ID, World world, Vec2 position, float friction, float density, Vec2 acceleration, Vec2 deceleration, Color color, Vec2 size) {
         super(position, friction, color);
         this.ID = ID;
         this.acceleration = acceleration;
@@ -55,6 +88,7 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
         restitution = 0;
         jumpCount = 0;
         score = 0;
+        sprite = null;
         sensorThickness = size.x / 10;
         velocityZeroTimer = -1;
         direction = Direction.NONE;
@@ -87,20 +121,32 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
         //Do note that the SetAsBox takes half of the width and half of the height then spanning said measurments
         //out on both sides of the centerpoint (bodyposition). The height of each element is first divided by two
         //(because the shapes takes half width and height) and then by 3 since there are 3 elements on a player.
-        Vec2 middleBoxSize = new Vec2(size.x - size.x / 50 , size.y - size.x);
-        float radious = size.x/2;
-        Vec2 upperCirclePos = new Vec2(0f, -((size.y - radious*4)/2) - radious);
-        Vec2 bottomCirclePos = new Vec2(0f, ((size.y - radious*4)/2) + radious);
+        float radious;
+        Vec2 middleBoxSize;
+        Vec2 upperCirclePos;
+        Vec2 bottomCirclePos;
+        if (size.y / size.x >= 1) {
+            radious = size.x/2;
+            middleBoxSize = new Vec2(size.x - size.x / 50 , size.x);
+            upperCirclePos = ((size.y - radious*4)/2 > 0) ? (new Vec2(0f, -((size.y - radious * 4) / 2) - radious)) : (new Vec2(0f, -radious));
+            bottomCirclePos = ((size.y - radious*4)/2 > 0) ? (new Vec2(0f, ((size.y - radious * 4) / 2) + radious)) : (new Vec2(0f, radious));
+        }
+        else{
+            radious = size.y/2;
+            middleBoxSize = new Vec2(size.y - size.y / 50, size.y);
+            upperCirclePos = ((size.x - radious*4)/2 > 0) ? (new Vec2(-((size.x - radious * 4) / 2) - radious, 0f)) : (new Vec2(-radious, 0f));
+            bottomCirclePos = ((size.x - radious*4)/2 > 0) ? (new Vec2(((size.x - radious * 4) / 2) + radious, 0f)) : (new Vec2(radious, 0f));
+        }
         Vec2 bottomSensorPos = new Vec2(0f, bottomCirclePos.y + radious);
-        Vec2 bottomSensorSize = new Vec2(size.x - size.x/4 , sensorThickness * 2);
+        Vec2 bottomSensorSize = new Vec2(size.x - size.x / 4, sensorThickness * 2);
         Vec2 leftSensorPos = new Vec2(-size.x / 2 - sensorThickness, 0f);
         Vec2 leftSensorSize = new Vec2(sensorThickness, size.y - size.y/5);
         Vec2 rightSensorPos = new Vec2(size.x/2 + sensorThickness, 0f);
         Vec2 rightSensorSize = new Vec2(sensorThickness, size.y - size.y/5);
 
         //Initializing the shapes
-        upperCircleShape.setRadius(size.x/2);
-        bottomCircleShape.setRadius(size.x/2);
+        upperCircleShape.setRadius(radious);
+        bottomCircleShape.setRadius(radious);
         middleBoxShape.setAsBox(middleBoxSize.x/2, middleBoxSize.y / 2);
         bottomSensorShape.setAsBox(bottomSensorSize.x / 2, bottomSensorSize.y / 2, bottomSensorPos, 0);
         leftSensorShape.setAsBox(leftSensorSize.x / 2, leftSensorSize.y / 2, leftSensorPos, 0);
@@ -165,7 +211,7 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
         runHandler();
 
         //Ensures that the sensorvalue is not wrong. If velocity.y is 0 for two frames then the character is grounded
-        if (body.getLinearVelocity().y > -0.000001 && body.getLinearVelocity().y < 0.000001 && !grounded){
+        if (body.getLinearVelocity().y > -0.01 && body.getLinearVelocity().y < 0.01 && !grounded){
             if (velocityZeroTimer == -1){velocityZeroTimer = System.currentTimeMillis();}
             else if (System.currentTimeMillis() - velocityZeroTimer >= 32){
                 velocityZeroTimer = -1;
@@ -174,6 +220,18 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
         }
         else{
             velocityZeroTimer = -1;
+        }
+
+        //Handling updates for the sprite if the player has one.
+        if (sprite != null){
+
+            if (!isRunning){sprite.freezeOnFrame(8, 1);}
+            else{sprite.startSprite();}
+            //Updating the sprites position so that the sprite is drawn over the player body.
+            sprite.setPosition(body.getPosition());
+            //Flips the sprite to make the playerSprite appear to be facing the correct direction.
+            if (direction == Direction.LEFT){sprite.setFlip(false);}
+            else {sprite.setFlip(true);}
         }
     }
 
@@ -215,36 +273,18 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
 
     @Override
     public void draw(GraphicsContext gc) {
+<<<<<<< HEAD
         drawHealthBar(gc);
-        if (body == null) {
-            playerSquare.draw(gc);
-        }
-        else {
             damage(1);
-            //This if-statement makes the bar "roll", it makes the
-            //healthbar change much smoother.
-            if(actualHealth < visibleHealth){
-                visibleHealth -= 1;
-                if (visibleHealth == 0){
-                    System.out.println("Dead");
-                    respawn(gc);
-                }
-            }
-            else if(actualHealth != visibleHealth){
-                visibleHealth = actualHealth;
-                if (visibleHealth == 0){
-                    System.out.println("Dead");
-                }
-            }
+        if (sprite == null || debugDraw) {
+>>>>>>> Develop
             for (Fixture fixture = body.getFixtureList(); fixture != null; fixture = fixture.getNext()) {
-                if (fixture.getType() == ShapeType.CIRCLE){
+                if (fixture.getType() == ShapeType.CIRCLE) {
                     drawCircleFixture(gc, fixture);
-                }
-                else if (fixture.getType() == ShapeType.POLYGON && !fixture.isSensor()){
+                } else if (fixture.getType() == ShapeType.POLYGON && !fixture.isSensor()) {
                     drawBoxPolygonFixture(gc, fixture);
-                }
-                else if (fixture.getType() == ShapeType.POLYGON && fixture.isSensor() && drawSensors){
-                    drawSensor(gc, fixture, ((SensorStatus)fixture.getUserData()).isDrawSensor());
+                } else if (fixture.getType() == ShapeType.POLYGON && fixture.isSensor() && drawSensors) {
+                    drawSensor(gc, fixture, ((SensorStatus) fixture.getUserData()).isDrawSensor());
                 }
             }
         }
@@ -281,6 +321,21 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
         gc.setFill(Color.GREEN);
         gc.fillRect(GameComponent.metersToPix(body.getPosition().x)-healthBarWidth/2,
                 GameComponent.metersToPix(body.getPosition().y-(size.y/2))-healthBarHeight, visibleHealth, healthBarHeight);
+        //This if-statement makes the bar "roll", it makes the
+        //healthbar change much smoother.
+        if(actualHealth < visibleHealth){
+            visibleHealth -= 1;
+            if (visibleHealth == 0){
+                System.out.println("Dead");
+                respawn(gc);
+            }
+        }
+        else if(actualHealth != visibleHealth){
+            visibleHealth = actualHealth;
+            if (visibleHealth == 0){
+                System.out.println("Dead");
+            }
+        }
     }
 
     /**

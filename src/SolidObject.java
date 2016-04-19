@@ -30,6 +30,19 @@ public class SolidObject {
     }
 
     /**
+     * Sets variables for a Solid Object with static position and collision properites. Note that the object will not
+     * be drawn unless a image or color is added first.
+     * @param pos The position at wich to place the Object (units in meters)
+     * @param friction The friction of the body
+     */
+    public SolidObject(Vec2 pos, float friction) {
+        this.friction = friction;
+        this.pos = pos;
+        color = null;
+        image = null;
+    }
+
+    /**
      * Sets variables for a Solid Object with static position and collision properites.
      * @param pos The position at wich to place the Object (units in meters)
      * @param friction The friction of the body
@@ -74,7 +87,7 @@ public class SolidObject {
         float halfWidth = GameComponent.metersToPix(width.floatValue()) / 2;
         float halfHeight = GameComponent.metersToPix(height.floatValue()) / 2;
         if (image == null){gc.fillRect(-halfWidth, -halfHeight, 2 * halfWidth, 2 * halfHeight);}
-        else{gc.drawImage(image, -halfWidth, -halfHeight, 2 * halfWidth, 2 * halfHeight);}
+        else{gc.drawImage(image, -halfWidth, -halfHeight);}
         //Popping the stack, removing the top element, thus leaving the original xy-plane at the top
         gc.restore();
     }
@@ -97,7 +110,7 @@ public class SolidObject {
         gc.setFill(color);
         float pixRadious  = GameComponent.metersToPix(radious.floatValue());
         if (image == null) {gc.fillOval(-pixRadious, -pixRadious, 2 * pixRadious, 2 * pixRadious);}
-        else {gc.drawImage(image, -pixRadious/2, pixRadious/2);}
+        else if (color != null) {gc.drawImage(image, -pixRadious/2, pixRadious/2);}
         //Popping the stack, removing the top element, thus leaving the original xy-plane at the top
         gc.restore();
     }
@@ -131,13 +144,19 @@ public class SolidObject {
         //Casting the attatched 'Shape' to CircleShape (this must be a circleshape for the Fixture to be a circle)
         CircleShape circle = (CircleShape) fixture.getShape();
         //Calculating the global coordinates of the circles center
-        Vec2 fixturePos = new Vec2(body.getPosition().x, body.getPosition().y - circle.m_p.y);
+        Vec2 fixturePos = new Vec2(body.getPosition().x - circle.m_p.x, body.getPosition().y - circle.m_p.y);
         Float radious = fixture.getShape().getRadius();
         //Drawing the circle
         drawCircle(gc, fixturePos, radious.doubleValue());
     }
 
-
+    /**
+     * Function that draws a given sensor. The sensor is drawn green if 'isTriggered' is false, else the sensor is drawn
+     * red.
+     * @param gc The graphicsContext with wich to draw.
+     * @param sensor The 'Fixture' of the sensor to draw.
+     * @param isTriggered A boolean value that is true if the sensor is currently colliding, and false otherwise.
+     */
     protected void drawSensor(GraphicsContext gc, Fixture sensor, boolean isTriggered){
         Color tmpColor = color;
         if (isTriggered) {color = Color.GREEN;}
