@@ -41,6 +41,8 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
     private static boolean debugDraw = false;                 //Used for debugging, draws the bodyfixtures over the sprite
     private final int ID;                                     //The unique id of the specific instance of player
     private int score;                                        //The score of the player
+    private int actualHealth;                                 //Here we apply the gamelogic.
+    private int visibleHealth;                                //This is the health we are showing.
     private long velocityZeroTimer;                           //Keeps track of how long the bodys y velocity has been 0
 
     public Player(int ID, World world, Vec2 position, float friction, float density, Vec2 acceleration, Vec2 deceleration, Sprite sprite) {
@@ -67,6 +69,7 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
         maxVelocity = new Vec2(10f, 20f);
         createBody(world);
         currentJumpHandler = new WallJumpHandler();
+        resetHealth(100);
     }
 
     public Player(int ID, World world, Vec2 position, float friction, float density, Vec2 acceleration, Vec2 deceleration, Color color, Vec2 size) {
@@ -93,6 +96,7 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
         maxVelocity = new Vec2(10f, 20f);
         createBody(world);
         currentJumpHandler = new WallJumpHandler();
+        resetHealth(100);
     }
 
     private void createBody(World world){
@@ -265,7 +269,10 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
 
     @Override
     public void draw(GraphicsContext gc) {
+        drawHealthBar(gc);
+            damage(1);
         if (sprite == null || debugDraw) {
+
             for (Fixture fixture = body.getFixtureList(); fixture != null; fixture = fixture.getNext()) {
                 if (fixture.getType() == ShapeType.CIRCLE) {
                     drawCircleFixture(gc, fixture);
@@ -276,6 +283,71 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
                 }
             }
         }
+    }
+
+    /**
+     * Sets the health.
+     * @param health The health of the player.
+     */
+    public void resetHealth(int health){
+        actualHealth = visibleHealth = health;
+    }
+
+    /**
+     * The amount of damage taken.
+     * @param damage The damage taken.
+     */
+    public void damage(int damage){
+        actualHealth -= damage;
+    }
+
+    /**
+     * Draws the healthbar directly over each player.
+     * @param gc The graphicscontext on which to draw on.
+     */
+    private void drawHealthBar(GraphicsContext gc){
+        int healthBarWidth = 100;
+        int healthBarHeight = 20;
+        //This bar shows how much health you have lost.
+        gc.setFill(Color.RED);
+        gc.fillRect(GameComponent.metersToPix(body.getPosition().x)-healthBarWidth/2,
+                GameComponent.metersToPix(body.getPosition().y-(size.y/2))-healthBarHeight, healthBarWidth, healthBarHeight);
+        //This bar shows you your current health.
+        gc.setFill(Color.GREEN);
+        gc.fillRect(GameComponent.metersToPix(body.getPosition().x)-healthBarWidth/2,
+                GameComponent.metersToPix(body.getPosition().y-(size.y/2))-healthBarHeight, visibleHealth, healthBarHeight);
+        //This if-statement makes the bar "roll", it makes the
+        //healthbar change much smoother.
+        if(actualHealth < visibleHealth){
+            visibleHealth -= 1;
+            if (visibleHealth == 0){
+                System.out.println("Dead");
+                respawn(gc);
+            }
+        }
+        else if(actualHealth != visibleHealth){
+            visibleHealth = actualHealth;
+            if (visibleHealth == 0){
+                System.out.println("Dead");
+            }
+        }
+    }
+
+    /**
+     * This method respawns the player after death.
+     * @param gc The graphicscontext on which to draw on.
+     */
+    private void respawn(GraphicsContext gc){
+        Map map = LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber());
+        map.removeBody(body);
+        map.removeDrawAndUpdateObject(this);
+        map.removeCollisionListener(this);
+        map.removeInputListener(this);
+        createBody(world);
+        LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber()).addCollisionListener(this);
+        LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber()).addDrawAndUpdateObject(this);
+        LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber()).addInputListener(this);
+        resetHealth(100);
     }
 
     public void inputAction(KeyEvent event){
@@ -387,5 +459,13 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
 
     public int getScore() {
         return score;
+    }
+
+    public int getActualHealth() {
+        return actualHealth;
+    }
+
+    public int getVisibleHealth() {
+        return visibleHealth;
     }
 }

@@ -7,9 +7,13 @@ import java.util.List;
 /**
  * Created by kristiansikiric on 2016-04-16.
  */
+
+/**
+ * This singelton draws the score of the players.
+ */
 public class ScoreBoard implements DrawAndUpdateObject {
     private static ScoreBoard ourInstance = new ScoreBoard();
-    private static List<Player> players;
+    private static List<Player> players; //Holds the players.
 
     public static ScoreBoard getInstance() {
         return ourInstance;
@@ -22,6 +26,10 @@ public class ScoreBoard implements DrawAndUpdateObject {
 
     }
 
+    /**
+     * Draws the score of each players.
+     * @param gc The GraphicsContext with wich to draw
+     */
     public void draw(GraphicsContext gc){
         int x = 100;
         int y = 50;
@@ -33,6 +41,11 @@ public class ScoreBoard implements DrawAndUpdateObject {
             y *= 2;
         }
     }
+
+    /**
+     * Adds a player to the list that holds all the players.
+     * @param player The player to add to the list.
+     */
     public void addPlayers(Player player){
         players.add(player);
     }

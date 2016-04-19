@@ -75,7 +75,8 @@ public final class LoadMap {
             gameObjectsCollision.add(coin);
             gameObjects.add(coin);
 
-            Vec2 position = new Vec2(3f, 0f);
+            Vec2 position = new Vec2(6f, 5f);
+
             Vec2 acceleration = new Vec2(50f, 800f);
             Vec2 deceleration = new Vec2(100f, 0f);
             Vec2 size = new Vec2(0.3f, 0.8f); //Must have a ration bigger than 1:2
@@ -101,7 +102,10 @@ public final class LoadMap {
             gameObjects.add(player);
             gameObjectsCollision.add(player);
 
+
+            //Player player2 = new Player(objectID++, world, position, friction, density, acceleration, deceleration, size, Color.BLANCHEDALMOND);
             Player player2 = new Player(objectID++, world, position, friction, density, acceleration, deceleration, sprite2);
+
             ScoreBoard.getInstance().addPlayers(player2);
             player2.setJump(KeyCode.UP);
             player2.setRight(KeyCode.RIGHT);
