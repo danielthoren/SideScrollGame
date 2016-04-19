@@ -41,10 +41,6 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
     private static boolean debugDraw = false;                  //Used for debugging, draws the bodyfixtures over the sprite
     private final int ID;                                     //The unique id of the specific instance of player
     private int score;                                        // The score of the player
-<<<<<<< HEAD
-    private KeyCode left;
-    private KeyCode right;
-    private KeyCode jump;
     private int actualHealth;                                   //Here we apply the gamelogic.
     private int visibleHealth;                                  //This is the health we are showing.
     private long velocityZeroTimer;                           //Keeps track of how long the bodys y velocity has been 0
@@ -73,8 +69,8 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
         maxVelocity = new Vec2(10f, 20f);
         createBody(world);
         currentJumpHandler = new WallJumpHandler();
+        resetHealth(100);
     }
->>>>>>> Develop
 
     public Player(int ID, World world, Vec2 position, float friction, float density, Vec2 acceleration, Vec2 deceleration, Color color, Vec2 size) {
         super(position, friction, color);
@@ -273,11 +269,10 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
 
     @Override
     public void draw(GraphicsContext gc) {
-<<<<<<< HEAD
         drawHealthBar(gc);
             damage(1);
         if (sprite == null || debugDraw) {
->>>>>>> Develop
+
             for (Fixture fixture = body.getFixtureList(); fixture != null; fixture = fixture.getNext()) {
                 if (fixture.getType() == ShapeType.CIRCLE) {
                     drawCircleFixture(gc, fixture);
