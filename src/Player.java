@@ -51,7 +51,6 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
         this.acceleration = acceleration;
         this.deceleration = deceleration;
         this.world = world;
-        System.out.println(sprite.getSpriteWindowSize());
         this.size = sprite.getActualSizeOfSprite();
         this.density = density;
         this.sprite = sprite;

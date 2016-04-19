@@ -10,7 +10,8 @@ import org.jbox2d.dynamics.World;
 import org.jbox2d.dynamics.contacts.ContactEdge;
 
 /**
- * Created by daniel on 2016-03-31.
+ * Parentclass to all 'solid' gameobjects where 'solid' means that the object has a body that is a part of the
+ * gameworld (the world of the physicslibrary). This class contains shared drawingfunctions and fields.
  */
 public class SolidObject {
     protected Vec2 pos;     //The position of the upper left corner of the square in meters
@@ -22,7 +23,7 @@ public class SolidObject {
     /**
      * The default constructor of the class. Should never be used!
      */
-    protected SolidObject(){                                                                                   //Why is a default constructor needed and what does it do ?
+    protected SolidObject(){
         this.pos = null;
         this.body = null;
         this.image = null;

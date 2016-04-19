@@ -78,6 +78,7 @@ public class GameComponent extends Parent
     public void update(float nanosecScienceLast){
         world.step(nanosecScienceLast / 1000000000, velocityIterations,positionIterations);
         currentMap.removeStagedOBjects();
+        currentMap.addStagedObjects();
         for (Iterator<DrawAndUpdateObject> iterator = currentMap.getDrawAndUpdateObjectList().iterator(); iterator.hasNext();){
             DrawAndUpdateObject obj = iterator.next();
                 obj.update();

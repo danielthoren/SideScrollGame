@@ -1,5 +1,3 @@
-import jdk.internal.util.xml.impl.Input;
-import org.jbox2d.callbacks.ContactListener;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.World;
@@ -22,6 +20,10 @@ public class Map
     private List<CollisionListener> collisionListenersStagedForRemoval;
     private List<Body> bodiesStagedForRemoval;
 
+    private List<DrawAndUpdateObject> drawAndUpdateObjectsStagedForAddition;
+    private List<InputListener> inputListenersStagedForAddition;
+    private List<CollisionListener> collisionListenersStagedForAddition;
+
     private World world;
 
     private Vec2 gravity;
@@ -32,10 +34,13 @@ public class Map
         this.inputListenerList = gameObjectsListen;
         this.gravity = gravity;
         this.world = world;
-        drawANdUpdateObjectsStagedForRemoval = new ArrayList<DrawAndUpdateObject>(4);
-        inputListenersStagedForRemoval = new ArrayList<InputListener>(4);
-        collisionListenersStagedForRemoval = new ArrayList<CollisionListener>(4);
-        bodiesStagedForRemoval = new ArrayList<Body>(4);
+        drawANdUpdateObjectsStagedForRemoval = new ArrayList<DrawAndUpdateObject>(2);
+        inputListenersStagedForRemoval = new ArrayList<InputListener>(2);
+        collisionListenersStagedForRemoval = new ArrayList<CollisionListener>(2);
+        bodiesStagedForRemoval = new ArrayList<Body>(2);
+        drawAndUpdateObjectsStagedForAddition = new ArrayList<DrawAndUpdateObject>(2);
+        inputListenersStagedForAddition = new ArrayList<InputListener>(2);
+        collisionListenersStagedForAddition = new ArrayList<CollisionListener>(2);
     }
 
     /**
@@ -65,19 +70,41 @@ public class Map
         collisionListenersStagedForRemoval.clear();
 }
 
+    /**
+     * Adding objects staged for addition and clears the 'StagedForAddition' lists
+     */
+    public void addStagedObjects (){
+        //Adding all of the staged 'DrawAndUpdate' objects to the maps global list
+        for (DrawAndUpdateObject object : drawAndUpdateObjectsStagedForAddition){
+            drawAndUpdateObjectList.add(object);
+        }
+        //Adding all of the staged 'InputListener' objects to the maps global list
+        for (InputListener listener : inputListenersStagedForAddition){
+            inputListenerList.add(listener);
+        }
+        //Adding all of the staged 'CollisionListener' objects to the maps global list
+        for (CollisionListener collisionListener : collisionListenersStagedForAddition){
+            collisionListenerList.add(collisionListener);
+        }
+        //Clearing the objects staged for addition
+        drawAndUpdateObjectsStagedForAddition.clear();
+        inputListenersStagedForAddition.clear();
+        collisionListenersStagedForAddition.clear();
+    }
+
     public void removeBody(Body body){bodiesStagedForRemoval.add(body);}
 
-    public void removeCollisionListener(CollisionListener listener){
-        collisionListenerList.remove(listener);
-    }
+    public void removeCollisionListener(CollisionListener listener){collisionListenersStagedForRemoval.add(listener);}
 
-    public void removeInputListener(InputListener listener){
-        inputListenerList.remove(listener);
-    }
+    public void removeInputListener(InputListener listener){inputListenersStagedForRemoval.add(listener);}
 
-    public void removeDrawAndUpdateObject(DrawAndUpdateObject object){
-        drawAndUpdateObjectList.remove(object);
-    }
+    public void removeDrawAndUpdateObject(DrawAndUpdateObject object){drawANdUpdateObjectsStagedForRemoval.add(object);}
+
+    public void addDrawAndUpdateObject(DrawAndUpdateObject object) {drawAndUpdateObjectsStagedForAddition.add(object);}
+
+    public void addInputListener(InputListener object) { inputListenersStagedForAddition.add(object); }
+
+    public void addCollisionListener(CollisionListener object) { collisionListenersStagedForAddition.add(object); }
 
     public List<DrawAndUpdateObject> getDrawAndUpdateObjectList() {return drawAndUpdateObjectList;}
 
@@ -90,16 +117,4 @@ public class Map
     public Vec2 getGravity() {return gravity;}
 
     public World getWorld() {return world;}
-
-    public void addDrawAndUpdateObject(DrawAndUpdateObject object) {drawANdUpdateObjectsStagedForRemoval.add(object);}
-
-    public void addInputListener(InputListener object) {
-        inputListenerList.add(object);
-    }
-
-    public void addCollisionListener(CollisionListener object) {
-        collisionListenerList.add(object);
-    }
-
-    public List<DrawAndUpdateObject> getDrawANdUpdateObjectsStagedForRemoval() {return drawANdUpdateObjectsStagedForRemoval;}
 }
