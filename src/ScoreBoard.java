@@ -5,10 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by kristiansikiric on 2016-04-16.
- */
-
-/**
  * This singelton draws the score of the players.
  */
 public class ScoreBoard implements DrawAndUpdateObject {
@@ -22,6 +18,7 @@ public class ScoreBoard implements DrawAndUpdateObject {
     private ScoreBoard() {
         players = new ArrayList<>(2);
     }
+
     public void update(){
 
     }

@@ -9,6 +9,8 @@ import javafx.scene.paint.Paint;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.World;
 
+import java.util.Iterator;
+
 /**
  * This is the class that handles all the logic in the game. It is also a child of the class 'Parent' wich extends
  * 'Node'. Thus making this class a child of 'Node'. This enables the class to be added to another 'Node' or subclass
@@ -55,7 +57,7 @@ public class GameComponent extends Parent
         this.setOnKeyPressed(new EventHandler<KeyEvent>()
         {
             @Override public void handle(final KeyEvent event) {
-                for (InputListener obj : currentMap.getGameObjectsListen()){
+                for (InputListener obj : currentMap.getInputListenerList()){
                     obj.inputAction(event);
                 }
             }
@@ -63,7 +65,7 @@ public class GameComponent extends Parent
         this.setOnKeyReleased(new EventHandler<KeyEvent>()
         {
             @Override public void handle(final KeyEvent event) {
-                for (InputListener obj : currentMap.getGameObjectsListen()){
+                for (InputListener obj : currentMap.getInputListenerList()){
                     obj.inputAction(event);
                 }
             }
@@ -72,12 +74,16 @@ public class GameComponent extends Parent
 
     /**
      * Updates all of the game objects
+     * Using the 'Iterator' to iterate o
      * @param nanosecScienceLast The time scinse the last update in nanoseconds
      */
     public void update(float nanosecScienceLast){
         world.step(nanosecScienceLast / 1000000000, velocityIterations,positionIterations);
-        for (DrawAndUpdateObject obj : currentMap.getGameObjects()){
-            obj.update();
+        currentMap.removeStagedOBjects();
+        currentMap.addStagedObjects();
+        for (Iterator<DrawAndUpdateObject> iterator = currentMap.getDrawAndUpdateObjectList().iterator(); iterator.hasNext();){
+            DrawAndUpdateObject obj = iterator.next();
+                obj.update();
         }
     }
 
@@ -87,7 +93,7 @@ public class GameComponent extends Parent
     public void draw(){
         GraphicsContext gc = canvas.getGraphicsContext2D();
         gc.clearRect(0,0, canvas.getWidth(), canvas.getHeight());
-        for (DrawAndUpdateObject obj : currentMap.getGameObjects()){
+        for (DrawAndUpdateObject obj : currentMap.getDrawAndUpdateObjectList()){
             obj.draw(gc);
         }
     }

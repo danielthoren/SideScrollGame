@@ -12,7 +12,7 @@ public class ContactListenerGame implements ContactListener
      * @param contact
      */
     public void beginContact(Contact contact) {
-	List<CollisionListener> listeners = LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber()).getGameObjectsCollision();
+	List<CollisionListener> listeners = LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber()).getCollisionListenerList();
 	for (CollisionListener obj : listeners){
 	    obj.beginContact(contact);
 	}
@@ -23,7 +23,7 @@ public class ContactListenerGame implements ContactListener
      * @param contact
      */
     public void endContact(Contact contact){
-	List<CollisionListener> listeners = LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber()).getGameObjectsCollision();
+	List<CollisionListener> listeners = LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber()).getCollisionListenerList();
 	for (CollisionListener obj : listeners){
 	    obj.endContact(contact);
 	}

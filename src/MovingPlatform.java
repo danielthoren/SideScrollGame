@@ -7,10 +7,6 @@ import org.jbox2d.dynamics.World;
 import static java.lang.Math.abs;
 
 /**
- * Created by kristiansikiric on 2016-04-05.
- */
-
-/**
  * This class creates a movingplatform.
  */
 public class MovingPlatform extends Square{

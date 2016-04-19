@@ -25,6 +25,7 @@ public class Sprite implements DrawAndUpdateObject {
     private float angle;
     private boolean flip;
     private boolean freeze;
+    private boolean stagedForRemoval;
 
     /**
      * Creates a spriteobject that draws a spritesheet with even spacing.

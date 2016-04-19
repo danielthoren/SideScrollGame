@@ -11,6 +11,9 @@ import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.FixtureDef;
 import org.jbox2d.dynamics.World;
 
+/**
+ * Class that creates a squareobject that is a part of the current world
+ */
 public class Square extends SolidObject implements DrawAndUpdateObject
 {
 
@@ -28,9 +31,6 @@ public class Square extends SolidObject implements DrawAndUpdateObject
 	super(pos, friction, image);
 	width = image.getWidth() / LoadMap.getInstance().getPixPerMeter();
 	height = image.getHeight() / LoadMap.getInstance().getPixPerMeter();
-
-	System.out.print(width);
-	System.out.println(height);
 
 	createBody(world);
 	body.setUserData(this);
