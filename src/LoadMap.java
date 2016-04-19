@@ -66,7 +66,7 @@ public final class LoadMap {
             gameObjectsCollision.add(coin);
             gameObjects.add(coin);
 
-            Vec2 position = new Vec2(6f, 0f);
+            Vec2 position = new Vec2(6f, 5f);
             Vec2 acceleration = new Vec2(50f, 800f);
             Vec2 deceleration = new Vec2(100f, 0f);
             Vec2 size = new Vec2(0.3f, 0.8f); //Must have a ration bigger than 1:2

@@ -282,23 +282,22 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
         gc.fillRect(GameComponent.metersToPix(body.getPosition().x)-healthBarWidth/2,
                 GameComponent.metersToPix(body.getPosition().y-(size.y/2))-healthBarHeight, visibleHealth, healthBarHeight);
     }
+
+    /**
+     * This method respawns the player after death.
+     * @param gc The graphicscontext on which to draw on.
+     */
     private void respawn(GraphicsContext gc){
         Map map = LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber());
         map.removeBody(body);
         map.removeDrawAndUpdateObject(this);
+        map.removeCollisionListener(this);
+        map.removeInputListener(this);
         createBody(world);
-        for (Fixture fixture = body.getFixtureList(); fixture != null; fixture = fixture.getNext()) {
-            if (fixture.getType() == ShapeType.CIRCLE){
-                drawCircleFixture(gc, fixture);
-            }
-            else if (fixture.getType() == ShapeType.POLYGON && !fixture.isSensor()){
-                drawBoxPolygonFixture(gc, fixture);
-            }
-            else if (fixture.getType() == ShapeType.POLYGON && fixture.isSensor() && drawSensors){
-                drawSensor(gc, fixture, ((SensorStatus)fixture.getUserData()).isDrawSensor());
-            }
-        }
-
+        LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber()).addCollisionListener(this);
+        LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber()).addDrawAndUpdateObject(this);
+        LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber()).addInputListener(this);
+        resetHealth(100);
     }
 
     public void inputAction(KeyEvent event){

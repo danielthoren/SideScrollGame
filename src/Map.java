@@ -56,4 +56,15 @@ public class Map
     public Vec2 getGravity() {return gravity;}
 
     public World getWorld() {return world;}
+
+    public void addDrawAndUpdateObject(DrawAndUpdateObject object) {
+    gameObjects.add(object);
+    }
+
+    public void addInputListener(InputListener object) {
+        gameObjectsListen.add(object);
+    }
+    public void addCollisionListener(CollisionListener object) {
+        gameObjectsCollision.add(object);
+    }
 }
