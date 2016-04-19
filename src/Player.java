@@ -38,9 +38,9 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
     private boolean collisionLeft;
     private boolean collisionRight;
     private static boolean drawSensors = true;                //Used for debugging, draws the sensorFixtures of the player
-    private static boolean debugDraw = false;                  //Used for debugging, draws the bodyfixtures over the sprite
+    private static boolean debugDraw = false;                 //Used for debugging, draws the bodyfixtures over the sprite
     private final int ID;                                     //The unique id of the specific instance of player
-    private int score;                                        // The score of the player
+    private int score;                                        //The score of the player
     private long velocityZeroTimer;                           //Keeps track of how long the bodys y velocity has been 0
 
     public Player(int ID, World world, Vec2 position, float friction, float density, Vec2 acceleration, Vec2 deceleration, Sprite sprite) {
@@ -382,6 +382,8 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
     public void setJump(KeyCode jump) {
         this.jump = jump;
     }
+
+    public Vec2 getPosition() {return body.getPosition();}
 
     public int getScore() {
         return score;

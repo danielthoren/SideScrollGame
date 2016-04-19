@@ -53,6 +53,9 @@ public final class LoadMap {
             Image stoneBrickWall = loadImage("/textures/squareTextures/StoneBrickWall.jpg", new Vec2(0.4f, 0.4f));
             Image dessertSquare = loadImage("/textures/squareTextures/DessertSquare.jpg", new Vec2(0.4f, 0.4f));
             Image grayHexagons = loadImage("/textures/squareTextures/GrayHexagons.png", new Vec2(0.4f, 0.4f));
+            Image sword = loadImage("/textures/Textures/Sword.png", new Vec2(0.4f, 0.8f));
+            gameObjects.add(new DynamicSquare(world, new Vec2(5f, 2f), 0.3f, sword));
+
             gameObjects.add(new DynamicSquare(world, new Vec2(2f, 2f), 0.3f, stoneBrickWall));
             gameObjects.add(new DynamicSquare(world, new Vec2(2.5f, 2f), 0.3f, stoneBrickWall));
             gameObjects.add(new DynamicSquare(world, new Vec2(2.3f, 0.5f), 0.3f, grayHexagons));
