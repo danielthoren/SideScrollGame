@@ -44,6 +44,8 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
     private int actualHealth;                                   //Here we apply the gamelogic.
     private int visibleHealth;                                  //This is the health we are showing.
     private long velocityZeroTimer;                           //Keeps track of how long the bodys y velocity has been 0
+    private int maxHealth = 100;
+    private int deathCount = 0;
 
     public Player(int ID, World world, Vec2 position, float friction, float density, Vec2 acceleration, Vec2 deceleration, Sprite sprite) {
         super(position, friction);
@@ -69,7 +71,7 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
         maxVelocity = new Vec2(10f, 20f);
         createBody(world);
         currentJumpHandler = new WallJumpHandler();
-        resetHealth(100);
+        resetHealth(maxHealth);
     }
 
     public Player(int ID, World world, Vec2 position, float friction, float density, Vec2 acceleration, Vec2 deceleration, Color color, Vec2 size) {
@@ -96,7 +98,7 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
         maxVelocity = new Vec2(10f, 20f);
         createBody(world);
         currentJumpHandler = new WallJumpHandler();
-        resetHealth(100);
+        resetHealth(maxHealth);
     }
 
     private void createBody(World world){
@@ -270,7 +272,7 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
     @Override
     public void draw(GraphicsContext gc) {
         drawHealthBar(gc);
-            damage(1);
+        damage(1);
         if (sprite == null || debugDraw) {
 
             for (Fixture fixture = body.getFixtureList(); fixture != null; fixture = fixture.getNext()) {
@@ -329,6 +331,7 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
             visibleHealth = actualHealth;
             if (visibleHealth == 0){
                 System.out.println("Dead");
+                respawn(gc);
             }
         }
     }
@@ -347,7 +350,25 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
         LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber()).addCollisionListener(this);
         LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber()).addDrawAndUpdateObject(this);
         LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber()).addInputListener(this);
-        resetHealth(100);
+        resetHealth(maxHealth);
+        deathCount++;
+    }
+
+    /**
+     * Heals the player the amount held by the Class 'FirstAidBox'. If the amount of the box
+     * exceeds the maximum health of the player it is only healed the amount to bring it up
+     * to max health.
+     * @param heal The amount the player should be healed.
+     */
+    public void heal(int heal){
+        int tmp;
+        if (actualHealth + heal > maxHealth){
+            tmp = maxHealth - actualHealth;
+            damage(-tmp); //Damage is called with negative value because -(-) = +.
+        }
+        else{
+            damage(-heal);
+        }
     }
 
     public void inputAction(KeyEvent event){

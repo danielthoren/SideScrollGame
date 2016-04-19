@@ -9,41 +9,42 @@ import org.jbox2d.dynamics.contacts.Contact;
  */
 
 /**
- * This class creates a coin that can be picked up by the player. The coin contains points
+ * This class creates a box that can be picked up by the player. The box contains health
  * given to the player when picked up.
  */
-public class Coin extends Circle implements CollisionListener {
-    private int points;
+public class FirstAidBox extends Square implements CollisionListener {
+    private int health;
     private int ID;
     private World world;
 
     /**
-     * Creates a circle that will symbolize the coin.
+     * Creates a box that will symbolize a first aid kit.
      * @param world The world where the coin will be created
      * @param pos   The position of the coin
      * @param friction  The friction of the coin
      * @param image     The iamge of the coin
      * @param ID    The ID of the coin
      */
-    public Coin(World world, Vec2 pos, float friction, Image image, int ID) {
+    public FirstAidBox(World world, Vec2 pos, float friction, Image image, int ID) {
         super(world, pos, friction, image);
-        points = 100;
+        health = 100;
         body.getFixtureList().setSensor(true); //Makes the coin a sensor
         body.setUserData(this);
     }
 
     /**
-     * Creates a circle that will symbolize the coin
-     * @param world The world where the coin will be created
-     * @param pos   The posoistion of the coin
-     * @param friction  The friction of the coin
-     * @param color     The color of the coin
-     * @param radious   The radious of the coin
-     * @param ID    The ID of the coin
+     * Creates a box that will symbolize a first aid kit
+     * @param world The world where the box will be created
+     * @param pos   The posistion of the box
+     * @param friction  The friction of the box
+     * @param color The color of the box
+     * @param width The width of the box
+     * @param height    The height if the box
+     * @param ID    The id of the box
      */
-    public Coin(World world, Vec2 pos, float friction, Color color, double radious, int ID) {
-        super(world, pos, friction, color, radious);
-        points = 100;
+    public FirstAidBox(World world, Vec2 pos, float friction, Color color, double width, double height, int ID) {
+        super(world, pos, friction, color, width, height);
+        health = 100;
         body.getFixtureList().setSensor(true); //Makes the coin a sensor
         body.setUserData(this);
     }
@@ -54,14 +55,14 @@ public class Coin extends Circle implements CollisionListener {
      */
     public void beginContact(Contact contact){
         if (contact.getFixtureA().getBody().getUserData().equals(this) && contact.getFixtureB().getBody().getUserData() instanceof Player){
-            ((Player) contact.getFixtureB().getBody().getUserData()).addScore(points);
+            ((Player) contact.getFixtureB().getBody().getUserData()).heal(health);
             Map map = LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber());
             map.removeBody(body);
             map.removeCollisionListener(this);
             map.removeDrawAndUpdateObject(this);
         }
         else if (contact.getFixtureB().getBody().getUserData().equals(this) && contact.getFixtureA().getBody().getUserData() instanceof Player){
-            ((Player) contact.getFixtureA().getBody().getUserData()).addScore(points);
+            ((Player) contact.getFixtureA().getBody().getUserData()).heal(health);
             Map map = LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber());
             map.removeBody(body);
             map.removeCollisionListener(this);
@@ -78,7 +79,7 @@ public class Coin extends Circle implements CollisionListener {
     /**
      * @return the points held by the coin
      */
-    public int getPoints() {return points;}
+    public int getPoints() {return health;}
 
     /**
      * @return the ID of the coin
@@ -92,7 +93,7 @@ public class Coin extends Circle implements CollisionListener {
      */
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof Coin && ((Coin) obj).getID() == this.getID()){return true;}
+        if (obj instanceof FirstAidBox && ((FirstAidBox) obj).getID() == this.getID()){return true;}
         else {return false;}
     }
 
