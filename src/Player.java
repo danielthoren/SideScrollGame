@@ -21,6 +21,7 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
     private Direction direction;
     private World world;
     private JumpHandler currentJumpHandler;
+    private Inventory inventory;
     private KeyCode left;
     private KeyCode right;
     private KeyCode jump;
@@ -32,7 +33,6 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
     private float restitution;
     private float density;
     private final float sensorThickness;
-    private int jumpCount;                                     //Keeps track of the times the player has jumped since last on the ground
     private boolean isRunning;
     private boolean grounded;
     private boolean collisionLeft;
@@ -54,8 +54,8 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
         this.size = sprite.getActualSizeOfSprite();
         this.density = density;
         this.sprite = sprite;
+        inventory = new Inventory(this);
         restitution = 0;
-        jumpCount = 0;
         score = 0;
         sensorThickness = size.x / 10;
         velocityZeroTimer = -1;
@@ -81,7 +81,7 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
         this.playerSquare = null;
         this.density = density;
         restitution = 0;
-        jumpCount = 0;
+        inventory = new Inventory(this);
         score = 0;
         sprite = null;
         sensorThickness = size.x / 10;
@@ -421,6 +421,10 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
         if (obj instanceof Player && ((Player) obj).getID() == this.getID()){return true;}
         else {return false;}
     }
+
+    public Inventory getInventory() {return inventory;}
+
+    public Vec2 getSize() {return size;}
 
     public void setRestitution(float restitution) {this.restitution = restitution;}
 

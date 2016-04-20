@@ -11,8 +11,8 @@ public class Sword extends InventoryItem implements InputListener {
     private KeyCode attack;
     private KeyCode defend;
 
-    public Sword(Player player, int damage, Vec2 relativePos, Image image) {
-        super(player, damage, relativePos, image);
+    public Sword(int ID, Player player, int damage, Image image) {
+        super(ID, player, damage, image);
     }
 
     public void inputAction(KeyEvent keyEvent){
