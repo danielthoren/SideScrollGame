@@ -1,26 +1,31 @@
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import org.jbox2d.common.Vec2;
-import org.jbox2d.dynamics.World;
-
-import javax.swing.*;
 
 /**
  * Parent Class containing shared code between equipped objects
  */
-public class EquippedItem extends SolidObject implements EquipItem, DrawAndUpdateObject {
+public class InventoryItem extends SolidObject implements DrawAndUpdateObject {
 
-    protected final int damage;
-    protected Vec2 relativePos;
     protected Player player;
+    protected Vec2 relativePos;
+    protected final int damage;
     protected final float height;
     protected final float width;
 
-    public EquippedItem(Player player, int damage, Vec2 relativePos, Image image) {
+    public InventoryItem(Player player, int damage, Vec2 relativePos, Image image) {
         super(player.getPosition(), 0f, image);
         this.damage = damage;
-        this.player = player;
         this.relativePos = relativePos;
+        height = GameComponent.pixToMeters((float) image.getHeight());
+        width = GameComponent.pixToMeters((float) image.getWidth());
+    }
+
+    public InventoryItem(Vec2 position, int damage, Vec2 relativePos, Image image) {
+        super(position, 0f, image);
+        this.damage = damage;
+        this.relativePos = relativePos;
+        player = null;
         height = GameComponent.pixToMeters((float) image.getHeight());
         width = GameComponent.pixToMeters((float) image.getWidth());
     }
@@ -37,6 +42,7 @@ public class EquippedItem extends SolidObject implements EquipItem, DrawAndUpdat
 
 
     public void equip(Player player){
+        
     }
 
     public void unEquip(){

@@ -3,12 +3,10 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import org.jbox2d.common.Vec2;
 
-import java.security.Key;
-
 /**
  * Created by daniel59088 on 4/19/16.
  */
-public class Sword extends EquippedItem implements InputListener {
+public class Sword extends InventoryItem implements InputListener {
 
     private KeyCode attack;
     private KeyCode defend;

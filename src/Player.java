@@ -269,7 +269,6 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
     @Override
     public void draw(GraphicsContext gc) {
         drawHealthBar(gc);
-            damage(1);
         if (sprite == null || debugDraw) {
             for (Fixture fixture = body.getFixtureList(); fixture != null; fixture = fixture.getNext()) {
                 if (fixture.getType() == ShapeType.CIRCLE) {
