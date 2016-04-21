@@ -36,7 +36,7 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
     private boolean collisionLeft;
     private boolean collisionRight;
     private boolean pickUpItem;
-    private static boolean drawSensors = true;                //Used for debugging, draws the sensorFixtures of the player
+    private static boolean drawSensors = false;                //Used for debugging, draws the sensorFixtures of the player
     private static boolean debugDraw = false;                 //Used for debugging, draws the bodyfixtures over the sprite
     private final int ID;                                     //The unique id of the specific instance of player
     private int score;                                        //The score of the player
