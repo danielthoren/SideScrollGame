@@ -1,8 +1,5 @@
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import jdk.internal.util.xml.impl.Input;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.Fixture;
@@ -12,12 +9,13 @@ import org.jbox2d.dynamics.contacts.Contact;
 /**
  * Parent Class containing shared code between equipped objects
  */
-public class SquareInventoryItem extends DynamicSquare implements InventoryItem
+public class SquareInventoryItem extends DynamicSquare implements InventoryItem, CollisionListener
 {
 
     protected World world;
     protected final int ID;
     protected Player player;
+    protected Player currentCollidingPlayer;
     protected Vec2 relativePos;
     protected final Vec2 size;
     protected boolean equipped;
@@ -26,20 +24,31 @@ public class SquareInventoryItem extends DynamicSquare implements InventoryItem
         super(ID, world, player.body.getPosition(), friction, image);
         this.world = world;
         this.ID = ID;
+        currentCollidingPlayer = null;
         equipped = true;
         size = new Vec2(GameComponent.pixToMeters((float) image.getWidth()), GameComponent.pixToMeters((float) image.getHeight()));
-        relativePos = new Vec2(player.getPosition().x + player.getSize().x, player.getPosition().y - size.y/2);
+        calcRelativePos(player);
     }
 
     public SquareInventoryItem(int ID,World world, Vec2 position, float friction, Image image) {
         super(ID, world, position, friction, image);
         this.ID = ID;
         this.world = world;
+        currentCollidingPlayer = null;
         player = null;
         size = new Vec2(GameComponent.pixToMeters((float) image.getWidth()), GameComponent.pixToMeters((float) image.getHeight()));
     }
 
+    private void calcRelativePos(Player player){
+        relativePos = new Vec2(player.getPosition().x + player.getSize().x, player.getPosition().y - size.y/2);
+    }
+
     public void update(){
+        if (currentCollidingPlayer != null && currentCollidingPlayer.isPickUpItem()){
+            if (currentCollidingPlayer.getInventory().addItem(this)){
+                pickUp(currentCollidingPlayer);
+            }
+        }
         if (player != null) {
             pos = new Vec2(player.getPosition().x + relativePos.x, player.getPosition().y + relativePos.y);
         }
@@ -47,6 +56,36 @@ public class SquareInventoryItem extends DynamicSquare implements InventoryItem
 
     public void draw(GraphicsContext gc){
         super.drawSquare(gc, body.getPosition(), (double) size.x, (double) size.y);
+    }
+
+    public void beginContact(Contact contact){
+        if (contact.getFixtureA().getBody().getUserData().equals(this) && contact.getFixtureB().getBody().getUserData() instanceof Player){
+            currentCollidingPlayer = (Player) contact.getFixtureB().getBody().getUserData();
+        }
+        else if (contact.getFixtureB().getBody().getUserData().equals(this) && contact.getFixtureA().getBody().getUserData() instanceof Player){
+            currentCollidingPlayer = (Player) contact.getFixtureA().getBody().getUserData();
+        }
+    }
+
+    /**
+     * Checks if the player wants to pick this item up. If so then adds this to the players inventory
+     */
+    private void pickUpCheck(Player player) {
+        //Checks if the player wants to pick upp item ('E' is pressed). If so then this item is added to the players inventory
+        if (player.isPickUpItem())
+            if (player.getInventory().addItem(this)){
+                pickUp(player);
+        }
+    }
+
+    public void endContact(Contact contact){
+        if (contact.getFixtureA().getBody().getUserData().equals(this) && contact.getFixtureB().getBody().getUserData() instanceof Player){
+            currentCollidingPlayer = null;
+        }
+        else if (contact.getFixtureB().getBody().getUserData().equals(this) && contact.getFixtureA().getBody().getUserData() instanceof Player){
+            currentCollidingPlayer = null;
+        }
+
     }
 
     /**
@@ -69,6 +108,7 @@ public class SquareInventoryItem extends DynamicSquare implements InventoryItem
     }
 
     public void pickUp(Player player){
+        calcRelativePos(player);
         this.player = player;
     }
 
