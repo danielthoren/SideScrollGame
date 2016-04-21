@@ -37,6 +37,7 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
     private boolean grounded;
     private boolean collisionLeft;
     private boolean collisionRight;
+    private boolean pickUpItem;
     private static boolean drawSensors = true;                //Used for debugging, draws the sensorFixtures of the player
     private static boolean debugDraw = false;                 //Used for debugging, draws the bodyfixtures over the sprite
     private final int ID;                                     //The unique id of the specific instance of player
@@ -64,6 +65,7 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
         grounded = false;
         collisionLeft = false;
         collisionRight = false;
+        pickUpItem = false;
         //Default values, can be changed with setters
         maxVelocity = new Vec2(10f, 20f);
         createBody(world);
@@ -89,6 +91,7 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
         direction = Direction.NONE;
         isRunning = false;
         grounded = false;
+        pickUpItem = false;
         collisionLeft = false;
         collisionRight = false;
         //Default values, can be changed with setters
@@ -372,16 +375,19 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
     }
 
     public void beginContact(Contact contact){
+        boolean playerContact = false;
         if (contact.getFixtureA().getBody().getUserData().equals(this) && contact.getFixtureA().isSensor()){
             ((SensorStatus)contact.getFixtureA().getUserData()).setDrawSensor(true);
-            ((SensorStatus)contact.getFixtureA().getUserData()).setDrawSensor(true);
+            playerContact = true;
+        }
+       	if (contact.getFixtureB().getBody().getUserData().equals(this) && contact.getFixtureB().isSensor()) {
+            ((SensorStatus) contact.getFixtureB().getUserData()).setDrawSensor(true);
+            playerContact = true;
+        }
 
+        if(!isRunning && playerContact) {
             contact.setFriction(100);
         }
-       	if (contact.getFixtureB().getBody().getUserData().equals(this) && contact.getFixtureB().isSensor()){
-            ((SensorStatus)contact.getFixtureB().getUserData()).setDrawSensor(true);
-            ((SensorStatus)contact.getFixtureB().getUserData()).setDrawSensor(true);
-       	}
     }
 
     public void endContact(Contact contact){
@@ -469,4 +475,6 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
     public int getVisibleHealth() {
         return visibleHealth;
     }
+
+    public boolean isPickUpItem() {return pickUpItem;}
 }
