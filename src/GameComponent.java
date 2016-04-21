@@ -23,6 +23,7 @@ public class GameComponent extends Parent
     private Canvas canvas;                                  //The canvas on wich to draw on
     private GraphicsContext gc;                             //The GraphicsContext with wich to draw
     private World world;
+    private GameLogic gameLogic;
     private ContactListenerGame contactListenerGame;
     private double height, width;                           //The height and width of the window in pixels
     private int velocityIterations, positionIterations;     //Values deciding the accuracy of velocity and position
@@ -40,6 +41,9 @@ public class GameComponent extends Parent
 
         LoadMap.getInstance().loadMap(currentMapNumber);
         currentMap = LoadMap.getInstance().getMap(currentMapNumber);
+        gameLogic = new GameLogic();
+        currentMap.addCollisionListener(gameLogic);
+        currentMap.addDrawAndUpdateObject(gameLogic);
         world = currentMap.getWorld();
 
         contactListenerGame = new ContactListenerGame();

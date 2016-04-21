@@ -5,16 +5,9 @@ import org.jbox2d.dynamics.contacts.Contact;
 
 public class GameLogic implements CollisionListener, DrawAndUpdateObject
 {
-    private static GameLogic ourInstance = new GameLogic();
-
-    public static GameLogic getInstance() {
-	return ourInstance;
-    }
-
     private World world;
 
-    private GameLogic() {
-        world = LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber()).getWorld();
+    public GameLogic() {
     }
 
 
@@ -22,7 +15,6 @@ public class GameLogic implements CollisionListener, DrawAndUpdateObject
      * The function that updates the object every frame
      */
     public void update(){
-
     }
 
     /**
@@ -55,9 +47,9 @@ public class GameLogic implements CollisionListener, DrawAndUpdateObject
      */
     private void playerCollisionCheck(Fixture playerFixture, Fixture otherFixture){
         //Checks if the player wants to pick upp item ('E' is pressed). If so and other item colliding with the player
-        //is an 'InventoryItem' then said 'InventoryItem's 'equip' function is called.
-        if (((Player) playerFixture.getBody().getUserData()).isPickUpItem() && otherFixture.getBody().getUserData() instanceof InventoryItem){
-            ((InventoryItem) otherFixture.getBody().getUserData()).equip((Player) playerFixture.getBody().getUserData());
+        //is an 'SquareInventoryItem' then said 'SquareInventoryItem's 'equip' function is called.
+        if (((Player) playerFixture.getBody().getUserData()).isPickUpItem() && otherFixture.getBody().getUserData() instanceof SquareInventoryItem){
+            ((SquareInventoryItem) otherFixture.getBody().getUserData()).pickUp((Player) playerFixture.getBody().getUserData());
         }
 
 }
@@ -71,10 +63,6 @@ public class GameLogic implements CollisionListener, DrawAndUpdateObject
      */
     public void endContact(Contact contact){
 
-    }
-
-    public void setWorld(final World world) {
-        this.world = world;
     }
 }
 

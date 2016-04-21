@@ -32,8 +32,6 @@ public class DynamicSquare extends Square {
      * @param world The world in wich to add its body
      * @param pos The position of the topleft corner of the square in meters
      * @param friction The friction of its body
-     * @param density The density of its body
-     * @param restitution The restitution of its body (the bounciness of the body)
      * @param color The color representing the body in the visual realm
      * @param width The width of the body in meters
      * @param height The height of the body in meters

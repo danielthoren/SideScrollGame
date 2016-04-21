@@ -7,13 +7,17 @@ import org.jbox2d.dynamics.World;
 /**
  * Created by daniel59088 on 4/19/16.
  */
-public class Sword extends InventoryItem implements InputListener {
+public class Sword extends SquareInventoryItem implements InputListener {
 
     private KeyCode attack;
     private KeyCode defend;
 
-    public Sword(World world, int ID, Player player, int damage, Image image) {
-        super(world, ID, player, damage, image);
+    public Sword(int ID, World world, Player player, float friction,  int damage, Image image) {
+        super(ID, world, player, friction, image);
+    }
+
+    public Sword(int ID, World world, Vec2 pos, float friction, int damage, Image image) {
+        super(ID, world, pos, friction, image);
     }
 
     public void inputAction(KeyEvent keyEvent){
@@ -26,11 +30,6 @@ public class Sword extends InventoryItem implements InputListener {
                 }
             }
         }
-    }
-
-    @Override
-    protected void createBody(){
-
     }
 
     private void attack(){

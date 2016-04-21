@@ -13,18 +13,16 @@ import org.jbox2d.dynamics.FixtureDef;
 import org.jbox2d.dynamics.World;
 import org.jbox2d.dynamics.contacts.Contact;
 
-import java.sql.Time;
-
 public class Player extends SolidObject implements InputListener, DrawAndUpdateObject, CollisionListener
 {
-    private Square playerSquare;
     private Direction direction;
     private World world;
     private JumpHandler currentJumpHandler;
     private Inventory inventory;
-    private KeyCode left;
-    private KeyCode right;
-    private KeyCode jump;
+    private KeyCode runLeftCode;
+    private KeyCode runRightCode;
+    private KeyCode jumpCode;
+    private KeyCode pickUpCode;
     private Sprite sprite;
     private Vec2 maxVelocity;
     private Vec2 acceleration;
@@ -73,6 +71,11 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
         createBody(world);
         currentJumpHandler = new WallJumpHandler();
         resetHealth(maxHealth);
+        //Default valued, can be changed with setters
+        pickUpCode = KeyCode.E;
+        runLeftCode = KeyCode.A;
+        runRightCode = KeyCode.D;
+        jumpCode = KeyCode.W;
     }
 
     public Player(int ID, World world, Vec2 position, float friction, float density, Vec2 acceleration, Vec2 deceleration, Color color, Vec2 size) {
@@ -82,7 +85,6 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
         this.deceleration = deceleration;
         this.world = world;
         this.size = size;
-        this.playerSquare = null;
         this.density = density;
         restitution = 0;
         inventory = new Inventory(this);
@@ -101,6 +103,11 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
         createBody(world);
         currentJumpHandler = new WallJumpHandler();
         resetHealth(maxHealth);
+        //Default valued, can be changed with setters
+        pickUpCode = KeyCode.E;
+        runLeftCode = KeyCode.A;
+        runRightCode = KeyCode.D;
+        jumpCode = KeyCode.W;
     }
 
     private void createBody(World world){
@@ -373,24 +380,30 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
 
     public void inputAction(KeyEvent event){
         if (event.getEventType().equals(KeyEvent.KEY_PRESSED)) {
-            if (event.getCode() == left) {
+            if (event.getCode() == runLeftCode) {
                 isRunning = true;
                 direction = Direction.LEFT;
             }
-            if (event.getCode() == right) {
+            if (event.getCode() == runRightCode) {
                 isRunning = true;
                 direction = Direction.RIGHT;
             }
-            if (event.getCode() == jump){
+            if (event.getCode() == jumpCode){
                 jump();
+            }
+            if(event.getCode() == pickUpCode){
+                pickUpItem = true;
             }
         }
         else if (event.getEventType().equals(KeyEvent.KEY_RELEASED)){
-            if (event.getCode() == left){
+            if (event.getCode() == runLeftCode){
                 isRunning = false;
             }
-            if (event.getCode() == right){
+            if (event.getCode() == runRightCode){
                 isRunning = false;
+            }
+            if (event.getCode() == pickUpCode){
+                pickUpItem = false;
             }
         }
     }
@@ -471,16 +484,16 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
         this.score += score;
     }
 
-    public void setRight(KeyCode right) {
-        this.right = right;
+    public void setRunRightCode(KeyCode runRightCode) {
+        this.runRightCode = runRightCode;
     }
 
-    public void setLeft(KeyCode left) {
-        this.left = left;
+    public void setRunLeftCode(KeyCode runLeftCode) {
+        this.runLeftCode = runLeftCode;
     }
 
-    public void setJump(KeyCode jump) {
-        this.jump = jump;
+    public void setJumpCode(KeyCode jumpCode) {
+        this.jumpCode = jumpCode;
     }
 
     public Vec2 getPosition() {return body.getPosition();}
