@@ -21,6 +21,7 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
     private Direction direction;
     private World world;
     private JumpHandler currentJumpHandler;
+    private Inventory inventory;
     private KeyCode left;
     private KeyCode right;
     private KeyCode jump;
@@ -32,17 +33,17 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
     private float restitution;
     private float density;
     private final float sensorThickness;
-    private int jumpCount;                                     //Keeps track of the times the player has jumped since last on the ground
     private boolean isRunning;
     private boolean grounded;
     private boolean collisionLeft;
     private boolean collisionRight;
+    private boolean pickUpItem;
     private static boolean drawSensors = true;                //Used for debugging, draws the sensorFixtures of the player
-    private static boolean debugDraw = false;                  //Used for debugging, draws the bodyfixtures over the sprite
+    private static boolean debugDraw = false;                 //Used for debugging, draws the bodyfixtures over the sprite
     private final int ID;                                     //The unique id of the specific instance of player
-    private int score;                                        // The score of the player
-    private int actualHealth;                                   //Here we apply the gamelogic.
-    private int visibleHealth;                                  //This is the health we are showing.
+    private int score;                                        //The score of the player
+    private int actualHealth;                                 //Here we apply the gamelogic.
+    private int visibleHealth;                                //This is the health we are showing.
     private long velocityZeroTimer;                           //Keeps track of how long the bodys y velocity has been 0
     private int maxHealth = 100;
     private int deathCount = 0;
@@ -56,8 +57,8 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
         this.size = sprite.getActualSizeOfSprite();
         this.density = density;
         this.sprite = sprite;
+        inventory = new Inventory(this);
         restitution = 0;
-        jumpCount = 0;
         score = 0;
         sensorThickness = size.x / 10;
         velocityZeroTimer = -1;
@@ -66,6 +67,7 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
         grounded = false;
         collisionLeft = false;
         collisionRight = false;
+        pickUpItem = false;
         //Default values, can be changed with setters
         maxVelocity = new Vec2(10f, 20f);
         createBody(world);
@@ -83,7 +85,7 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
         this.playerSquare = null;
         this.density = density;
         restitution = 0;
-        jumpCount = 0;
+        inventory = new Inventory(this);
         score = 0;
         sprite = null;
         sensorThickness = size.x / 10;
@@ -91,6 +93,7 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
         direction = Direction.NONE;
         isRunning = false;
         grounded = false;
+        pickUpItem = false;
         collisionLeft = false;
         collisionRight = false;
         //Default values, can be changed with setters
@@ -271,7 +274,6 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
     @Override
     public void draw(GraphicsContext gc) {
         drawHealthBar(gc);
-        damage(1);
         if (sprite == null || debugDraw) {
             for (Fixture fixture = body.getFixtureList(); fixture != null; fixture = fixture.getNext()) {
                 if (fixture.getType() == ShapeType.CIRCLE) {
@@ -394,16 +396,19 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
     }
 
     public void beginContact(Contact contact){
+        boolean playerContact = false;
         if (contact.getFixtureA().getBody().getUserData().equals(this) && contact.getFixtureA().isSensor()){
             ((SensorStatus)contact.getFixtureA().getUserData()).setDrawSensor(true);
-            ((SensorStatus)contact.getFixtureA().getUserData()).setDrawSensor(true);
+            playerContact = true;
+        }
+       	if (contact.getFixtureB().getBody().getUserData().equals(this) && contact.getFixtureB().isSensor()) {
+            ((SensorStatus) contact.getFixtureB().getUserData()).setDrawSensor(true);
+            playerContact = true;
+        }
 
+        if(!isRunning && playerContact) {
             contact.setFriction(100);
         }
-       	if (contact.getFixtureB().getBody().getUserData().equals(this) && contact.getFixtureB().isSensor()){
-            ((SensorStatus)contact.getFixtureB().getUserData()).setDrawSensor(true);
-            ((SensorStatus)contact.getFixtureB().getUserData()).setDrawSensor(true);
-       	}
     }
 
     public void endContact(Contact contact){
@@ -444,6 +449,10 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
         else {return false;}
     }
 
+    public Inventory getInventory() {return inventory;}
+
+    public Vec2 getSize() {return size;}
+
     public void setRestitution(float restitution) {this.restitution = restitution;}
 
     public void setMaxVelocity(Vec2 maxVelocity){
@@ -474,6 +483,8 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
         this.jump = jump;
     }
 
+    public Vec2 getPosition() {return body.getPosition();}
+
     public int getScore() {
         return score;
     }
@@ -486,7 +497,11 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
         return visibleHealth;
     }
 
+
     public void setCurrentJumpHandler(JumpHandler currentJumpHandler) {
         this.currentJumpHandler = currentJumpHandler;
     }
+
+    public boolean isPickUpItem() {return pickUpItem;}
+
 }
