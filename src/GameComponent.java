@@ -41,11 +41,12 @@ public class GameComponent extends Parent
 
         LoadMap.getInstance().loadMap(currentMapNumber);
         currentMap = LoadMap.getInstance().getMap(currentMapNumber);
-        gameLogic = new GameLogic();
+        world = currentMap.getWorld();
+
+        gameLogic = new GameLogic(world);
         currentMap.addCollisionListener(gameLogic);
         currentMap.addDrawAndUpdateObject(gameLogic);
 
-        world = currentMap.getWorld();
 
         contactListenerGame = new ContactListenerGame();
         world.setContactListener(contactListenerGame);

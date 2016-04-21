@@ -14,7 +14,7 @@ public class PowerUpCoin extends DynamicCircle implements CollisionListener{
     public PowerUpCoin(World world, Vec2 pos, float friction, float density,
                        float restitution, Image image, int ID, JumpHandler jumpHandler) {
         super(world, pos, friction, density, restitution, image);
-        body.getFixtureList().setSensor(true); //Makes the coin a sensor
+        body.getFixtureList().setSensor(false); //Makes the coin a sensor
         body.setUserData(this);
         this.jumpHandler = jumpHandler;
     }
@@ -22,7 +22,7 @@ public class PowerUpCoin extends DynamicCircle implements CollisionListener{
     public PowerUpCoin(World world, Vec2 pos, float friction, float density,
                        float restitution, Color color, double radious, int ID, JumpHandler jumpHandler) {
         super(world, pos, friction, density, restitution, color, radious);
-        body.getFixtureList().setSensor(true); //Makes the coin a sensor
+        body.getFixtureList().setSensor(false); //Makes the coin a sensor
         body.setUserData(this);
         this.jumpHandler = jumpHandler;
     }
@@ -46,5 +46,9 @@ public class PowerUpCoin extends DynamicCircle implements CollisionListener{
 
     public void endContact(Contact contact) {
 
+    }
+
+    public void setID(int ID) {
+        this.ID = ID;
     }
 }

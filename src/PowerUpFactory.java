@@ -15,19 +15,17 @@ public class PowerUpFactory {
     public PowerUpFactory(World world, int randomPowerUP, JumpHandler jumpHandler) {
         this.randomPowerUP = randomPowerUP;
         this.jumpHandler = jumpHandler;
-        powerUp(world);
-        System.out.println(randomPowerUP);
+        //powerUp(world);
     }
 
-    public void powerUp(World world){
-        System.out.println(randomPowerUP);
+    public void powerUp(World world, int randomPowerUP, JumpHandler jumpHandler){
         switch (randomPowerUP){
             case (0):
                 int currentId = LoadMap.getObjectID();
-                LoadMap.setObjectID(currentId++);
-                System.out.println(1);
+                LoadMap.setObjectID(currentId+1);
                 FirstAidBox firstAidBox = new FirstAidBox(world, new Vec2(new Random().nextFloat()*2, new Random().nextFloat()*4),
                         1f, Color.WHITE, 0.4d, 0.4, currentId++);
+                firstAidBox.setID(currentId);
                 LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber()).addDrawAndUpdateObject(firstAidBox);
                 LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber()).addCollisionListener(firstAidBox);
                 break;
@@ -36,7 +34,8 @@ public class PowerUpFactory {
                 currentId = LoadMap.getObjectID();
                 LoadMap.setObjectID(currentId++);
                 PowerUpCoin powerUpCoin = new PowerUpCoin(world, new Vec2(2f, 4f),
-                        1f, 1f,1f, Color.WHITE, 0.4d, currentId++,jumpHandler);
+                        1f, 1f,1f, Color.WHITE, 0.2d, currentId++,jumpHandler);
+                powerUpCoin.setID(currentId);
                 LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber()).addDrawAndUpdateObject(powerUpCoin);
                 LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber()).addCollisionListener(powerUpCoin);
                 break;

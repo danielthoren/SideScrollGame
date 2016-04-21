@@ -37,8 +37,6 @@ public class DynamicCircle extends Circle {
      * @param density The density of its body
      * @param restitution The restitution of its body (the bounciness of the body)
      * @param color The color representing the body in the visual realm
-     * @param width The width of the body in meters
-     * @param height The height of the body in meters
      */
     public DynamicCircle(World world, Vec2 pos, float friction, float density, float restitution, Color color, double radious) {
         super(world, pos, friction, color, radious);

@@ -53,7 +53,7 @@ public final class LoadMap {
             Image grayHexagons = loadImage("/textures/squareTextures/GrayHexagons.png", new Vec2(0.4f, 0.4f));
             Image sword = loadImage("/textures/Textures/Sword.png", new Vec2(0.4f, 0.8f));
 
-            gameObjects.add(new Sword(objectID++, world, new Vec2(5f, 2f), 0.4f, 50, sword));
+            //gameObjects.add(new Sword(objectID++, world, new Vec2(5f, 2f), 0.4f, 50, sword));
 
             gameObjects.add(new DynamicSquare(world, new Vec2(2f, 2f), 0.3f, stoneBrickWall));
             gameObjects.add(new DynamicSquare(world, new Vec2(2.5f, 2f), 0.3f, stoneBrickWall));
@@ -73,6 +73,8 @@ public final class LoadMap {
             /*FirstAidBox firstAidBox = (new FirstAidBox(world, new Vec2(2f, 4f), 1f, Color.WHITE, 0.4d, 0.4, objectID++));
             gameObjectsCollision.add(firstAidBox);
             gameObjects.add(firstAidBox);*/
+
+
 
             Vec2 position = new Vec2(6f, 5f);
 

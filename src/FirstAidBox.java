@@ -12,7 +12,7 @@ import org.jbox2d.dynamics.contacts.Contact;
  * This class creates a box that can be picked up by the player. The box contains health
  * given to the player when picked up.
  */
-public class FirstAidBox extends Square implements CollisionListener {
+public class FirstAidBox extends DynamicSquare implements CollisionListener {
     private int health;
     private int ID;
     private World world;
@@ -28,7 +28,7 @@ public class FirstAidBox extends Square implements CollisionListener {
     public FirstAidBox(World world, Vec2 pos, float friction, Image image, int ID) {
         super(world, pos, friction, image);
         health = 100;
-        body.getFixtureList().setSensor(true); //Makes the coin a sensor
+        body.getFixtureList().setSensor(false); //Makes the coin a sensor
         body.setUserData(this);
     }
 
@@ -45,8 +45,9 @@ public class FirstAidBox extends Square implements CollisionListener {
     public FirstAidBox(World world, Vec2 pos, float friction, Color color, double width, double height, int ID) {
         super(world, pos, friction, color, width, height);
         health = 100;
-        body.getFixtureList().setSensor(true); //Makes the coin a sensor
+        body.getFixtureList().setSensor(false); //Makes the coin a sensor
         body.setUserData(this);
+        System.out.println(ID);
     }
 
     /**
@@ -54,6 +55,7 @@ public class FirstAidBox extends Square implements CollisionListener {
      * by the coin and the coin is then removed from the world.
      */
     public void beginContact(Contact contact){
+        System.out.println(ID);
         if (contact.getFixtureA().getBody().getUserData().equals(this) && contact.getFixtureB().getBody().getUserData() instanceof Player){
             ((Player) contact.getFixtureB().getBody().getUserData()).heal(health);
             Map map = LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber());
@@ -85,6 +87,10 @@ public class FirstAidBox extends Square implements CollisionListener {
      * @return the ID of the coin
      */
     public int getID() {return ID;}
+
+    public void setID(int ID) {
+        this.ID = ID;
+    }
 
     /**
      * Overrides the method 'equals.()'
