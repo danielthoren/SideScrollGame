@@ -485,4 +485,8 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
     public int getVisibleHealth() {
         return visibleHealth;
     }
+
+    public void setCurrentJumpHandler(JumpHandler currentJumpHandler) {
+        this.currentJumpHandler = currentJumpHandler;
+    }
 }

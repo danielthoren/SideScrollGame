@@ -79,7 +79,7 @@ public class FirstAidBox extends Square implements CollisionListener {
     /**
      * @return the points held by the coin
      */
-    public int getPoints() {return health;}
+    public int getHealth() {return health;}
 
     /**
      * @return the ID of the coin

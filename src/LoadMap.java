@@ -141,4 +141,12 @@ public final class LoadMap {
     public Map getMap(int mapNumber){
         return maps.get(mapNumber);
     }
+
+    public static int getObjectID() {
+        return objectID;
+    }
+
+    public static void setObjectID(int objectID) {
+        LoadMap.objectID = objectID;
+    }
 }
