@@ -3,6 +3,9 @@ import org.jbox2d.dynamics.Fixture;
 import org.jbox2d.dynamics.World;
 import org.jbox2d.dynamics.contacts.Contact;
 
+import java.util.List;
+import java.util.Random;
+
 public class GameLogic implements CollisionListener, DrawAndUpdateObject
 {
     private static GameLogic ourInstance = new GameLogic();
@@ -13,8 +16,13 @@ public class GameLogic implements CollisionListener, DrawAndUpdateObject
 
     private World world;
 
-    private GameLogic() {
+    List<JumpHandler> jumpHandlers;
+
+    private GameLogic()
+    {
         world = LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber()).getWorld();
+        LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber()).addDrawAndUpdateObject(this);
+        LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber()).addCollisionListener(this);
     }
 
 
@@ -22,7 +30,15 @@ public class GameLogic implements CollisionListener, DrawAndUpdateObject
      * The function that updates the object every frame
      */
     public void update(){
+        System.out.println("hej");
+        Random rand = new Random();
+        int n = rand.nextInt(1)+0;
 
+
+        jumpHandlers.add(new WallJumpHandler());
+        int lenList = rand.nextInt(jumpHandlers.size());
+
+        new PowerUpFactory(world, n,jumpHandlers.get(lenList));
     }
 
     /**

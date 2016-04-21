@@ -69,9 +69,9 @@ public final class LoadMap {
             //gameObjects.add(new MovingPlatform(world, new Vec2(0f, 3f), 1f, Color.WHEAT, 1d, 0.1d, new Vec2(7f, 4f)));
             //gameObjects.add(new MovingPlatform(world, new Vec2(1f, 3f), 1f, Color.BISQUE, 1d, 0.1d, new Vec2(1f, 5f)));
 
-            FirstAidBox firstAidBox = (new FirstAidBox(world, new Vec2(2f, 4f), 1f, Color.WHITE, 0.4d, 0.4, objectID++));
+            /*FirstAidBox firstAidBox = (new FirstAidBox(world, new Vec2(2f, 4f), 1f, Color.WHITE, 0.4d, 0.4, objectID++));
             gameObjectsCollision.add(firstAidBox);
-            gameObjects.add(firstAidBox);
+            gameObjects.add(firstAidBox);*/
 
             Vec2 position = new Vec2(6f, 5f);
 
