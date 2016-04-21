@@ -14,7 +14,7 @@ import org.jbox2d.dynamics.contacts.Contact;
  */
 public class FirstAidBox extends Square implements CollisionListener {
     private int health;
-    private int ID;
+    private final int ID;
     private World world;
 
     /**
@@ -25,8 +25,9 @@ public class FirstAidBox extends Square implements CollisionListener {
      * @param image     The iamge of the coin
      * @param ID    The ID of the coin
      */
-    public FirstAidBox(World world, Vec2 pos, float friction, Image image, int ID) {
-        super(world, pos, friction, image);
+    public FirstAidBox(int ID, World world, Vec2 pos, float friction, Image image) {
+        super(ID, world, pos, friction, image);
+        this.ID = ID;
         health = 100;
         body.getFixtureList().setSensor(true); //Makes the coin a sensor
         body.setUserData(this);
@@ -42,8 +43,9 @@ public class FirstAidBox extends Square implements CollisionListener {
      * @param height    The height if the box
      * @param ID    The id of the box
      */
-    public FirstAidBox(World world, Vec2 pos, float friction, Color color, double width, double height, int ID) {
-        super(world, pos, friction, color, width, height);
+    public FirstAidBox(int ID, World world, Vec2 pos, float friction, Color color, double width, double height) {
+        super(ID, world, pos, friction, color, width, height);
+        this.ID = ID;
         health = 100;
         body.getFixtureList().setSensor(true); //Makes the coin a sensor
         body.setUserData(this);

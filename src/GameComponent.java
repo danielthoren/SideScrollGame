@@ -41,7 +41,7 @@ public class GameComponent extends Parent
 
         LoadMap.getInstance().loadMap(currentMapNumber);
         currentMap = LoadMap.getInstance().getMap(currentMapNumber);
-        gameLogic = new GameLogic();
+        gameLogic = new GameLogic(LoadMap.getObjectID());
         currentMap.addCollisionListener(gameLogic);
         currentMap.addDrawAndUpdateObject(gameLogic);
         world = currentMap.getWorld();

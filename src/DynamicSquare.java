@@ -21,8 +21,8 @@ public class DynamicSquare extends Square {
      * @param restitution The restitution of the body (the bouncines of the body)
      * @param image The image representing the body in the visual realm
      */
-    public DynamicSquare(World world, Vec2 pos, float friction, Image image) {
-        super(world, pos, friction, image);
+    public DynamicSquare(int ID, World world, Vec2 pos, float friction, Image image) {
+        super(ID, world, pos, friction, image);
         body.setUserData(this);
         makeDynamic();
     }
@@ -36,8 +36,8 @@ public class DynamicSquare extends Square {
      * @param width The width of the body in meters
      * @param height The height of the body in meters
      */
-    public DynamicSquare(World world, Vec2 pos, float friction, Color color, double width, double height) {
-        super(world, pos, friction, color, width, height);
+    public DynamicSquare(int ID, World world, Vec2 pos, float friction, Color color, double width, double height) {
+        super(ID, world, pos, friction, color, width, height);
         body.setUserData(this);
         makeDynamic();
     }

@@ -25,8 +25,8 @@ public class MovingPlatform extends Square{
      * @param image   The image texture on the platform
      * @param endPos  The end posistion
      */
-    public MovingPlatform(World world, Vec2 pos, float friction, Image image, Vec2 endPos) {
-        super(world, pos, friction, image);
+    public MovingPlatform(int ID, World world, Vec2 pos, float friction, Image image, Vec2 endPos) {
+        super(ID, world, pos, friction, image);
         startPos = pos;
         this.endPos = endPos;
         platformSpeed = 1;
@@ -44,8 +44,8 @@ public class MovingPlatform extends Square{
      * @param height The height of the platform
      * @param endPos The posistion where the platform should return
      */
-    public MovingPlatform(World world, Vec2 pos, float friction, Color color, double width, double height, Vec2 endPos) {
-        super(world, pos, friction, color, width, height);
+    public MovingPlatform(int ID, World world, Vec2 pos, float friction, Color color, double width, double height, Vec2 endPos) {
+        super(ID, world, pos, friction, color, width, height);
         startPos = pos;
         this.endPos = endPos;
         platformSpeed = 1;   //The platform speed is set to 1m/s

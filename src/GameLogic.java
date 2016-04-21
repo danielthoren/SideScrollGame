@@ -6,8 +6,10 @@ import org.jbox2d.dynamics.contacts.Contact;
 public class GameLogic implements CollisionListener, DrawAndUpdateObject
 {
     private World world;
+    private final int ID;
 
-    public GameLogic() {
+    public GameLogic(int ID) {
+        this.ID = ID;
     }
 
 
@@ -63,6 +65,10 @@ public class GameLogic implements CollisionListener, DrawAndUpdateObject
      */
     public void endContact(Contact contact){
 
+    }
+
+    @Override public int getID() {
+        return ID;
     }
 }
 

@@ -23,7 +23,7 @@ public class SquareInventoryItem extends DynamicSquare implements InventoryItem
     protected boolean equipped;
 
     public SquareInventoryItem(int ID, World world, Player player, float friction, Image image) {
-        super(world, player.body.getPosition(), friction, image);
+        super(ID, world, player.body.getPosition(), friction, image);
         this.world = world;
         this.ID = ID;
         equipped = true;
@@ -32,7 +32,7 @@ public class SquareInventoryItem extends DynamicSquare implements InventoryItem
     }
 
     public SquareInventoryItem(int ID,World world, Vec2 position, float friction, Image image) {
-        super(world, position, friction, image);
+        super(ID, world, position, friction, image);
         this.ID = ID;
         this.world = world;
         player = null;
