@@ -52,7 +52,8 @@ public final class LoadMap {
             Image dessertSquare = loadImage("/textures/squareTextures/DessertSquare.jpg", new Vec2(0.4f, 0.4f));
             Image grayHexagons = loadImage("/textures/squareTextures/GrayHexagons.png", new Vec2(0.4f, 0.4f));
             Image sword = loadImage("/textures/Textures/Sword.png", new Vec2(0.4f, 0.8f));
-            gameObjects.add(new DynamicSquare(world, new Vec2(5f, 2f), 0.3f, sword));
+
+            gameObjects.add(new Sword(objectID++, world, new Vec2(5f, 2f), 0.4f, 50, sword));
 
             gameObjects.add(new DynamicSquare(world, new Vec2(2f, 2f), 0.3f, stoneBrickWall));
             gameObjects.add(new DynamicSquare(world, new Vec2(2.5f, 2f), 0.3f, stoneBrickWall));
@@ -93,9 +94,9 @@ public final class LoadMap {
             Player player = new Player(objectID++, world, position, friction, density, acceleration, deceleration, sprite);
 
             ScoreBoard.getInstance().addPlayers(player);
-            player.setJump(KeyCode.W);
-            player.setLeft(KeyCode.A);
-            player.setRight(KeyCode.D);
+            player.setJumpCode(KeyCode.W);
+            player.setRunLeftCode(KeyCode.A);
+            player.setRunRightCode(KeyCode.D);
             gameObjectsListen.add(player);
             gameObjects.add(player);
             gameObjectsCollision.add(player);
@@ -105,9 +106,9 @@ public final class LoadMap {
             Player player2 = new Player(objectID++, world, position, friction, density, acceleration, deceleration, sprite2);
 
             ScoreBoard.getInstance().addPlayers(player2);
-            player2.setJump(KeyCode.UP);
-            player2.setRight(KeyCode.RIGHT);
-            player2.setLeft(KeyCode.LEFT);
+            player2.setJumpCode(KeyCode.UP);
+            player2.setRunRightCode(KeyCode.RIGHT);
+            player2.setRunLeftCode(KeyCode.LEFT);
             gameObjectsListen.add(player2);
             gameObjects.add(player2);
             gameObjectsCollision.add(player2);

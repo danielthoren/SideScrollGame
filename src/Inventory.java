@@ -7,7 +7,7 @@ import java.util.List;
 public class Inventory {
 
     private Player player;
-    private List<InventoryItem> inventoryItemList;
+    private List<SquareInventoryItem> inventoryItemList;
     private int equippedItemIndex;
     private int inventorySize;
     private int maxInventorySize;
@@ -19,7 +19,7 @@ public class Inventory {
     public Inventory(Player player) {
         this.player = player;
 
-        inventoryItemList = new ArrayList<InventoryItem>(4);
+        inventoryItemList = new ArrayList<SquareInventoryItem>(4);
         //The size of the current inventory
         inventorySize = 0;
         //Default value
@@ -34,7 +34,7 @@ public class Inventory {
     public void cycle (){
         if (inventorySize > 0) {
             equippedItemIndex = (equippedItemIndex + 1) % inventorySize;
-            inventoryItemList.get(equippedItemIndex).equip(player);
+            inventoryItemList.get(equippedItemIndex).equip();
         }
     }
 
@@ -42,11 +42,11 @@ public class Inventory {
      * Adds item and equipps it if the inventory is not full.
      * @param inventoryItem The item to be added to the inventory.
      */
-    public boolean addItem(InventoryItem inventoryItem){
+    public boolean addItem(SquareInventoryItem inventoryItem){
         if (inventorySize < maxInventorySize) {
             inventoryItemList.add(inventoryItem);
             inventoryItemList.get(equippedItemIndex).unEquip();
-            inventoryItem.equip(player);
+            inventoryItem.pickUp(player);
             equippedItemIndex = inventoryItemList.indexOf(inventoryItem);
             return true;
         }

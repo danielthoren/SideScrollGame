@@ -18,7 +18,7 @@ public class FirstAidBox extends Square implements CollisionListener {
     private World world;
 
     /**
-     * Creates a box that will symbolize a first aid kit.
+     * Creates a box that will symbolize a first aid kit
      * @param world The world where the coin will be created
      * @param pos   The position of the coin
      * @param friction  The friction of the coin

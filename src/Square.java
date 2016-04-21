@@ -57,7 +57,7 @@ public class Square extends SolidObject implements DrawAndUpdateObject
      * Creates the body of the 'Square' object.
      * @param world The world in wich to add its body.
      */
-    private void createBody(World world){
+    protected void createBody(World world){
 	FixtureDef fixtureDef = new FixtureDef();
 	PolygonShape polygonShape = new PolygonShape();
 

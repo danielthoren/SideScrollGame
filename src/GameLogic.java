@@ -8,21 +8,13 @@ import java.util.Random;
 
 public class GameLogic implements CollisionListener, DrawAndUpdateObject
 {
-    private static GameLogic ourInstance = new GameLogic();
-
-    public static GameLogic getInstance() {
-	return ourInstance;
-    }
-
     private World world;
+
 
     List<JumpHandler> jumpHandlers;
 
-    private GameLogic()
-    {
-        world = LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber()).getWorld();
-        LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber()).addDrawAndUpdateObject(this);
-        LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber()).addCollisionListener(this);
+    public GameLogic() {
+
     }
 
 
@@ -39,6 +31,7 @@ public class GameLogic implements CollisionListener, DrawAndUpdateObject
         int lenList = rand.nextInt(jumpHandlers.size());
 
         new PowerUpFactory(world, n,jumpHandlers.get(lenList));
+
     }
 
     /**
@@ -71,9 +64,9 @@ public class GameLogic implements CollisionListener, DrawAndUpdateObject
      */
     private void playerCollisionCheck(Fixture playerFixture, Fixture otherFixture){
         //Checks if the player wants to pick upp item ('E' is pressed). If so and other item colliding with the player
-        //is an 'InventoryItem' then said 'InventoryItem's 'equip' function is called.
-        if (((Player) playerFixture.getBody().getUserData()).isPickUpItem() && otherFixture.getBody().getUserData() instanceof InventoryItem){
-            ((InventoryItem) otherFixture.getBody().getUserData()).equip((Player) playerFixture.getBody().getUserData());
+        //is an 'SquareInventoryItem' then said 'SquareInventoryItem's 'equip' function is called.
+        if (((Player) playerFixture.getBody().getUserData()).isPickUpItem() && otherFixture.getBody().getUserData() instanceof SquareInventoryItem){
+            ((SquareInventoryItem) otherFixture.getBody().getUserData()).pickUp((Player) playerFixture.getBody().getUserData());
         }
 
 }
@@ -87,10 +80,6 @@ public class GameLogic implements CollisionListener, DrawAndUpdateObject
      */
     public void endContact(Contact contact){
 
-    }
-
-    public void setWorld(final World world) {
-        this.world = world;
     }
 }
 
