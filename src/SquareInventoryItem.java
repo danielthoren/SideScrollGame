@@ -40,7 +40,8 @@ public class SquareInventoryItem extends DynamicSquare implements InventoryItem,
     }
 
     private void calcRelativePos(Player player){
-        relativePos = new Vec2(player.getPosition().x + player.getSize().x, player.getPosition().y - size.y/2);
+        relativePos = new Vec2(player.getSize().x, -size.y/2);
+        System.out.println(relativePos);
     }
 
     public void update(){
@@ -50,7 +51,14 @@ public class SquareInventoryItem extends DynamicSquare implements InventoryItem,
             }
         }
         if (player != null) {
-            pos = new Vec2(player.getPosition().x + relativePos.x, player.getPosition().y + relativePos.y);
+            Vec2 newPos = new Vec2(player.getPosition().x + relativePos.x, player.getPosition().y + relativePos.y);
+            body.getPosition().x = newPos.x;
+            body.getPosition().y = newPos.y;
+            /*
+            System.out.print(body.getPosition());
+            System.out.print("    playerPosition:    ");
+            System.out.println(player.body.getPosition());
+            */
         }
     }
 
@@ -104,6 +112,7 @@ public class SquareInventoryItem extends DynamicSquare implements InventoryItem,
     public void unEquip(){
         LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber()).removeBody(body);
         LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber()).removeDrawAndUpdateObject(this);
+        body = null;
         equipped = false;
     }
 
