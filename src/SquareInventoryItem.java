@@ -1,6 +1,7 @@
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import org.jbox2d.common.Vec2;
+import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.Fixture;
 import org.jbox2d.dynamics.World;
@@ -26,6 +27,9 @@ public class SquareInventoryItem extends DynamicSquare implements InventoryItem,
         this.ID = ID;
         currentCollidingPlayer = null;
         equipped = true;
+        setGroupIndex(-player.getID());
+        setSensor(false);
+        body.setType(BodyType.KINEMATIC);
         size = new Vec2(GameComponent.pixToMeters((float) image.getWidth()), GameComponent.pixToMeters((float) image.getHeight()));
         calcRelativePos(player);
     }
@@ -36,12 +40,24 @@ public class SquareInventoryItem extends DynamicSquare implements InventoryItem,
         this.world = world;
         currentCollidingPlayer = null;
         player = null;
+        setSensor(true);
         size = new Vec2(GameComponent.pixToMeters((float) image.getWidth()), GameComponent.pixToMeters((float) image.getHeight()));
+    }
+
+    private void setSensor(boolean isSensor){
+        for (Fixture fixture = body.getFixtureList(); fixture != null; fixture = fixture.getNext()){
+            fixture.setSensor(isSensor);
+        }
+    }
+
+    private void setGroupIndex(int index){
+        for (Fixture fixture = body.getFixtureList(); fixture != null; fixture = fixture.getNext()){
+            fixture.getFilterData().groupIndex = index;
+        }
     }
 
     private void calcRelativePos(Player player){
         relativePos = new Vec2(player.getSize().x, -size.y/2);
-        System.out.println(relativePos);
     }
 
     public void update(){
@@ -51,9 +67,16 @@ public class SquareInventoryItem extends DynamicSquare implements InventoryItem,
             }
         }
         if (player != null) {
-            Vec2 newPos = new Vec2(player.getPosition().x + relativePos.x, player.getPosition().y + relativePos.y);
+            Vec2 newPos = new Vec2(0,0);
+            if (player.getDirection() == Direction.LEFT){
+                newPos = new Vec2(player.getPosition().x - relativePos.x, player.getPosition().y + relativePos.y);
+            }
+            else if (player.getDirection() == Direction.RIGHT){
+                newPos = new Vec2(player.getPosition().x + relativePos.x, player.getPosition().y + relativePos.y);
+            }
             body.getPosition().x = newPos.x;
             body.getPosition().y = newPos.y;
+
             /*
             System.out.print(body.getPosition());
             System.out.print("    playerPosition:    ");
@@ -117,11 +140,17 @@ public class SquareInventoryItem extends DynamicSquare implements InventoryItem,
     }
 
     public void pickUp(Player player){
+        setGroupIndex(-player.getID());
+        setSensor(false);
+        body.setType(BodyType.KINEMATIC);
         calcRelativePos(player);
         this.player = player;
     }
 
     public void drop(){
+        setSensor(true);
+        setGroupIndex(0);
+        body.setType(BodyType.DYNAMIC);
         player = null;
         body.setType(BodyType.DYNAMIC);
     }

@@ -197,6 +197,15 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
         rightSensor.friction = 0;
         rightSensor.userData = new SensorStatus(Direction.RIGHT);
 
+        //Setting the group index to be able to prevent collision between the player and certain objects (for example
+        //between the player and the inventory-items)
+        upperCircle.filter.groupIndex = -ID;
+        middleBox.filter.groupIndex = -ID;
+        bottomCircle.filter.groupIndex = -ID;
+        bottomSensor.filter.groupIndex = -ID;
+        leftSensor.filter.groupIndex = -ID;
+        rightSensor.filter.groupIndex = -ID;
+
         //Creating the body using the fixtureDef and the BodyDef created beneath
         BodyDef bodyDef = new BodyDef();
         bodyDef.position.set(pos);
@@ -511,4 +520,6 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
     }
 
     public boolean isPickUpItem() {return pickUpItem;}
+
+    public Direction getDirection() {return direction;}
 }
