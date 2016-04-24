@@ -30,6 +30,7 @@ public class PowerUpCoin extends DynamicCircle implements CollisionListener{
     public void beginContact(Contact contact) {
         if (contact.getFixtureA().getBody().getUserData().equals(this) && contact.getFixtureB().getBody().getUserData() instanceof Player){
             ((Player) contact.getFixtureB().getBody().getUserData()).setCurrentJumpHandler(jumpHandler);
+            ((Player) contact.getFixtureA().getBody().getUserData()).setStartTime(true);
             Map map = LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber());
             map.removeBody(body);
             map.removeCollisionListener(this);
@@ -37,6 +38,7 @@ public class PowerUpCoin extends DynamicCircle implements CollisionListener{
         }
         else if (contact.getFixtureB().getBody().getUserData().equals(this) && contact.getFixtureA().getBody().getUserData() instanceof Player){
             ((Player) contact.getFixtureA().getBody().getUserData()).setCurrentJumpHandler(jumpHandler);
+            ((Player) contact.getFixtureA().getBody().getUserData()).setStartTime(true);
             Map map = LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber());
             map.removeBody(body);
             map.removeCollisionListener(this);

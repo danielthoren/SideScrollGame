@@ -45,6 +45,8 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
     private long velocityZeroTimer;                           //Keeps track of how long the bodys y velocity has been 0
     private int maxHealth = 100;
     private int deathCount = 0;
+    private boolean startTime = false;
+    private int PowerUpTime=0;
 
     public Player(int ID, World world, Vec2 position, float friction, float density, Vec2 acceleration, Vec2 deceleration, Sprite sprite) {
         super(position, friction);
@@ -69,13 +71,10 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
         //Default values, can be changed with setters
         maxVelocity = new Vec2(10f, 20f);
         createBody(world);
-        currentJumpHandler = new WallJumpHandler();
+        currentJumpHandler = new DefaultJumpHandler();
         resetHealth(maxHealth);
         //Default valued, can be changed with setters
         pickUpCode = KeyCode.E;
-        runLeftCode = KeyCode.A;
-        runRightCode = KeyCode.D;
-        jumpCode = KeyCode.W;
     }
 
     public Player(int ID, World world, Vec2 position, float friction, float density, Vec2 acceleration, Vec2 deceleration, Color color, Vec2 size) {
@@ -101,13 +100,10 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
         //Default values, can be changed with setters
         maxVelocity = new Vec2(10f, 20f);
         createBody(world);
-        currentJumpHandler = new WallJumpHandler();
+        currentJumpHandler = new DefaultJumpHandler();
         resetHealth(maxHealth);
         //Default valued, can be changed with setters
         pickUpCode = KeyCode.E;
-        runLeftCode = KeyCode.A;
-        runRightCode = KeyCode.D;
-        jumpCode = KeyCode.W;
     }
 
     private void createBody(World world){
@@ -216,6 +212,14 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
 
     public void update(){
         runHandler();
+        if(startTime){
+            PowerUpTime++;
+            if (PowerUpTime > 360){
+                PowerUpTime = 0;
+                setCurrentJumpHandler(new DefaultJumpHandler());
+                setStartTime(false);
+            }
+        }
 
         //Ensures that the sensorvalue is not wrong. If velocity.y is 0 for two frames then the character is grounded
         if (body.getLinearVelocity().y > -0.01 && body.getLinearVelocity().y < 0.01 && !grounded){
@@ -411,10 +415,12 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
     public void beginContact(Contact contact){
         boolean playerContact = false;
         if (contact.getFixtureA().getBody().getUserData().equals(this) && contact.getFixtureA().isSensor()){
+            sensorSwitch(contact.getFixtureA(), true);
             ((SensorStatus)contact.getFixtureA().getUserData()).setDrawSensor(true);
             playerContact = true;
         }
        	if (contact.getFixtureB().getBody().getUserData().equals(this) && contact.getFixtureB().isSensor()) {
+            sensorSwitch(contact.getFixtureB(), true);
             ((SensorStatus) contact.getFixtureB().getUserData()).setDrawSensor(true);
             playerContact = true;
         }
@@ -517,4 +523,7 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
 
     public boolean isPickUpItem() {return pickUpItem;}
 
+    public void setStartTime(boolean startTime) {
+        this.startTime = startTime;
+    }
 }
