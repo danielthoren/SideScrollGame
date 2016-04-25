@@ -22,7 +22,7 @@ public final class LoadMap {
     private LoadMap() {
         maps = new HashMap<Integer, Map>();
         objectID = 1;
-        pixPerMeter = 100;                                 //should be read from file in the future
+        pixPerMeter = 100;
     }
 
     public static LoadMap getInstance(){
@@ -51,9 +51,12 @@ public final class LoadMap {
             Image stoneBrickWall = loadImage("/textures/squareTextures/StoneBrickWall.jpg", new Vec2(0.4f, 0.4f));
             Image dessertSquare = loadImage("/textures/squareTextures/DessertSquare.jpg", new Vec2(0.4f, 0.4f));
             Image grayHexagons = loadImage("/textures/squareTextures/GrayHexagons.png", new Vec2(0.4f, 0.4f));
-            Image sword = loadImage("/textures/Textures/Sword.png", new Vec2(0.4f, 0.8f));
+            Image swordIm = loadImage("/textures/Textures/Sword.png", new Vec2(0.4f, 0.8f));
 
-            gameObjects.add(new Sword(objectID++, world, new Vec2(5f, 2f), 0.4f, 50, sword));
+            Sword sword = new Sword(objectID++, world, new Vec2(5f, 0f), 0.4f, 50, swordIm);
+            gameObjects.add(sword);
+            gameObjectsCollision.add(sword);
+
 
             gameObjects.add(new DynamicSquare(objectID++, world, new Vec2(2f, 2f), 0.3f, stoneBrickWall));
             gameObjects.add(new DynamicSquare(objectID++, world, new Vec2(2.5f, 2f), 0.3f, stoneBrickWall));

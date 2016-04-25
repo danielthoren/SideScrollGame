@@ -2,6 +2,7 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.BodyType;
+import org.jbox2d.dynamics.Fixture;
 import org.jbox2d.dynamics.World;
 
 /**
@@ -54,7 +55,9 @@ public class DynamicSquare extends Square {
 
 
     public void setDensity(float density) {
-        this.density = density;
+        for (Fixture fixture = body.getFixtureList(); fixture != null; fixture = fixture.getNext()){
+            fixture.setDensity(density);
+        }
     }
 
     public void setRestitution(float restitution) {

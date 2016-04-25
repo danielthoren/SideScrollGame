@@ -23,6 +23,7 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
     private KeyCode runRightCode;
     private KeyCode jumpCode;
     private KeyCode pickUpCode;
+    private KeyCode dropItemCode;
     private Sprite sprite;
     private Vec2 maxVelocity;
     private Vec2 acceleration;
@@ -76,6 +77,7 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
         runLeftCode = KeyCode.A;
         runRightCode = KeyCode.D;
         jumpCode = KeyCode.W;
+        dropItemCode = KeyCode.G;
     }
 
     public Player(int ID, World world, Vec2 position, float friction, float density, Vec2 acceleration, Vec2 deceleration, Color color, Vec2 size) {
@@ -108,6 +110,7 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
         runLeftCode = KeyCode.A;
         runRightCode = KeyCode.D;
         jumpCode = KeyCode.W;
+        dropItemCode = KeyCode.G;
     }
 
     private void createBody(World world){
@@ -199,12 +202,12 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
 
         //Setting the group index to be able to prevent collision between the player and certain objects (for example
         //between the player and the inventory-items)
-        upperCircle.filter.groupIndex = -ID;
-        middleBox.filter.groupIndex = -ID;
-        bottomCircle.filter.groupIndex = -ID;
-        bottomSensor.filter.groupIndex = -ID;
-        leftSensor.filter.groupIndex = -ID;
-        rightSensor.filter.groupIndex = -ID;
+        upperCircle.filter.groupIndex = -1;
+        middleBox.filter.groupIndex = -1;
+        bottomCircle.filter.groupIndex = -1;
+        bottomSensor.filter.groupIndex = -1;
+        leftSensor.filter.groupIndex = -1;
+        rightSensor.filter.groupIndex = -1;
 
         //Creating the body using the fixtureDef and the BodyDef created beneath
         BodyDef bodyDef = new BodyDef();
@@ -402,6 +405,9 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
             }
             if(event.getCode() == pickUpCode){
                 pickUpItem = true;
+            }
+            if (event.getCode() == dropItemCode){
+                inventory.dropCurrentItem();
             }
         }
         else if (event.getEventType().equals(KeyEvent.KEY_RELEASED)){

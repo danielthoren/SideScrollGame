@@ -9,7 +9,7 @@ public class Inventory {
     private Player player;
     private List<SquareInventoryItem> inventoryItemList;
     private int equippedItemIndex;
-    private int inventorySize;
+    private int occupiedInventorySlots;
     private int maxInventorySize;
 
     /**
@@ -21,7 +21,7 @@ public class Inventory {
 
         inventoryItemList = new ArrayList<SquareInventoryItem>(4);
         //The size of the current inventory
-        inventorySize = 0;
+        occupiedInventorySlots = 0;
         //Default value
         maxInventorySize = 4;
         //WHen value is -1 there is no equipped item
@@ -32,8 +32,8 @@ public class Inventory {
      * Cycles through the inventory items, equipping the one next in the list.
      */
     public void cycle (){
-        if (inventorySize > 0) {
-            equippedItemIndex = (equippedItemIndex + 1) % inventorySize;
+        if (occupiedInventorySlots > 0) {
+            equippedItemIndex = (equippedItemIndex + 1) % occupiedInventorySlots;
             inventoryItemList.get(equippedItemIndex).equip();
         }
     }
@@ -43,9 +43,12 @@ public class Inventory {
      * @param inventoryItem The item to be added to the inventory.
      */
     public boolean addItem(SquareInventoryItem inventoryItem){
-        if (inventorySize < maxInventorySize) {
+        System.out.println("in addItem");
+        if (occupiedInventorySlots < maxInventorySize) {
             inventoryItemList.add(inventoryItem);
-            inventoryItemList.get(equippedItemIndex).unEquip();
+            if (equippedItemIndex != -1) {
+                inventoryItemList.get(equippedItemIndex).unEquip();
+            }
             inventoryItem.pickUp(player);
             equippedItemIndex = inventoryItemList.indexOf(inventoryItem);
             return true;
@@ -53,11 +56,14 @@ public class Inventory {
         return false;
     }
 
-    public void dropItem(int equippedItemIndex){
-
+    public void dropCurrentItem(){
+        if (equippedItemIndex != -1) {
+            inventoryItemList.get(equippedItemIndex).drop();
+            inventoryItemList.remove(equippedItemIndex);
+        }
     }
 
-    public int getInventorySize() {return inventorySize;}
+    public int getOccupiedInventorySlots() {return occupiedInventorySlots;}
 
-    public void setInventorySize(int inventorySize) {this.inventorySize = inventorySize;}
+    public void setOccupiedInventorySlots(int occupiedInventorySlots) {this.occupiedInventorySlots = occupiedInventorySlots;}
 }

@@ -1,5 +1,6 @@
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import org.jbox2d.collision.shapes.PolygonShape;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.BodyType;
@@ -20,40 +21,39 @@ public class SquareInventoryItem extends DynamicSquare implements InventoryItem,
     protected Vec2 relativePos;
     protected final Vec2 size;
     protected boolean equipped;
+    protected boolean hasDamaged;
 
     public SquareInventoryItem(int ID, World world, Player player, float friction, Image image) {
         super(ID, world, player.body.getPosition(), friction, image);
+        super.setDensity(1f);
         this.world = world;
         this.ID = ID;
         currentCollidingPlayer = null;
+        hasDamaged = false;
         equipped = true;
         setGroupIndex(-player.getID());
-        setSensor(false);
         body.setType(BodyType.KINEMATIC);
         size = new Vec2(GameComponent.pixToMeters((float) image.getWidth()), GameComponent.pixToMeters((float) image.getHeight()));
         calcRelativePos(player);
     }
 
-    public SquareInventoryItem(int ID,World world, Vec2 position, float friction, Image image) {
+    public SquareInventoryItem(int ID, World world, Vec2 position, float friction, Image image) {
         super(ID, world, position, friction, image);
+        super.setDensity(1f);
         this.ID = ID;
         this.world = world;
+        hasDamaged = false;
         currentCollidingPlayer = null;
         player = null;
-        setSensor(true);
         size = new Vec2(GameComponent.pixToMeters((float) image.getWidth()), GameComponent.pixToMeters((float) image.getHeight()));
     }
 
-    private void setSensor(boolean isSensor){
-        for (Fixture fixture = body.getFixtureList(); fixture != null; fixture = fixture.getNext()){
-            fixture.setSensor(isSensor);
-        }
-    }
-
     private void setGroupIndex(int index){
+        /*
         for (Fixture fixture = body.getFixtureList(); fixture != null; fixture = fixture.getNext()){
             fixture.getFilterData().groupIndex = index;
         }
+        */
     }
 
     private void calcRelativePos(Player player){
@@ -61,10 +61,9 @@ public class SquareInventoryItem extends DynamicSquare implements InventoryItem,
     }
 
     public void update(){
-        if (currentCollidingPlayer != null && currentCollidingPlayer.isPickUpItem()){
-            if (currentCollidingPlayer.getInventory().addItem(this)){
-                pickUp(currentCollidingPlayer);
-            }
+        if (currentCollidingPlayer != null && currentCollidingPlayer.isPickUpItem() && player == null){
+            System.out.println("in update");
+            currentCollidingPlayer.getInventory().addItem(this);
         }
         if (player != null) {
             Vec2 newPos = new Vec2(0,0);
@@ -76,12 +75,6 @@ public class SquareInventoryItem extends DynamicSquare implements InventoryItem,
             }
             body.getPosition().x = newPos.x;
             body.getPosition().y = newPos.y;
-
-            /*
-            System.out.print(body.getPosition());
-            System.out.print("    playerPosition:    ");
-            System.out.println(player.body.getPosition());
-            */
         }
     }
 
@@ -90,11 +83,21 @@ public class SquareInventoryItem extends DynamicSquare implements InventoryItem,
     }
 
     public void beginContact(Contact contact){
-        if (contact.getFixtureA().getBody().getUserData().equals(this) && contact.getFixtureB().getBody().getUserData() instanceof Player){
+        if (contact.getFixtureA().getBody().getUserData().equals(this) &&
+                contact.getFixtureB().getBody().getUserData() instanceof Player){
             currentCollidingPlayer = (Player) contact.getFixtureB().getBody().getUserData();
+            if (player != null && !hasDamaged && !((Player) contact.getFixtureB().getBody().getUserData()).equals(player)) {
+                currentCollidingPlayer.damage(15);
+                hasDamaged = true;
+            }
         }
-        else if (contact.getFixtureB().getBody().getUserData().equals(this) && contact.getFixtureA().getBody().getUserData() instanceof Player){
+        else if (contact.getFixtureB().getBody().getUserData().equals(this) &&
+                contact.getFixtureA().getBody().getUserData() instanceof Player){
             currentCollidingPlayer = (Player) contact.getFixtureA().getBody().getUserData();
+            if (player != null && !hasDamaged && !((Player) contact.getFixtureA().getBody().getUserData()).equals(player)) {
+                currentCollidingPlayer.damage(15);
+                hasDamaged = true;
+            }
         }
     }
 
@@ -106,14 +109,17 @@ public class SquareInventoryItem extends DynamicSquare implements InventoryItem,
         if (player.isPickUpItem())
             if (player.getInventory().addItem(this)){
                 pickUp(player);
+                System.out.println("In pickupCheck");
         }
     }
 
     public void endContact(Contact contact){
         if (contact.getFixtureA().getBody().getUserData().equals(this) && contact.getFixtureB().getBody().getUserData() instanceof Player){
+            hasDamaged = false;
             currentCollidingPlayer = null;
         }
         else if (contact.getFixtureB().getBody().getUserData().equals(this) && contact.getFixtureA().getBody().getUserData() instanceof Player){
+            hasDamaged = false;
             currentCollidingPlayer = null;
         }
 
@@ -124,7 +130,9 @@ public class SquareInventoryItem extends DynamicSquare implements InventoryItem,
      */
     public void equip(){
         LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber()).addDrawAndUpdateObject(this);
+        LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber()).addCollisionListener(this);
         super.createBody(world);
+        System.out.println("in equip");
         equipped = true;
     }
 
@@ -140,19 +148,18 @@ public class SquareInventoryItem extends DynamicSquare implements InventoryItem,
     }
 
     public void pickUp(Player player){
-        setGroupIndex(-player.getID());
-        setSensor(false);
-        body.setType(BodyType.KINEMATIC);
+        System.out.println(body);
+        body.setType(BodyType.STATIC);
+        body.getFixtureList().setSensor(false);
+        body.setFixedRotation(true);
         calcRelativePos(player);
         this.player = player;
     }
 
     public void drop(){
-        setSensor(true);
-        setGroupIndex(0);
         body.setType(BodyType.DYNAMIC);
+        body.setFixedRotation(false);
         player = null;
-        body.setType(BodyType.DYNAMIC);
     }
 
     public int getID() {return ID;}
