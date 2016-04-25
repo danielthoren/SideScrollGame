@@ -7,7 +7,7 @@ import org.jbox2d.dynamics.contacts.Contact;
 /**
  * Created by kristiansikiric on 2016-04-21.
  */
-public class PowerUpCoin extends DynamicCircle implements CollisionListener{
+public class PowerUpCoin extends DynamicCircle implements CollisionListener, DrawAndUpdateObject {
     private JumpHandler jumpHandler;
     private int ID;
 

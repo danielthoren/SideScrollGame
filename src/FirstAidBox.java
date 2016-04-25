@@ -12,7 +12,7 @@ import org.jbox2d.dynamics.contacts.Contact;
  * This class creates a box that can be picked up by the player. The box contains health
  * given to the player when picked up.
  */
-public class FirstAidBox extends DynamicSquare implements CollisionListener {
+public class FirstAidBox extends DynamicSquare implements CollisionListener, DrawAndUpdateObject {
     private int health;
     private int ID;
     private World world;

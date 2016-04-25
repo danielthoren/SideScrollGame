@@ -11,7 +11,7 @@ public class GameLogic implements CollisionListener, DrawAndUpdateObject
 {
     private World world;
 
-    PowerUpFactory powerUpFactory = new PowerUpFactory(world, 0, null);
+    PowerUpFactory powerUpFactory = new PowerUpFactory(world);
 
     List<JumpHandler> jumpHandlers = new ArrayList<JumpHandler>();
 
@@ -28,15 +28,7 @@ public class GameLogic implements CollisionListener, DrawAndUpdateObject
 
         count ++;
         if (count % 60 == 0) {
-            Random rand = new Random();
-            int n = rand.nextInt(2);
-
-
-            jumpHandlers.add(new WallJumpHandler());
-            int lenList = rand.nextInt(jumpHandlers.size());
-
-            powerUpFactory.powerUp(world, n, jumpHandlers.get(lenList));
-
+            powerUpFactory.powerUp(world);
         }
     }
 
