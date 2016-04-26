@@ -10,6 +10,7 @@ import java.util.List;
 public class ScoreBoard implements DrawAndUpdateObject {
     private static ScoreBoard ourInstance = new ScoreBoard();
     private static List<Player> players; //Holds the players.
+    private static int ID = -1;
 
     public static ScoreBoard getInstance() {
         return ourInstance;
@@ -45,5 +46,9 @@ public class ScoreBoard implements DrawAndUpdateObject {
      */
     public void addPlayers(Player player){
         players.add(player);
+    }
+
+    public int getID(){
+        return ID;
     }
 }

@@ -23,6 +23,7 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
     private KeyCode runRightCode;
     private KeyCode jumpCode;
     private KeyCode pickUpCode;
+    private KeyCode dropItemCode;
     private Sprite sprite;
     private Vec2 maxVelocity;
     private Vec2 acceleration;
@@ -36,7 +37,7 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
     private boolean collisionLeft;
     private boolean collisionRight;
     private boolean pickUpItem;
-    private static boolean drawSensors = true;                //Used for debugging, draws the sensorFixtures of the player
+    private static boolean drawSensors = false;                //Used for debugging, draws the sensorFixtures of the player
     private static boolean debugDraw = false;                 //Used for debugging, draws the bodyfixtures over the sprite
     private final int ID;                                     //The unique id of the specific instance of player
     private int score;                                        //The score of the player
@@ -44,7 +45,6 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
     private int visibleHealth;                                //This is the health we are showing.
     private long velocityZeroTimer;                           //Keeps track of how long the bodys y velocity has been 0
     private int maxHealth = 100;
-    private int deathCount = 0;
     private boolean startTime = false;
     private int PowerUpTime=0;
 
@@ -75,6 +75,11 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
         resetHealth(maxHealth);
         //Default valued, can be changed with setters
         pickUpCode = KeyCode.E;
+        runLeftCode = KeyCode.A;
+        runRightCode = KeyCode.D;
+        jumpCode = KeyCode.W;
+        dropItemCode = KeyCode.G;
+
     }
 
     public Player(int ID, World world, Vec2 position, float friction, float density, Vec2 acceleration, Vec2 deceleration, Color color, Vec2 size) {
@@ -104,6 +109,11 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
         resetHealth(maxHealth);
         //Default valued, can be changed with setters
         pickUpCode = KeyCode.E;
+        runLeftCode = KeyCode.A;
+        runRightCode = KeyCode.D;
+        jumpCode = KeyCode.W;
+        dropItemCode = KeyCode.G;
+
     }
 
     private void createBody(World world){
@@ -192,6 +202,15 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
         rightSensor.density = 0;
         rightSensor.friction = 0;
         rightSensor.userData = new SensorStatus(Direction.RIGHT);
+
+        //Setting the group index to be able to prevent collision between the player and certain objects (for example
+        //between the player and the inventory-items)
+        upperCircle.filter.groupIndex = -ID;
+        middleBox.filter.groupIndex = -ID;
+        bottomCircle.filter.groupIndex = -ID;
+        bottomSensor.filter.groupIndex = -ID;
+        leftSensor.filter.groupIndex = -ID;
+        rightSensor.filter.groupIndex = -ID;
 
         //Creating the body using the fixtureDef and the BodyDef created beneath
         BodyDef bodyDef = new BodyDef();
@@ -362,7 +381,7 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
         LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber()).addDrawAndUpdateObject(this);
         LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber()).addInputListener(this);
         resetHealth(maxHealth);
-        deathCount++;
+        addScore(-1);
     }
 
     /**
@@ -397,6 +416,9 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
             }
             if(event.getCode() == pickUpCode){
                 pickUpItem = true;
+            }
+            if (event.getCode() == dropItemCode){
+                inventory.dropCurrentItem();
             }
         }
         else if (event.getEventType().equals(KeyEvent.KEY_RELEASED)){
@@ -457,10 +479,9 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
     }
 
     /**
-     * Override function of equals checking if this instance of player and the 'obj' are exactly the same by using
-     * the players unique ID number.
-     * @param obj The object to compare to
-     * @return If the obj is the same as this
+     * equals function looking at the objects id to check if this is the exact same object as the one compared with.
+     * @param obj The object to compare with.
+     * @return true if both objects are identical (has the same id).
      */
     @Override
     public boolean equals(Object obj) {
@@ -526,4 +547,7 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
     public void setStartTime(boolean startTime) {
         this.startTime = startTime;
     }
+
+    public Direction getDirection() {return direction;}
+
 }

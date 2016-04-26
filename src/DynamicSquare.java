@@ -2,6 +2,7 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.BodyType;
+import org.jbox2d.dynamics.Fixture;
 import org.jbox2d.dynamics.World;
 
 /**
@@ -19,8 +20,8 @@ public class DynamicSquare extends Square {
      * @param friction The friction of the body
      * @param image The image representing the body in the visual realm
      */
-    public DynamicSquare(World world, Vec2 pos, float friction, Image image) {
-        super(world, pos, friction, image);
+    public DynamicSquare(int ID, World world, Vec2 pos, float friction, Image image) {
+        super(ID, world, pos, friction, image);
         body.setUserData(this);
         makeDynamic();
     }
@@ -34,8 +35,8 @@ public class DynamicSquare extends Square {
      * @param width The width of the body in meters
      * @param height The height of the body in meters
      */
-    public DynamicSquare(World world, Vec2 pos, float friction, Color color, double width, double height) {
-        super(world, pos, friction, color, width, height);
+    public DynamicSquare(int ID, World world, Vec2 pos, float friction, Color color, double width, double height) {
+        super(ID, world, pos, friction, color, width, height);
         body.setUserData(this);
         makeDynamic();
     }
@@ -52,7 +53,9 @@ public class DynamicSquare extends Square {
 
 
     public void setDensity(float density) {
-        this.density = density;
+        for (Fixture fixture = body.getFixtureList(); fixture != null; fixture = fixture.getNext()){
+            fixture.setDensity(density);
+        }
     }
 
     public void setRestitution(float restitution) {

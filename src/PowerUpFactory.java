@@ -39,20 +39,16 @@ public class PowerUpFactory {
         switch (randomPowerUP) {
             case (0):
                 int currentId = LoadMap.getObjectID();  //Gets the current ID from class load map.
-                LoadMap.setObjectID(currentId + 1); //Updates the ID because we are creating a new object that needs a uniqe ID
-                FirstAidBox firstAidBox = new FirstAidBox(world, new Vec2(new Random().nextFloat() * 2, new Random().nextFloat() * 4),
-                        1f, Color.WHITE, 0.4d, 0.4, currentId++); //Creates the box.
-                firstAidBox.setID(currentId); //Sets the ID of the box so it matches with loadmap.
+                FirstAidBox firstAidBox = new FirstAidBox(currentId, world, new Vec2(new Random().nextFloat() * 2, new Random().nextFloat() * 4),
+                        1f, Color.WHITE, 0.4d, 0.4); //Creates the box.
                 return firstAidBox;
 
 
             case (1):
                 //This case i similar to the previous. The diffrence being that we create a coin and not a box.
                 currentId = LoadMap.getObjectID();
-                LoadMap.setObjectID(currentId + 1);
-                PowerUpCoin powerUpCoin = new PowerUpCoin(world, new Vec2(2f, 4f),
-                        1f, 1f, 1f, Color.WHITE, 0.2d, currentId++, jumpHandlers.get(lenList));
-                powerUpCoin.setID(currentId);
+                PowerUpCoin powerUpCoin = new PowerUpCoin(currentId, world, new Vec2(2f, 4f),
+                        1f, 1f, 1f, Color.WHITE, 0.2d, jumpHandlers.get(lenList));
                 return powerUpCoin;
             default:
                 return null; // Needed or else the method would complain. Returns null if neither case is met.

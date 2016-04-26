@@ -3,6 +3,7 @@ import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.World;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -48,16 +49,31 @@ public class Map
      */
     public void removeStagedOBjects (){
         //Removing all of the 'DrawAndUpdate' objects from the maps global list
-        for (DrawAndUpdateObject object : drawANdUpdateObjectsStagedForRemoval){
-            drawAndUpdateObjectList.remove(object);
+        for (DrawAndUpdateObject objectRemove : drawANdUpdateObjectsStagedForRemoval){
+            for (Iterator<DrawAndUpdateObject> iterator = drawAndUpdateObjectList.iterator(); iterator.hasNext();){
+                DrawAndUpdateObject object = iterator.next();
+                if (objectRemove.getID() == object.getID()){
+                    iterator.remove();
+                }
+            }
         }
         //Removing all of the 'InputListener' objects from the maps global list
-        for (InputListener listener : inputListenersStagedForRemoval){
-            inputListenerList.remove(listener);
+        for (InputListener listenerRemova : inputListenersStagedForRemoval){
+            for (Iterator<InputListener> iterator = inputListenerList.iterator(); iterator.hasNext();) {
+                InputListener inputListener = iterator.next();
+                if (inputListener.getID() == listenerRemova.getID()){
+                    iterator.remove();
+                }
+            }
         }
         //Removing all of the 'CollisionListener' objects from the maps global list
-        for (CollisionListener collisionListener : collisionListenersStagedForRemoval){
-            collisionListenerList.remove(collisionListener);
+        for (CollisionListener collisionListenerRemove : collisionListenersStagedForRemoval){
+            for (Iterator<CollisionListener> iterator = collisionListenerList.iterator(); iterator.hasNext();){
+                CollisionListener collisionListener = iterator.next();
+                if (collisionListener.getID() == collisionListenerRemove.getID()) {
+                    iterator.remove();
+                }
+            }
         }
         //Destroying all of the bodies that are staged for removal
         for (Body body : bodiesStagedForRemoval){

@@ -23,4 +23,6 @@ public interface CollisionListener
      *                such as point of contact and so on.
      */
     public void endContact(Contact contact);
+
+    public int getID();
 }

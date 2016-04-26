@@ -14,4 +14,6 @@ public interface DrawAndUpdateObject {
      * @param gc The GraphicsContext with wich to draw
      */
     public void draw(GraphicsContext gc);
+
+    public int getID();
 }

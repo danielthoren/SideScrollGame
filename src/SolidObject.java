@@ -6,8 +6,6 @@ import org.jbox2d.collision.shapes.PolygonShape;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.Fixture;
-import org.jbox2d.dynamics.World;
-import org.jbox2d.dynamics.contacts.ContactEdge;
 
 /**
  * Parentclass to all 'solid' gameobjects where 'solid' means that the object has a body that is a part of the
@@ -127,10 +125,12 @@ public class SolidObject {
         PolygonShape polygon = (PolygonShape) fixture.getShape();
 
         //Calculating the size
-        Vec2 size = new Vec2(Math.abs(polygon.getVertex(0).x - polygon.getVertex(1).x), Math.abs(polygon.getVertex(0).y - polygon.getVertex(3).y));
+        Vec2 size = new Vec2(Math.abs(polygon.getVertex(0).x - polygon.getVertex(1).x),
+                             Math.abs(polygon.getVertex(0).y - polygon.getVertex(3).y));
 
         //Calculating the global coordinates of the center of the square
-        Vec2 globalPosition = new Vec2(fixture.getBody().getPosition().x + polygon.getVertex(1).x - size.x / 2, fixture.getBody().getPosition().y + polygon.getVertex(2).y - size.y / 2);
+        Vec2 globalPosition = new Vec2(fixture.getBody().getPosition().x + polygon.getVertex(1).x - size.x / 2,
+                                       fixture.getBody().getPosition().y + polygon.getVertex(2).y - size.y / 2);
 
         //Draws the square at the global coordinates
         drawSquare(gc, globalPosition, (double)size.x, (double)size.y);

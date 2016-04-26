@@ -14,7 +14,7 @@ import org.jbox2d.dynamics.contacts.Contact;
  */
 public class FirstAidBox extends DynamicSquare implements PowerUps {
     private int health;
-    private int ID;
+    private final int ID;
     private World world;
 
     /**
@@ -25,8 +25,9 @@ public class FirstAidBox extends DynamicSquare implements PowerUps {
      * @param image     The iamge of the coin
      * @param ID    The ID of the coin
      */
-    public FirstAidBox(World world, Vec2 pos, float friction, Image image, int ID) {
-        super(world, pos, friction, image);
+    public FirstAidBox(int ID, World world, Vec2 pos, float friction, Image image) {
+        super(ID, world, pos, friction, image);
+        this.ID = ID;
         health = 100;
         body.setUserData(this);
     }
@@ -41,11 +42,11 @@ public class FirstAidBox extends DynamicSquare implements PowerUps {
      * @param height    The height if the box
      * @param ID    The id of the box
      */
-    public FirstAidBox(World world, Vec2 pos, float friction, Color color, double width, double height, int ID) {
-        super(world, pos, friction, color, width, height);
+    public FirstAidBox(int ID, World world, Vec2 pos, float friction, Color color, double width, double height) {
+        super(ID, world, pos, friction, color, width, height);
+        this.ID = ID;
         health = 100;
         body.setUserData(this);
-        System.out.println(ID);
     }
 
     /**
@@ -53,7 +54,6 @@ public class FirstAidBox extends DynamicSquare implements PowerUps {
      * by the box and the box is then removed from the world.
      */
     public void beginContact(Contact contact){
-        System.out.println(ID);
         if (contact.getFixtureA().getBody().getUserData().equals(this) && contact.getFixtureB().getBody().getUserData() instanceof Player){
             ((Player) contact.getFixtureB().getBody().getUserData()).heal(health);
             Map map = LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber());
@@ -85,14 +85,6 @@ public class FirstAidBox extends DynamicSquare implements PowerUps {
      * @return the ID of the box
      */
     public int getID() {return ID;}
-
-    /**
-     * Sets the Id of the box
-     * @param ID
-     */
-    public void setID(int ID) {
-        this.ID = ID;
-    }
 
     /**
      * Overrides the method 'equals.()'
