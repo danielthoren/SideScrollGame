@@ -17,12 +17,14 @@ public class SolidObject {
     protected Image image;    //The image representing the square in the visual realm (=none if no image)
     protected Color color;    //The color of the square (=none if no color)
     protected float friction; //The friction of the square´s body
+    protected final int ID;   //The id of the solidobject
 
     /**
      * The default constructor of the class. Should never be used!
      */
     protected SolidObject(){
         this.pos = null;
+        this.ID = -1;
         this.body = null;
         this.image = null;
         this.color = null;
@@ -34,9 +36,10 @@ public class SolidObject {
      * @param pos The position at wich to place the Object (units in meters)
      * @param friction The friction of the body
      */
-    public SolidObject(Vec2 pos, float friction) {
+    public SolidObject(int ID, Vec2 pos, float friction) {
         this.friction = friction;
         this.pos = pos;
+        this.ID = ID;
         color = null;
         image = null;
     }
@@ -47,8 +50,9 @@ public class SolidObject {
      * @param friction The friction of the body
      * @param image The image to display over the body (visible part of the object).
      */
-    public SolidObject(Vec2 pos, float friction, Image image) {
+    public SolidObject(int ID, Vec2 pos, float friction, Image image) {
         this.image = image;
+        this.ID = ID;
         this.friction = friction;
         this.pos = pos;
         color = null;
@@ -60,9 +64,10 @@ public class SolidObject {
      * @param friction The fiction of the body
      * @param color The color of the object
      */
-    public SolidObject(Vec2 pos, float friction, Color color){
+    public SolidObject(int ID, Vec2 pos, float friction, Color color){
         this.friction = friction;
         this.pos = pos;
+        this.ID = ID;
         this.color = color;
         this.image = null;
     }
@@ -167,4 +172,34 @@ public class SolidObject {
 
         color = tmpColor;
     }
+
+    /**
+     * Changes the density of all of the 'Fixtures' of a solidObject to specified value.
+     * @param density The density to set the 'Fixtures' to.
+     */
+    public void setDensity(float density) {
+        for (Fixture fixture = body.getFixtureList(); fixture != null; fixture = fixture.getNext()){
+            fixture.setDensity(density);
+        }
+    }
+
+    /**
+     * equals function looking at the objects id to check if this is the exact same object as the one compared with.
+     * @param obj The object to compare with.
+     * @return true if both objects are identical (has the same id).
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof GameObject && ((GameObject) obj).getID() == this.getID()){return true;}
+        else {return false;}
+    }
+
+    /**
+     * Returns the solidobjects ID
+     * @return ID
+     */
+    public int getID(){
+        return ID;
+    }
+
 }

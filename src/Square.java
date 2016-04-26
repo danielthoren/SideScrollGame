@@ -8,6 +8,7 @@ import org.jbox2d.collision.shapes.PolygonShape;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.BodyDef;
 import org.jbox2d.dynamics.BodyType;
+import org.jbox2d.dynamics.Fixture;
 import org.jbox2d.dynamics.FixtureDef;
 import org.jbox2d.dynamics.World;
 
@@ -16,7 +17,6 @@ import org.jbox2d.dynamics.World;
  */
 public class Square extends SolidObject implements DrawAndUpdateObject
 {
-    protected final int ID;
     protected Double height;//The height of the square in meters
     protected Double width; //The width of the square in meters
 
@@ -28,8 +28,7 @@ public class Square extends SolidObject implements DrawAndUpdateObject
      * @param image The image to display over the body (visible part of the square)
      */
     public Square(int ID, World world, Vec2 pos, float friction, Image image) {
-	super(pos, friction, image);
-	this.ID = ID;
+	super(ID, pos, friction, image);
 	width = image.getWidth() / LoadMap.getInstance().getPixPerMeter();
 	height = image.getHeight() / LoadMap.getInstance().getPixPerMeter();
 
@@ -47,8 +46,7 @@ public class Square extends SolidObject implements DrawAndUpdateObject
      * @param height The height of the square in meters (world coordinates)
      */
     public Square(int ID, World world, Vec2 pos, float friction, Color color, double width, double height){
-	super(pos, friction, color);
-	this.ID = ID;
+	super(ID, pos, friction, color);
 	this.width = width;
 	this.height = height;
 	createBody(world);
@@ -102,6 +100,4 @@ public class Square extends SolidObject implements DrawAndUpdateObject
     public void draw(GraphicsContext gc){
 	super.drawSquare(gc, body.getPosition(), width, height);
     }
-
-    @Override public int getID() {return ID;}
 }

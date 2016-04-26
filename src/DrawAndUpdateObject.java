@@ -3,7 +3,7 @@ import javafx.scene.canvas.GraphicsContext;
 /**
  * Interface for all of the objects that needs updating and drawing
  */
-public interface DrawAndUpdateObject {
+public interface DrawAndUpdateObject extends GameObject {
     /**
      * The function that updates the object every frame
      */
@@ -14,6 +14,4 @@ public interface DrawAndUpdateObject {
      * @param gc The GraphicsContext with wich to draw
      */
     public void draw(GraphicsContext gc);
-
-    public int getID();
 }

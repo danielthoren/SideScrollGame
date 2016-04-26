@@ -17,15 +17,11 @@ public class DynamicCircle extends Circle {
      * @param world The world in wich to add its body
      * @param pos The position of the topleft corner of the square in meters
      * @param friction The friction of the body
-     * @param density The density of the body
-     * @param restitution The restitution of the body (the bouncines of the body)
      * @param image The image representing the body in the visual realm
      */
-    public DynamicCircle(int ID, World world, Vec2 pos, float friction, float density, float restitution, Image image) {
+    public DynamicCircle(int ID, World world, Vec2 pos, float friction, Image image) {
         super(ID, world, pos, friction, image);
         body.setUserData(this);
-        this.density = density;
-        this.restitution = restitution;
         makeDynamic();
     }
 
@@ -34,15 +30,11 @@ public class DynamicCircle extends Circle {
      * @param world The world in wich to add its body
      * @param pos The position of the topleft corner of the square in meters
      * @param friction The friction of its body
-     * @param density The density of its body
-     * @param restitution The restitution of its body (the bounciness of the body)
      * @param color The color representing the body in the visual realm
      */
-    public DynamicCircle(int ID, World world, Vec2 pos, float friction, float density, float restitution, Color color, double radious) {
+    public DynamicCircle(int ID, World world, Vec2 pos, float friction, Color color, double radious) {
         super(ID, world, pos, friction, color, radious);
         body.setUserData(this);
-        this.restitution = restitution;
-        this.density = density;
         makeDynamic();
     }
 
@@ -51,8 +43,6 @@ public class DynamicCircle extends Circle {
      */
     private void makeDynamic(){
         this.body.setType(BodyType.DYNAMIC);
-        this.body.getFixtureList().setRestitution(restitution);
-        this.body.getFixtureList().setDensity(density);
         this.body.setFixedRotation(false);
     }
 }

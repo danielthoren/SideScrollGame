@@ -4,7 +4,7 @@ import org.jbox2d.dynamics.contacts.Contact;
 /**
  * Interface specifying functions that all objects that want to listen to collisiondata needs to implement.
  */
-public interface CollisionListener
+public interface CollisionListener extends GameObject
 {
     /**
      * Handles event that needs to happen when contact between objects begins. Do note that this function
@@ -23,6 +23,4 @@ public interface CollisionListener
      *                such as point of contact and so on.
      */
     public void endContact(Contact contact);
-
-    public int getID();
 }

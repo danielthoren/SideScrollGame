@@ -1,7 +1,6 @@
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import org.jbox2d.common.Vec2;
-import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.Filter;
 import org.jbox2d.dynamics.Fixture;
 import org.jbox2d.dynamics.World;
@@ -10,40 +9,20 @@ import org.jbox2d.dynamics.contacts.Contact;
 /**
  * Parent Class containing shared code between equipped objects
  */
-public class SquareInventoryItem extends DynamicSquare implements InventoryItem, CollisionListener
+public class SquareInventoryItem implements InventoryItem, CollisionListener
 {
     protected World world;
     protected Player player;
     protected Player currentCollidingPlayer;
+    protected DynamicCircle dynamicCircle;
+    protected DynamicSquare dynamicSquare;
+    protected SolidObject solidObject;
+    protected DrawAndUpdateObject drawAndUpdateObject;
     protected Vec2 relativePos;
     protected float relativeAngle;
     protected final Vec2 size;
     protected boolean equipped;
     protected boolean hasDamaged;
-
-    /**
-     * Initializes a 'SquareInventoryItem' and adds it to the specified player.
-     * @param ID The id of the object.
-     * @param world The game world.
-     * @param player The player to add the item to.
-     * @param friction The friction of the item.
-     * @param image The image of the item.
-     */
-    public SquareInventoryItem(int ID, World world, Player player, float friction, Image image) {
-        super(ID, world, player.body.getPosition(), friction, image);
-        //Setting the density of the object to 1. This is the default value of an equipped item and can be changed by setter in superclass.
-        super.setDensity(1f);
-        this.world = world;
-        this.player = player;
-        currentCollidingPlayer = null;
-        hasDamaged = false;
-        equipped = true;
-        setGroupIndex(-player.getID());
-        body.setType(BodyType.DYNAMIC);
-        size = new Vec2(GameComponent.pixToMeters((float) image.getWidth()), GameComponent.pixToMeters((float) image.getHeight()));
-        calcRelativePos(player);
-        player.getInventory().addItem(this);
-    }
 
     /**
      * Initializes a 'SquareInventoryItem and puts it at the specified position in the specified world.
@@ -53,15 +32,24 @@ public class SquareInventoryItem extends DynamicSquare implements InventoryItem,
      * @param friction The friction of the object.
      * @param image The image of the object.
      */
-    public SquareInventoryItem(int ID, World world, Vec2 position, float friction, Image image) {
-        super(ID, world, position, friction, image);
-        //Setting the density of the object to 1. This is the default value of an equipped item and can be changed by setter in superclass.
-        super.setDensity(1f);
+    public SquareInventoryItem(int ID, World world, Vec2 position, float friction, Image image, boolean isSquare) {
         this.world = world;
+        if (isSquare){
+            dynamicSquare = new DynamicSquare(ID, world, position, friction, image);
+        }
+        else{
+            dynamicCircle = new DynamicCircle(ID, world, position, friction, image);
+        }
+
+        solidObject = dynamicSquare;
+        drawAndUpdateObject = dynamicSquare;
+        dynamicCircle = null;
         hasDamaged = false;
         currentCollidingPlayer = null;
         relativePos = null;
         player = null;
+        //Setting the density of the object to 1. This is the default value of an equipped item and can be changed by setter in superclass.
+        dynamicSquare.setDensity(1f);
         size = new Vec2(GameComponent.pixToMeters((float) image.getWidth()), GameComponent.pixToMeters((float) image.getHeight()));
     }
 
@@ -73,7 +61,7 @@ public class SquareInventoryItem extends DynamicSquare implements InventoryItem,
      *              except for each other. If the value is posetive they will collide with nothing bot each other.
      */
     private void setGroupIndex(int index){
-        for (Fixture fixture = body.getFixtureList(); fixture != null; fixture = fixture.getNext()){
+        for (Fixture fixture = solidObject.body.getFixtureList(); fixture != null; fixture = fixture.getNext()){
             Filter filter = fixture.getFilterData();
             filter.groupIndex = index;
             fixture.setFilterData(filter);
@@ -99,21 +87,22 @@ public class SquareInventoryItem extends DynamicSquare implements InventoryItem,
      */
     @Override
     public void update(){
+        drawAndUpdateObject.update();
         if (currentCollidingPlayer != null && currentCollidingPlayer.isPickUpItem() && player == null){
             currentCollidingPlayer.getInventory().addItem(this);
         }
         else if (player != null) {
             Vec2 newPos = new Vec2(0,0);
-            float newAngle = body.getAngle();
+            float newAngle = solidObject.body.getAngle();
             if (player.getDirection() == Direction.LEFT){
                 newPos = new Vec2(player.getPosition().x - relativePos.x, player.getPosition().y + relativePos.y);
-                newAngle = Math.abs(body.getAngle());
+                newAngle = Math.abs(solidObject.body.getAngle());
             }
             else if (player.getDirection() == Direction.RIGHT){
                 newPos = new Vec2(player.getPosition().x + relativePos.x, player.getPosition().y + relativePos.y);
-                newAngle = -Math.abs(body.getAngle());
+                newAngle = -Math.abs(solidObject.body.getAngle());
             }
-            body.setTransform(newPos, newAngle);
+            solidObject.body.setTransform(newPos, newAngle);
         }
     }
 
@@ -123,7 +112,7 @@ public class SquareInventoryItem extends DynamicSquare implements InventoryItem,
      */
     @Override
     public void draw(GraphicsContext gc){
-        super.drawSquare(gc, body.getPosition(), (double) size.x, (double) size.y);
+        solidObject.drawSquare(gc, solidObject.body.getPosition(), (double) size.x, (double) size.y);
     }
 
     /**
@@ -135,7 +124,7 @@ public class SquareInventoryItem extends DynamicSquare implements InventoryItem,
      * @param contact A object containing the two bodies and fixtures that made contact. It also contains collisiondata
      */
     public void beginContact(Contact contact){
-        if (contact.getFixtureA().getBody().getUserData().equals(this) &&
+        if (contact.getFixtureA().getBody().getUserData().equals(solidObject) &&
                 contact.getFixtureB().getBody().getUserData() instanceof Player){
             currentCollidingPlayer = (Player) contact.getFixtureB().getBody().getUserData();
             if (player != null && !hasDamaged && !((Player) contact.getFixtureB().getBody().getUserData()).equals(player)) {
@@ -143,7 +132,7 @@ public class SquareInventoryItem extends DynamicSquare implements InventoryItem,
                 hasDamaged = true;
             }
         }
-        else if (contact.getFixtureB().getBody().getUserData().equals(this) &&
+        else if (contact.getFixtureB().getBody().getUserData().equals(solidObject) &&
                 contact.getFixtureA().getBody().getUserData() instanceof Player){
             currentCollidingPlayer = (Player) contact.getFixtureA().getBody().getUserData();
             if (player != null && !hasDamaged && !((Player) contact.getFixtureA().getBody().getUserData()).equals(player)) {
@@ -159,11 +148,11 @@ public class SquareInventoryItem extends DynamicSquare implements InventoryItem,
      * @param contact A object containing the two bodies and fixtures that made contact. It also contains collisiondata
      */
     public void endContact(Contact contact){
-        if (contact.getFixtureA().getBody().getUserData().equals(this) && contact.getFixtureB().getBody().getUserData() instanceof Player){
+        if (contact.getFixtureA().getBody().getUserData().equals(solidObject) && contact.getFixtureB().getBody().getUserData() instanceof Player){
             hasDamaged = false;
             currentCollidingPlayer = null;
         }
-        else if (contact.getFixtureB().getBody().getUserData().equals(this) && contact.getFixtureA().getBody().getUserData() instanceof Player){
+        else if (contact.getFixtureB().getBody().getUserData().equals(solidObject) && contact.getFixtureA().getBody().getUserData() instanceof Player){
             hasDamaged = false;
             currentCollidingPlayer = null;
         }
@@ -175,7 +164,9 @@ public class SquareInventoryItem extends DynamicSquare implements InventoryItem,
     public void equip(){
         LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber()).addDrawAndUpdateObject(this);
         LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber()).addCollisionListener(this);
-        super.createBody(world);
+        if (dynamicSquare == null){
+            dynamicCircle.createBody(world);
+        }
         equipped = true;
     }
 
@@ -186,9 +177,9 @@ public class SquareInventoryItem extends DynamicSquare implements InventoryItem,
      * function and remove itselfe from the other listenerlists aswell.
      */
     public void unEquip(){
-        LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber()).removeBody(body);
+        LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber()).removeBody(solidObject.body);
         LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber()).removeDrawAndUpdateObject(this);
-        body = null;
+        solidObject.body = null;
         equipped = false;
     }
 
@@ -197,9 +188,9 @@ public class SquareInventoryItem extends DynamicSquare implements InventoryItem,
      * @param player The player to add this to.
      */
     public void pickUp(Player player){
-        body.getFixtureList().setSensor(false);
-        body.setFixedRotation(true);
-        body.setTransform(body.getPosition(), relativeAngle);
+        solidObject.body.getFixtureList().setSensor(false);
+        solidObject.body.setFixedRotation(true);
+        solidObject.body.setTransform(solidObject.body.getPosition(), relativeAngle);
         setGroupIndex(-player.getID());
         calcRelativePos(player);
         this.player = player;
@@ -209,9 +200,17 @@ public class SquareInventoryItem extends DynamicSquare implements InventoryItem,
      * Drops this item from the player.
      */
     public void drop(){
-        body.setFixedRotation(false);
+        solidObject.body.setFixedRotation(false);
         setGroupIndex(-1);
         player = null;
+    }
+
+    /**
+     * Returns the id of the 'SolidObject' of the items body
+     * @return int id
+     */
+    public int getID(){
+        return solidObject.getID();
     }
 
     /**

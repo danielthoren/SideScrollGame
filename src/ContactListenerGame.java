@@ -2,30 +2,37 @@ import org.jbox2d.callbacks.ContactImpulse;
 import org.jbox2d.callbacks.ContactListener;
 import org.jbox2d.dynamics.contacts.Contact;
 import org.jbox2d.collision.Manifold;
-
 import java.util.List;
 
+/**
+ * The contactlistener iterates over all of the objects implementing the 'CollisionListener' interface, informing them
+ * of the collision if they have collided.
+ */
 public class ContactListenerGame implements ContactListener
 {
     /**
      * Called when two fixtures begin to touch.
-     * @param contact
+     * @param contact An object containing information about the collision.
      */
     public void beginContact(Contact contact) {
 	List<CollisionListener> listeners = LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber()).getCollisionListenerList();
 	for (CollisionListener obj : listeners){
-	    obj.beginContact(contact);
+	    if (contact.getFixtureA().getBody().getUserData().equals(obj) || contact.getFixtureB().getBody().getUserData().equals(obj)){
+		obj.beginContact(contact);
+	    }
 	}
     }
 
     /**
      * Called when two fixtures cease to touch.
-     * @param contact
+     * @param contact An object containing information about the collision.
      */
     public void endContact(Contact contact){
 	List<CollisionListener> listeners = LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber()).getCollisionListenerList();
 	for (CollisionListener obj : listeners){
-	    obj.endContact(contact);
+	    if (contact.getFixtureA().getBody().getUserData().equals(obj) || contact.getFixtureB().getBody().getUserData().equals(obj)){
+		obj.endContact(contact);
+	    }
 	}
     }
 
@@ -42,7 +49,7 @@ public class ContactListenerGame implements ContactListener
     	 * the next step.
     	 * Note: the oldManifold parameter is pooled, so it will be the same object for every callback
     	 * for each thread.
-    	 * @param contact
+    	 * @param contact An object containing information about the collision.
     	 * @param oldManifold
     	 */
     public void preSolve(Contact contact, Manifold oldManifold){
@@ -56,7 +63,7 @@ public class ContactListenerGame implements ContactListener
    	 * arbitrarily large if the sub-step is small. Hence the impulse is provided explicitly
    	 * in a separate data structure.
    	 * Note: this is only called for contacts that are touching, solid, and awake.
-   	 * @param contact
+   	 * @param contact An object containing information about the collision.
    	 * @param impulse this is usually a pooled variable, so it will be modified after
    	 * this call
    	 */

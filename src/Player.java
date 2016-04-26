@@ -39,7 +39,6 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
     private boolean pickUpItem;
     private static boolean drawSensors = false;                //Used for debugging, draws the sensorFixtures of the player
     private static boolean debugDraw = false;                 //Used for debugging, draws the bodyfixtures over the sprite
-    private final int ID;                                     //The unique id of the specific instance of player
     private int score;                                        //The score of the player
     private int actualHealth;                                 //Here we apply the gamelogic.
     private int visibleHealth;                                //This is the health we are showing.
@@ -48,8 +47,7 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
     private int deathCount = 0;
 
     public Player(int ID, World world, Vec2 position, float friction, float density, Vec2 acceleration, Vec2 deceleration, Sprite sprite) {
-        super(position, friction);
-        this.ID = ID;
+        super(ID, position, friction);
         this.acceleration = acceleration;
         this.deceleration = deceleration;
         this.world = world;
@@ -81,8 +79,7 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
     }
 
     public Player(int ID, World world, Vec2 position, float friction, float density, Vec2 acceleration, Vec2 deceleration, Color color, Vec2 size) {
-        super(position, friction, color);
-        this.ID = ID;
+        super(ID, position, friction, color);
         this.acceleration = acceleration;
         this.deceleration = deceleration;
         this.world = world;
@@ -112,6 +109,8 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
         jumpCode = KeyCode.W;
         dropItemCode = KeyCode.G;
     }
+
+    
 
     private void createBody(World world){
         FixtureDef upperCircle = new FixtureDef();
@@ -465,17 +464,6 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
         currentJumpHandler.jump(this);
     }
 
-    /**
-     * equals function looking at the objects id to check if this is the exact same object as the one compared with.
-     * @param obj The object to compare with.
-     * @return true if both objects are identical (has the same id).
-     */
-    @Override
-    public boolean equals(Object obj) {
-        if (obj instanceof Player && ((Player) obj).getID() == this.getID()){return true;}
-        else {return false;}
-    }
-
     public Inventory getInventory() {return inventory;}
 
     public Vec2 getSize() {return size;}
@@ -491,12 +479,6 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
     public boolean getLeftCollision() {return collisionLeft;}
 
     public boolean getRightCollision() {return collisionRight;}
-
-    public int getID() {return ID;}
-
-    public void addScore(int score){
-        this.score += score;
-    }
 
     public void setRunRightCode(KeyCode runRightCode) {
         this.runRightCode = runRightCode;

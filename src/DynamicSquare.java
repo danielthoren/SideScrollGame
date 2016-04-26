@@ -53,13 +53,6 @@ public class DynamicSquare extends Square {
         this.body.setFixedRotation(false);
     }
 
-
-    public void setDensity(float density) {
-        for (Fixture fixture = body.getFixtureList(); fixture != null; fixture = fixture.getNext()){
-            fixture.setDensity(density);
-        }
-    }
-
     public void setRestitution(float restitution) {
         this.restitution = restitution;
     }

@@ -13,7 +13,6 @@ import org.jbox2d.dynamics.World;
 
 public class Circle extends SolidObject implements DrawAndUpdateObject {
     private Double radious;  //The radious of the circle
-    private final int ID;
 
     /**
      * Creates a circle with static position and collision properites.
@@ -23,10 +22,8 @@ public class Circle extends SolidObject implements DrawAndUpdateObject {
      * @param image The image to display over the body (visible part of the circle)
      */
     public Circle(int ID, World world, Vec2 pos, float friction, Image image) {
-	super(pos, friction, image);
-	this.ID = ID;
+	super(ID, pos, friction, image);
 	this.radious = image.getWidth()/2;
-
 	createBody(world);
 	body.setUserData(this);
     }
@@ -40,10 +37,8 @@ public class Circle extends SolidObject implements DrawAndUpdateObject {
      * @param radious The radious of the circle
      */
     public Circle(int ID, World world, Vec2 pos, float friction, Color color, double radious){
-	super(pos, friction, color);
-	this.ID = ID;
+	super(ID, pos, friction, color);
 	this.radious = radious;
-
 	createBody(world);
 	body.setUserData(this);
     }
@@ -52,7 +47,7 @@ public class Circle extends SolidObject implements DrawAndUpdateObject {
      * Creates the body of the 'CircleObject' and makes it static.
      * @param world The world in wich to add its body.
      */
-    private void createBody(World world){
+    protected void createBody(World world){
 	FixtureDef fixtureDef = new FixtureDef();
 	CircleShape circleShape = new CircleShape();
 
@@ -94,6 +89,4 @@ public class Circle extends SolidObject implements DrawAndUpdateObject {
 	    super.drawSquare(gc, body.getPosition(), radious, radious);
 	}
     }
-
-    @Override public int getID() {return ID;}
 }
