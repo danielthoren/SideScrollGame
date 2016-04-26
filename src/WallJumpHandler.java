@@ -20,7 +20,7 @@ public class WallJumpHandler implements JumpHandler {
         if (player.getGrounded()) {
             defaultJumpHandler.jump(player);
         }
-        else if (player.getLeftCollision() || player.getRightCollision()){
+        if (player.getLeftCollision() || player.getRightCollision()){
             Vec2 velocity = player.body.getLinearVelocity();
             float impulseY = player.body.getMass() * 5;
             float impulseX = player.body.getMass() * 3;

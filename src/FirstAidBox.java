@@ -12,7 +12,7 @@ import org.jbox2d.dynamics.contacts.Contact;
  * This class creates a box that can be picked up by the player. The box contains health
  * given to the player when picked up.
  */
-public class FirstAidBox extends Square implements CollisionListener {
+public class FirstAidBox extends DynamicSquare implements PowerUps {
     private int health;
     private final int ID;
     private World world;
@@ -29,7 +29,6 @@ public class FirstAidBox extends Square implements CollisionListener {
         super(ID, world, pos, friction, image);
         this.ID = ID;
         health = 100;
-        body.getFixtureList().setSensor(true); //Makes the coin a sensor
         body.setUserData(this);
     }
 
@@ -47,13 +46,12 @@ public class FirstAidBox extends Square implements CollisionListener {
         super(ID, world, pos, friction, color, width, height);
         this.ID = ID;
         health = 100;
-        body.getFixtureList().setSensor(true); //Makes the coin a sensor
         body.setUserData(this);
     }
 
     /**
-     * This method checks if the player have collided whit the coin, if it has the player is given the points held
-     * by the coin and the coin is then removed from the world.
+     * This method checks if the player have collided whit the box, if it has the player is given the health held
+     * by the box and the box is then removed from the world.
      */
     public void beginContact(Contact contact){
         if (contact.getFixtureA().getBody().getUserData().equals(this) && contact.getFixtureB().getBody().getUserData() instanceof Player){
@@ -79,12 +77,12 @@ public class FirstAidBox extends Square implements CollisionListener {
     public void endContact(Contact contact){}
 
     /**
-     * @return the points held by the coin
+     * @return the healh held by the box
      */
-    public int getPoints() {return health;}
+    public int getHealth() {return health;}
 
     /**
-     * @return the ID of the coin
+     * @return the ID of the box
      */
     public int getID() {return ID;}
 

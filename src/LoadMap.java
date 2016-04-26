@@ -52,10 +52,12 @@ public final class LoadMap {
             Image dessertSquare = loadImage("/textures/squareTextures/DessertSquare.jpg", new Vec2(0.4f, 0.4f));
             Image grayHexagons = loadImage("/textures/squareTextures/GrayHexagons.png", new Vec2(0.4f, 0.4f));
 
+
             Image swordIm = loadImage("/textures/Textures/Sword.png", new Vec2(0.2f, 0.4f));
             Sword sword = new Sword(objectID++, world, new Vec2(5f, 0f), 0.4f, 50, swordIm);
             gameObjects.add(sword);
             gameObjectsCollision.add(sword);
+
 
 
             gameObjects.add(new DynamicSquare(objectID++, world, new Vec2(2f, 2f), 0.3f, stoneBrickWall));
@@ -73,9 +75,8 @@ public final class LoadMap {
             //gameObjects.add(new MovingPlatform(world, new Vec2(0f, 3f), 1f, Color.WHEAT, 1d, 0.1d, new Vec2(7f, 4f)));
             //gameObjects.add(new MovingPlatform(world, new Vec2(1f, 3f), 1f, Color.BISQUE, 1d, 0.1d, new Vec2(1f, 5f)));
 
-            FirstAidBox firstAidBox = (new FirstAidBox(objectID++, world, new Vec2(2f, 4f), 1f, Color.WHITE, 0.4d, 0.4));
-            gameObjectsCollision.add(firstAidBox);
-            gameObjects.add(firstAidBox);
+
+
 
             Vec2 position = new Vec2(6f, 5f);
 
@@ -117,13 +118,15 @@ public final class LoadMap {
             gameObjectsCollision.add(player2);
 
             gameObjects.add(ScoreBoard.getInstance());
+            GameLogic gameLogic = new GameLogic(world);
+            gameObjects.add(gameLogic);
 
             Map map = new Map(world, gameObjects, gameObjectsListen, gameObjectsCollision, getMapGravity(mapNumber));
             maps.put(mapNumber, map);
         }
     }
 
-    private Image loadImage(String path, Vec2 size){
+    public Image loadImage(String path, Vec2 size){
         Image image;
         try{
             if (size.x == 0 || size.y == 0){
@@ -134,7 +137,7 @@ public final class LoadMap {
             }
         }
         catch (NullPointerException | IllegalArgumentException e ){
-            image = new Image(Main.class.getResourceAsStream("textures/squareTextures/ErrorSquare.png"), GameComponent.metersToPix(size.x), GameComponent.metersToPix(size.y), false, false);
+            image = new Image(Main.class.getResourceAsStream("/textures/squareTextures/ErrorSquare.png"), GameComponent.metersToPix(size.x), GameComponent.metersToPix(size.y), false, false);
         }
         return image;
     }
@@ -151,6 +154,8 @@ public final class LoadMap {
 
     public static int getObjectID() {
         objectID++;
-        return objectID;
+        return objectID - 1;
     }
+
+
 }

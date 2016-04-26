@@ -18,8 +18,6 @@ public class DynamicSquare extends Square {
      * @param world The world in wich to add its body
      * @param pos The position of the topleft corner of the square in meters
      * @param friction The friction of the body
-     * @param density The density of the body
-     * @param restitution The restitution of the body (the bouncines of the body)
      * @param image The image representing the body in the visual realm
      */
     public DynamicSquare(int ID, World world, Vec2 pos, float friction, Image image) {
