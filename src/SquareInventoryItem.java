@@ -4,6 +4,7 @@ import org.jbox2d.collision.shapes.PolygonShape;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.BodyType;
+import org.jbox2d.dynamics.Filter;
 import org.jbox2d.dynamics.Fixture;
 import org.jbox2d.dynamics.World;
 import org.jbox2d.dynamics.contacts.Contact;
@@ -13,7 +14,6 @@ import org.jbox2d.dynamics.contacts.Contact;
  */
 public class SquareInventoryItem extends DynamicSquare implements InventoryItem, CollisionListener
 {
-
     protected World world;
     protected final int ID;
     protected Player player;
@@ -32,7 +32,7 @@ public class SquareInventoryItem extends DynamicSquare implements InventoryItem,
         hasDamaged = false;
         equipped = true;
         setGroupIndex(-player.getID());
-        body.setType(BodyType.KINEMATIC);
+        body.setType(BodyType.DYNAMIC);
         size = new Vec2(GameComponent.pixToMeters((float) image.getWidth()), GameComponent.pixToMeters((float) image.getHeight()));
         calcRelativePos(player);
     }
@@ -49,11 +49,11 @@ public class SquareInventoryItem extends DynamicSquare implements InventoryItem,
     }
 
     private void setGroupIndex(int index){
-        /*
         for (Fixture fixture = body.getFixtureList(); fixture != null; fixture = fixture.getNext()){
-            fixture.getFilterData().groupIndex = index;
+            Filter filter = fixture.getFilterData();
+            filter.groupIndex = index;
+            fixture.setFilterData(filter);
         }
-        */
     }
 
     private void calcRelativePos(Player player){
@@ -65,16 +65,18 @@ public class SquareInventoryItem extends DynamicSquare implements InventoryItem,
             System.out.println("in update");
             currentCollidingPlayer.getInventory().addItem(this);
         }
-        if (player != null) {
+        else if (player != null) {
             Vec2 newPos = new Vec2(0,0);
+            float newAngle = body.getAngle();
             if (player.getDirection() == Direction.LEFT){
                 newPos = new Vec2(player.getPosition().x - relativePos.x, player.getPosition().y + relativePos.y);
+                newAngle = Math.abs(body.getAngle());
             }
             else if (player.getDirection() == Direction.RIGHT){
                 newPos = new Vec2(player.getPosition().x + relativePos.x, player.getPosition().y + relativePos.y);
+                newAngle = -Math.abs(body.getAngle());
             }
-            body.getPosition().x = newPos.x;
-            body.getPosition().y = newPos.y;
+            body.setTransform(newPos, newAngle);
         }
     }
 
@@ -141,6 +143,7 @@ public class SquareInventoryItem extends DynamicSquare implements InventoryItem,
      * from the 'CollisionListener' listener.
      */
     public void unEquip(){
+        System.out.println("in unequip");
         LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber()).removeBody(body);
         LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber()).removeDrawAndUpdateObject(this);
         body = null;
@@ -148,15 +151,18 @@ public class SquareInventoryItem extends DynamicSquare implements InventoryItem,
     }
 
     public void pickUp(Player player){
-        System.out.println(body);
-        body.setType(BodyType.STATIC);
+        System.out.println("in pickup");
+        body.setType(BodyType.DYNAMIC);
         body.getFixtureList().setSensor(false);
+        body.setTransform(body.getPosition(), (float) -(Math.PI / 2 + Math.PI / 4));
         body.setFixedRotation(true);
+        setGroupIndex(-player.getID());
         calcRelativePos(player);
         this.player = player;
     }
 
     public void drop(){
+        System.out.println("in drop");
         body.setType(BodyType.DYNAMIC);
         body.setFixedRotation(false);
         player = null;

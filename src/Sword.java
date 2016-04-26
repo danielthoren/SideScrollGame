@@ -14,10 +14,16 @@ public class Sword extends SquareInventoryItem implements InputListener {
 
     public Sword(int ID, World world, Player player, float friction,  int damage, Image image) {
         super(ID, world, player, friction, image);
+        //Default keys, may be changed with setters
+        attack = KeyCode.SPACE;
+        defend = KeyCode.SHIFT;
     }
 
     public Sword(int ID, World world, Vec2 pos, float friction, int damage, Image image) {
         super(ID, world, pos, friction, image);
+        //Default keys, may be changed with setters
+        attack = KeyCode.SPACE;
+        defend = KeyCode.SHIFT;
     }
 
     public void inputAction(KeyEvent keyEvent){
@@ -31,6 +37,10 @@ public class Sword extends SquareInventoryItem implements InputListener {
             }
         }
     }
+
+    public void setDefend(final KeyCode defend) {this.defend = defend;}
+
+    public void setAttack(final KeyCode attack) {this.attack = attack;}
 
     private void attack(){
         System.out.println("attack");

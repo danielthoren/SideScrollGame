@@ -51,8 +51,8 @@ public final class LoadMap {
             Image stoneBrickWall = loadImage("/textures/squareTextures/StoneBrickWall.jpg", new Vec2(0.4f, 0.4f));
             Image dessertSquare = loadImage("/textures/squareTextures/DessertSquare.jpg", new Vec2(0.4f, 0.4f));
             Image grayHexagons = loadImage("/textures/squareTextures/GrayHexagons.png", new Vec2(0.4f, 0.4f));
-            Image swordIm = loadImage("/textures/Textures/Sword.png", new Vec2(0.4f, 0.8f));
 
+            Image swordIm = loadImage("/textures/Textures/Sword.png", new Vec2(0.2f, 0.4f));
             Sword sword = new Sword(objectID++, world, new Vec2(5f, 0f), 0.4f, 50, swordIm);
             gameObjects.add(sword);
             gameObjectsCollision.add(sword);

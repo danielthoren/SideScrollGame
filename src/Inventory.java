@@ -45,10 +45,10 @@ public class Inventory {
     public boolean addItem(SquareInventoryItem inventoryItem){
         System.out.println("in addItem");
         if (occupiedInventorySlots < maxInventorySize) {
-            inventoryItemList.add(inventoryItem);
             if (equippedItemIndex != -1) {
                 inventoryItemList.get(equippedItemIndex).unEquip();
             }
+            inventoryItemList.add(inventoryItem);
             inventoryItem.pickUp(player);
             equippedItemIndex = inventoryItemList.indexOf(inventoryItem);
             return true;
@@ -60,6 +60,7 @@ public class Inventory {
         if (equippedItemIndex != -1) {
             inventoryItemList.get(equippedItemIndex).drop();
             inventoryItemList.remove(equippedItemIndex);
+            equippedItemIndex = -1;
         }
     }
 
