@@ -21,7 +21,7 @@ public final class LoadMap {
 
     private LoadMap() {
         maps = new HashMap<Integer, Map>();
-        objectID = 1;
+        objectID = 2;
         pixPerMeter = 100;
     }
 

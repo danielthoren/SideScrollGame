@@ -43,7 +43,6 @@ public class Inventory {
      * @param inventoryItem The item to be added to the inventory.
      */
     public boolean addItem(SquareInventoryItem inventoryItem){
-        System.out.println("in addItem");
         if (occupiedInventorySlots < maxInventorySize) {
             if (equippedItemIndex != -1) {
                 inventoryItemList.get(equippedItemIndex).unEquip();

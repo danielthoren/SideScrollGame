@@ -466,10 +466,9 @@ public class Player extends SolidObject implements InputListener, DrawAndUpdateO
     }
 
     /**
-     * Override function of equals checking if this instance of player and the 'obj' are exactly the same by using
-     * the players unique ID number.
-     * @param obj The object to compare to
-     * @return If the obj is the same as this
+     * equals function looking at the objects id to check if this is the exact same object as the one compared with.
+     * @param obj The object to compare with.
+     * @return true if both objects are identical (has the same id).
      */
     @Override
     public boolean equals(Object obj) {
