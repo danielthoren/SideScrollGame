@@ -126,7 +126,7 @@ public final class LoadMap {
         }
     }
 
-    private Image loadImage(String path, Vec2 size){
+    public Image loadImage(String path, Vec2 size){
         Image image;
         try{
             if (size.x == 0 || size.y == 0){
@@ -137,7 +137,7 @@ public final class LoadMap {
             }
         }
         catch (NullPointerException | IllegalArgumentException e ){
-            image = new Image(Main.class.getResourceAsStream("textures/squareTextures/ErrorSquare.png"), GameComponent.metersToPix(size.x), GameComponent.metersToPix(size.y), false, false);
+            image = new Image(Main.class.getResourceAsStream("/textures/squareTextures/ErrorSquare.png"), GameComponent.metersToPix(size.x), GameComponent.metersToPix(size.y), false, false);
         }
         return image;
     }

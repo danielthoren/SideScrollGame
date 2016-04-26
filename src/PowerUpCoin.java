@@ -80,5 +80,4 @@ public class PowerUpCoin extends DynamicCircle implements PowerUps {
 
     }
 
-
 }

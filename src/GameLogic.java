@@ -1,4 +1,5 @@
 import javafx.scene.canvas.GraphicsContext;
+import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Fixture;
 import org.jbox2d.dynamics.World;
 import org.jbox2d.dynamics.contacts.Contact;
@@ -11,14 +12,17 @@ public class GameLogic implements DrawAndUpdateObject
 {
     private World world;
 
-    PowerUpFactory powerUpFactory = new PowerUpFactory(world);
+    PowerUpFactory powerUpFactory;
+
+    //PowerUpFactory powerUpFactory = new PowerUpFactory(world);
 
     List<JumpHandler> jumpHandlers = new ArrayList<JumpHandler>();
 
     public GameLogic(World world) {
         this.world = world;
+        powerUpFactory = new PowerUpFactory(world, LoadMap.getInstance().loadImage("/textures/squareTextures/FirstAid.jpg", new Vec2(0.4f, 0.4f))
+                ,LoadMap.getInstance().loadImage("/textures/circleTextures/Coin.png",new Vec2(0.4f, 0.4f)));
     }
-
 
     /**
      * The function that updates the object every frame

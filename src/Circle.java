@@ -25,7 +25,7 @@ public class Circle extends SolidObject implements DrawAndUpdateObject {
     public Circle(int ID, World world, Vec2 pos, float friction, Image image) {
 	super(pos, friction, image);
 	this.ID = ID;
-	this.radious = image.getWidth()/2;
+	this.radious = (double) GameComponent.pixToMeters((float) image.getWidth()/2);
 
 	createBody(world);
 	body.setUserData(this);
