@@ -12,7 +12,7 @@ import org.jbox2d.dynamics.contacts.Contact;
  * This class creates a box that can be picked up by the player. The box contains health
  * given to the player when picked up.
  */
-public class FirstAidBox extends DynamicSquare implements CollisionListener, DrawAndUpdateObject {
+public class FirstAidBox extends DynamicSquare implements PowerUps {
     private int health;
     private int ID;
     private World world;
@@ -28,7 +28,6 @@ public class FirstAidBox extends DynamicSquare implements CollisionListener, Dra
     public FirstAidBox(World world, Vec2 pos, float friction, Image image, int ID) {
         super(world, pos, friction, image);
         health = 100;
-        body.getFixtureList().setSensor(false); //Makes the coin a sensor
         body.setUserData(this);
     }
 
@@ -45,14 +44,13 @@ public class FirstAidBox extends DynamicSquare implements CollisionListener, Dra
     public FirstAidBox(World world, Vec2 pos, float friction, Color color, double width, double height, int ID) {
         super(world, pos, friction, color, width, height);
         health = 100;
-        body.getFixtureList().setSensor(false); //Makes the coin a sensor
         body.setUserData(this);
         System.out.println(ID);
     }
 
     /**
-     * This method checks if the player have collided whit the coin, if it has the player is given the points held
-     * by the coin and the coin is then removed from the world.
+     * This method checks if the player have collided whit the box, if it has the player is given the health held
+     * by the box and the box is then removed from the world.
      */
     public void beginContact(Contact contact){
         System.out.println(ID);
@@ -79,15 +77,19 @@ public class FirstAidBox extends DynamicSquare implements CollisionListener, Dra
     public void endContact(Contact contact){}
 
     /**
-     * @return the points held by the coin
+     * @return the healh held by the box
      */
     public int getHealth() {return health;}
 
     /**
-     * @return the ID of the coin
+     * @return the ID of the box
      */
     public int getID() {return ID;}
 
+    /**
+     * Sets the Id of the box
+     * @param ID
+     */
     public void setID(int ID) {
         this.ID = ID;
     }

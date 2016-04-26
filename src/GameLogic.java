@@ -28,7 +28,9 @@ public class GameLogic implements CollisionListener, DrawAndUpdateObject
 
         count ++;
         if (count % 60 == 0) {
-            powerUpFactory.powerUp(world);
+            PowerUps powerUps = powerUpFactory.powerUp(world);
+            LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber()).addDrawAndUpdateObject(powerUps);
+            LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber()).addCollisionListener(powerUps);
         }
     }
 
