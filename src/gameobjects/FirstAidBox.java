@@ -35,7 +35,7 @@ public class FirstAidBox extends DynamicSquare implements PowerUps
     public FirstAidBox(int ID, World world, Vec2 pos, float friction, Image image) {
         super(ID, world, pos, friction, image);
         this.ID = ID;
-        health = 100;
+        health = 20;
         body.setUserData(this);
     }
 
@@ -52,7 +52,7 @@ public class FirstAidBox extends DynamicSquare implements PowerUps
     public FirstAidBox(int ID, World world, Vec2 pos, float friction, Color color, double width, double height) {
         super(ID, world, pos, friction, color, width, height);
         this.ID = ID;
-        health = 100;
+        health = 20;
         body.setUserData(this);
     }
 

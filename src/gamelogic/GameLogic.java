@@ -12,6 +12,8 @@ import java.util.List;
 public class GameLogic implements DrawAndUpdateObject
 {
     private World world;
+    private int count = 0;
+    private int fiveSeconds = 300;
 
     PowerUpFactory powerUpFactory;
 
@@ -29,11 +31,11 @@ public class GameLogic implements DrawAndUpdateObject
     /**
      * The function that updates the object every frame
      */
-    int count = 0;
+
     public void update(){
 
         count ++;
-        if (count % 60 == 0) {
+        if (count % fiveSeconds == 0) {
             PowerUps powerUps = powerUpFactory.powerUp(world);
             LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber()).addDrawAndUpdateObject(powerUps);
             LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber()).addCollisionListener(powerUps);

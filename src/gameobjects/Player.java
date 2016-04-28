@@ -243,9 +243,10 @@ public class Player extends SolidObject implements DrawAndUpdateObject, Collisio
 
     public void update(){
         runHandler();
+        int sixSeconds = 360;
         if(startTime){
             PowerUpTime++;
-            if (PowerUpTime > 360){
+            if (PowerUpTime > sixSeconds){
                 PowerUpTime = 0;
                 setCurrentJumpHandler(new DefaultJumpHandler());
                 setStartTime(false);
