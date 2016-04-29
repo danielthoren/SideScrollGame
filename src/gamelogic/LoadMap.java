@@ -1,5 +1,6 @@
 package gamelogic;
 
+import gameobjects.DynamicCircle;
 import gameobjects.DynamicSquare;
 import gameobjects.Player;
 import gameobjects.Sprite;
@@ -62,11 +63,11 @@ public final class LoadMap {
 
 
             Image swordIm = loadImage("/textures/Textures/Sword.png", new Vec2(0.2f, 0.4f));
-            Sword sword = new Sword(objectID++, world, new Vec2(5f, 0f), 0.4f, 50, swordIm);
+            Sword sword = new Sword(objectID++, world, new Vec2(5f, 0f), 0.4f, swordIm, true, 50);
             gameObjects.add(sword);
             gameObjectsCollision.add(sword);
 
-
+            gameObjects.add(new DynamicCircle(getObjectID(), world, new Vec2(2f,0f), 0.2f, Color.AQUA, 0.2));
 
             gameObjects.add(new DynamicSquare(objectID++, world, new Vec2(2f, 2f), 0.3f, stoneBrickWall));
             gameObjects.add(new DynamicSquare(objectID++, world, new Vec2(2.5f, 2f), 0.3f, stoneBrickWall));
@@ -126,8 +127,7 @@ public final class LoadMap {
             gameObjectsCollision.add(player2);
 
             gameObjects.add(ScoreBoard.getInstance());
-            GameLogic gameLogic = new GameLogic(world);
-            gameObjects.add(gameLogic);
+            gameObjects.add(new GameLogic(LoadMap.getObjectID(), world));
 
             Map map = new Map(world, gameObjects, gameObjectsListen, gameObjectsCollision, getMapGravity(mapNumber));
             maps.put(mapNumber, map);
@@ -151,7 +151,8 @@ public final class LoadMap {
     }
 
     public Vec2 getMapGravity(int mapNumber){
-        return new Vec2(0, 20f);                                                                        ///////////////////////////////////Needs to be dealt with
+        //Todo gravity constant needs to be moved to appropriate location
+        return new Vec2(0, 20f);
     }
 
     public float getPixPerMeter(){return pixPerMeter;}

@@ -99,6 +99,7 @@ public class Square extends SolidObject implements DrawAndUpdateObject
 
     @Override
     public void draw(GraphicsContext gc){
-	super.drawSquare(gc, body.getPosition(), width, height);
+	//drawSquare(gc, body.getPosition(), width, height);
+	drawBoxPolygonFixture(gc, body.getFixtureList());
     }
 }

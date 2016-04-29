@@ -23,25 +23,34 @@ import java.util.Random;
  * This class returns either a firsaidbox or a jump powerup given a random number.
  */
 public class PowerUpFactory {
-    List<JumpHandler> jumpHandlers = new ArrayList<JumpHandler>();//Contains all the jumphandlers
-    Image firstAidBoxTexture;
-    Image powerUpCoinTexture;
+    private List<JumpHandler> jumpHandlers;
+    private Image firstAidTexture;
+    private Image coinTexture;
+    private Color color;
+    private Random randomHealth;
+    private Random random;
+    private float coinRadious;
+    private Vec2 boxSize;
 
-    /**
-     * Creates an instance of this class.
-     * @param world The world where the powerups is returned to.
-     */
-    public PowerUpFactory(World world) {
+    //Todo move constant to appropriate position
+    private final static int healthBound = 30;
+
+    public PowerUpFactory(float coinRadious, Vec2 boxSize, Color color) {
+        this.color = color;
+        this.coinRadious = coinRadious;
+        this.boxSize = boxSize;
+        jumpHandlers = new ArrayList<>();
         jumpHandlers.add(new WallJumpHandler());
+        random = new Random();
     }
-    /**
-     * Creates an instance of this class.
-     * @param world The world where the powerups is returned to.
-     */
-    public PowerUpFactory(World world, Image firstAidBoxTexture, Image powerUpCoinTexture) {
+
+
+    public PowerUpFactory(Image firstAidBoxTexture, Image powerUpCoinTexture) {
+        this.firstAidTexture = firstAidBoxTexture;
+        this.coinTexture = powerUpCoinTexture;
+        jumpHandlers = new ArrayList<>();
         jumpHandlers.add(new WallJumpHandler());
-        this.firstAidBoxTexture = firstAidBoxTexture;
-        this.powerUpCoinTexture = powerUpCoinTexture;
+        random = new Random();
     }
 
     /**
@@ -50,39 +59,38 @@ public class PowerUpFactory {
      * @return Returns a powerup.
      */
     public PowerUps powerUp(World world){
-        Random rand = new Random();
-        int randomPowerUP = rand.nextInt(2); //Creates a random number from 0 to 1.
+        int randomPowerUP = random.nextInt(2); //Creates a random number from 0 to 1.
+        int lenList = random.nextInt(jumpHandlers.size()); //Returns a index used to retrive a random jumpHandler. (More can be added)
 
-
-        int lenList = rand.nextInt(jumpHandlers.size()); //Returns a random jumphandler. (More can be added)
         FirstAidBox firstAidBox;
         PowerUpCoin powerUpCoin;
         switch (randomPowerUP) {
             case (0):
-                if (firstAidBoxTexture == null) {
+                int heal = random.nextInt(healthBound);
+                if (firstAidTexture == null) {
                     int currentId = LoadMap.getObjectID();  //Gets the current ID from class load map.
                     firstAidBox = new FirstAidBox(currentId, world, new Vec2(new Random().nextFloat() * 2, new Random().nextFloat() * 4),
-                            1f, Color.WHITE, 0.4d, 0.4d); //Creates the box.
+                            1f, heal, this.color, boxSize.x, boxSize.y); //Creates the box.
                 }
                 else{
                     int currentId = LoadMap.getObjectID();  //Gets the current ID from class load map.
                     firstAidBox = new FirstAidBox(currentId, world, new Vec2(new Random().nextFloat() * 2, new Random().nextFloat() * 4),
-                                                  1f, firstAidBoxTexture); //Creates the box.
+                                                  1f, heal, firstAidTexture); //Creates the box.
                 }
                 return firstAidBox;
 
 
             case (1):
                 //This case i similar to the previous. The diffrence being that we create a coin and not a box.
-                if(powerUpCoinTexture == null){
+                if(coinTexture == null){
                 int currentId = LoadMap.getObjectID();
-                powerUpCoin = new PowerUpCoin(currentId, world, new Vec2(2f, 4f),
-                                              1f, 1f, 1f, Color.WHITE, 0.2d, jumpHandlers.get(lenList));
+                powerUpCoin = new PowerUpCoin(currentId, world, new Vec2(new Random().nextFloat() * 2, new Random().nextFloat() * 4),
+                                              0.3f, this.color, coinRadious, jumpHandlers.get(lenList));
                 }
                 else {
                     int currentId = LoadMap.getObjectID();
-                    powerUpCoin = new PowerUpCoin(currentId, world, new Vec2(2f, 4f),
-                            1f, 1f, 1f, powerUpCoinTexture, jumpHandlers.get(lenList));
+                    powerUpCoin = new PowerUpCoin(currentId, world, new Vec2(new Random().nextFloat() * 2, new Random().nextFloat() * 4),
+                                                  0.3f, coinTexture, jumpHandlers.get(lenList));
                 }
                 return powerUpCoin;
             default:

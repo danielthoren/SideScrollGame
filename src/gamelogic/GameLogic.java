@@ -1,6 +1,8 @@
 package gamelogic;
 
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.World;
 import characterspesific.JumpHandler;
@@ -12,33 +14,38 @@ import java.util.List;
 public class GameLogic implements DrawAndUpdateObject
 {
     private World world;
-    private int count = 0;
-    private int fiveSeconds = 300;
+    private PowerUpFactory powerUpFactory;
+    private long timeBetweenPowerups;
+    private long timeSinceLastPowerup;
+    private final int iD;
 
-    PowerUpFactory powerUpFactory;
-
-    //gamelogic.PowerUpFactory powerUpFactory = new gamelogic.PowerUpFactory(world);
+    //Default values, can be changed with setters
+    private Vec2 healBoxSize = new Vec2(0.4f, 0.4f);
+    private Vec2 coinSize = new Vec2(0.2f, 0.2f);
 
     List<JumpHandler> jumpHandlers = new ArrayList<JumpHandler>();
 
-    public GameLogic(World world) {
+    public GameLogic(int iD, World world) {
         this.world = world;
-        powerUpFactory = new PowerUpFactory(world, LoadMap
-                .getInstance().loadImage("/textures/squareTextures/FirstAid.jpg", new Vec2(0.4f, 0.4f))
-                , LoadMap.getInstance().loadImage("/textures/circleTextures/Coin.png",new Vec2(0.4f, 0.4f)));
-    }
+        this.iD = iD;
+        timeSinceLastPowerup = System.currentTimeMillis();
 
-    /**
-     * The function that updates the object every frame
-     */
+        //Todo Move default size and time values to a more appropriate position
+        timeBetweenPowerups = 500;
+        Image boxTexture = LoadMap.getInstance().loadImage("/textures/squareTextures/FirstAid.jpg", new Vec2(0.2f,0.2f));
+        Image coinTexture = LoadMap.getInstance().loadImage("/textures/circleTextures/Coin.png", new Vec2(0.2f,0.2f));
+
+        powerUpFactory = new PowerUpFactory(boxTexture, coinTexture);
+        //powerUpFactory = new PowerUpFactory(0.2f, new Vec2(0.2f, 0.2f), Color.WHITE);
+    }
 
     public void update(){
 
-        count ++;
-        if (count % fiveSeconds == 0) {
+        if (System.currentTimeMillis() - timeSinceLastPowerup > timeBetweenPowerups) {
             PowerUps powerUps = powerUpFactory.powerUp(world);
             LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber()).addDrawAndUpdateObject(powerUps);
             LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber()).addCollisionListener(powerUps);
+            timeSinceLastPowerup = System.currentTimeMillis();
         }
     }
 
@@ -48,10 +55,8 @@ public class GameLogic implements DrawAndUpdateObject
      */
     public void draw(GraphicsContext gc){}
 
-
-    //TODO: move getid from drawandupdate interface to solidobject when making solidobject an abstract class
     public int getID(){
-        return -1;
+        return iD;
     }
 }
 

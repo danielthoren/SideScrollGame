@@ -15,14 +15,13 @@ import gamelogic.Map;
  */
 
 /**
- * This class creates a box that can be picked up by the player. The box contains health
+ * This class creates a box that can be picked up by the player. The box contains heal
  * given to the player when picked up.
  */
 public class FirstAidBox extends DynamicSquare implements PowerUps
 {
-    private int health;
+    private int heal;
     private final int ID;
-    private World world;
 
     /**
      * Creates a box that will symbolize a first aid kit
@@ -32,11 +31,12 @@ public class FirstAidBox extends DynamicSquare implements PowerUps
      * @param image     The iamge of the coin
      * @param ID    The ID of the coin
      */
-    public FirstAidBox(int ID, World world, Vec2 pos, float friction, Image image) {
+    public FirstAidBox(int ID, World world, Vec2 pos, float friction, int heal, Image image) {
         super(ID, world, pos, friction, image);
         this.ID = ID;
-        health = 20;
+        this.heal = heal;
         body.setUserData(this);
+        setRestitution(1f);
     }
 
     /**
@@ -49,27 +49,35 @@ public class FirstAidBox extends DynamicSquare implements PowerUps
      * @param height    The height if the box
      * @param ID    The id of the box
      */
-    public FirstAidBox(int ID, World world, Vec2 pos, float friction, Color color, double width, double height) {
+    public FirstAidBox(int ID, World world, Vec2 pos, float friction, int heal, Color color, double width, double height) {
         super(ID, world, pos, friction, color, width, height);
         this.ID = ID;
-        health = 20;
+        this.heal = heal;
         body.setUserData(this);
+        setRestitution(1f);
     }
 
     /**
-     * This method checks if the player have collided whit the box, if it has the player is given the health held
+     * This method checks if the player have collided whit the box, if it has, the player is given the heal held
      * by the box and the box is then removed from the world.
+     *
+     *OBS!
+     * The chain of 'instanceof' is used to check if the object collided with is an instance of player. The 'getUserData' method in
+     * body is a container of type 'Object'. This container always contains the class owning the body (in this project) thus
+     * this parameter can be used to check wich type of gameobject is collided with and then run methods on said object to get
+     * an effect. For example heal the player if we are sure that the object collided with is of the 'Player' class
+     * (thus we can safely cast the object contained inside the 'UserData' to 'Player'.
      */
     public void beginContact(Contact contact){
         if (contact.getFixtureA().getBody().getUserData().equals(this) && contact.getFixtureB().getBody().getUserData() instanceof Player){
-            ((Player) contact.getFixtureB().getBody().getUserData()).heal(health);
+            ((Player) contact.getFixtureB().getBody().getUserData()).heal(heal);
             Map map = LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber());
             map.removeBody(body);
             map.removeCollisionListener(this);
             map.removeDrawAndUpdateObject(this);
         }
         else if (contact.getFixtureB().getBody().getUserData().equals(this) && contact.getFixtureA().getBody().getUserData() instanceof Player){
-            ((Player) contact.getFixtureA().getBody().getUserData()).heal(health);
+            ((Player) contact.getFixtureA().getBody().getUserData()).heal(heal);
             Map map = LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber());
             map.removeBody(body);
             map.removeCollisionListener(this);
@@ -86,7 +94,7 @@ public class FirstAidBox extends DynamicSquare implements PowerUps
     /**
      * @return the healh held by the box
      */
-    public int getHealth() {return health;}
+    public int getHeal() {return heal;}
 
     /**
      * @return the ID of the box

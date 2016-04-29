@@ -1,14 +1,12 @@
 package gameobjects;
 
+import characterspesific.InventoryItem;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Filter;
 import org.jbox2d.dynamics.Fixture;
 import org.jbox2d.dynamics.World;
-import org.jbox2d.dynamics.contacts.Contact;
-import characterspesific.InventoryItem;
-import gamelogic.CollisionListener;
 import gamelogic.Direction;
 import gamelogic.DrawAndUpdateObject;
 import gamelogic.GameComponent;
@@ -17,7 +15,7 @@ import gamelogic.LoadMap;
 /**
  * Parent Class containing shared code between equipped objects
  */
-public class SquareInventoryItem implements InventoryItem, CollisionListener
+public class InventoryItemParent implements InventoryItem
 {
     protected World world;
     protected Player player;
@@ -30,34 +28,35 @@ public class SquareInventoryItem implements InventoryItem, CollisionListener
     protected float relativeAngle;
     protected final Vec2 size;
     protected boolean equipped;
-    protected boolean hasDamaged;
 
     /**
-     * Initializes a 'gameobjects.SquareInventoryItem and puts it at the specified position in the specified world.
+     * Initializes a 'gameobjects.InventoryItemParent and puts it at the specified position in the specified world.
      * @param ID The id of the object.
      * @param world The game world to add the object to.
      * @param position The startposition of the object.
      * @param friction The friction of the object.
      * @param image The image of the object.
      */
-    public SquareInventoryItem(int ID, World world, Vec2 position, float friction, Image image, boolean isSquare) {
+    public InventoryItemParent(int ID, World world, Vec2 position, float friction, Image image, boolean isSquare) {
         this.world = world;
         if (isSquare){
             dynamicSquare = new DynamicSquare(ID, world, position, friction, image);
+            solidObject = dynamicSquare;
+            drawAndUpdateObject = dynamicSquare;
+            dynamicCircle = null;
         }
         else{
             dynamicCircle = new DynamicCircle(ID, world, position, friction, image);
+            solidObject = dynamicCircle;
+            drawAndUpdateObject = dynamicCircle;
+            dynamicSquare = null;
         }
 
-        solidObject = dynamicSquare;
-        drawAndUpdateObject = dynamicSquare;
-        dynamicCircle = null;
-        hasDamaged = false;
         currentCollidingPlayer = null;
         relativePos = null;
         player = null;
         //Setting the density of the object to 1. This is the default value of an equipped item and can be changed by setter in superclass.
-        dynamicSquare.setDensity(1f);
+        solidObject.setDensity(1f);
         size = new Vec2(GameComponent.pixToMeters((float) image.getWidth()), GameComponent.pixToMeters((float) image.getHeight()));
     }
 
@@ -124,54 +123,10 @@ public class SquareInventoryItem implements InventoryItem, CollisionListener
     }
 
     /**
-     * Takes care of collisionencounters with players:
-     * - if: This collides with a player, set the 'currentCollidingPlayer' field to said player.
-     *       - if: This item is in an inventory and has not damaged a player since this started to collide with a player
-     *             (thus preventing the item from draining all of the health of the other player with just one collision)
-     *             then damage the player with whom this is colliding and set field 'hasDamaged' to true.
-     * @param contact A object containing the two bodies and fixtures that made contact. It also contains collisiondata
-     */
-    public void beginContact(Contact contact){
-        if (contact.getFixtureA().getBody().getUserData().equals(solidObject) &&
-                contact.getFixtureB().getBody().getUserData() instanceof Player){
-            currentCollidingPlayer = (Player) contact.getFixtureB().getBody().getUserData();
-            if (player != null && !hasDamaged && !((Player) contact.getFixtureB().getBody().getUserData()).equals(player)) {
-                currentCollidingPlayer.damage(15);
-                hasDamaged = true;
-            }
-        }
-        else if (contact.getFixtureB().getBody().getUserData().equals(solidObject) &&
-                contact.getFixtureA().getBody().getUserData() instanceof Player){
-            currentCollidingPlayer = (Player) contact.getFixtureA().getBody().getUserData();
-            if (player != null && !hasDamaged && !((Player) contact.getFixtureA().getBody().getUserData()).equals(player)) {
-                currentCollidingPlayer.damage(15);
-                hasDamaged = true;
-            }
-        }
-    }
-
-    /**
-     * Takes car of collisionencounters with players:
-     * - if: This stops to collide with a player then set the field 'hasDamaged' to 'false' and 'currentCollidingPlayer' to 'null'.
-     * @param contact A object containing the two bodies and fixtures that made contact. It also contains collisiondata
-     */
-    public void endContact(Contact contact){
-        if (contact.getFixtureA().getBody().getUserData().equals(solidObject) && contact.getFixtureB().getBody().getUserData() instanceof Player){
-            hasDamaged = false;
-            currentCollidingPlayer = null;
-        }
-        else if (contact.getFixtureB().getBody().getUserData().equals(solidObject) && contact.getFixtureA().getBody().getUserData() instanceof Player){
-            hasDamaged = false;
-            currentCollidingPlayer = null;
-        }
-    }
-
-    /**
      * Equips the item to the player owning the inventory that this is stored in.
      */
     public void equip(){
         LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber()).addDrawAndUpdateObject(this);
-        LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber()).addCollisionListener(this);
         if (dynamicSquare == null){
             dynamicCircle.createBody(world);
         }
@@ -186,7 +141,6 @@ public class SquareInventoryItem implements InventoryItem, CollisionListener
      */
     public void unEquip(){
         LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber()).removeBody(solidObject.body);
-        LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber()).removeDrawAndUpdateObject(this);
         solidObject.body = null;
         equipped = false;
     }
@@ -213,6 +167,7 @@ public class SquareInventoryItem implements InventoryItem, CollisionListener
         player = null;
     }
 
+
     /**
      * Returns the id of the 'gameobjects.SolidObject' of the items body
      * @return int id
@@ -228,8 +183,8 @@ public class SquareInventoryItem implements InventoryItem, CollisionListener
      */
     @Override
     public boolean equals(Object object){
-        if (object instanceof SquareInventoryItem){
-            if (this.getID() == ((SquareInventoryItem) object).getID()){
+        if (object instanceof InventoryItemParent){
+            if (this.getID() == ((InventoryItemParent) object).getID()){
                 return true;
             }
         }

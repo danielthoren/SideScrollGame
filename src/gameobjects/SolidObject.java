@@ -23,6 +23,10 @@ public class SolidObject {
     protected float friction; //The friction of the square´s body
     protected final int ID;   //The id of the solidobject
 
+    //Default values that can be changed by setters
+    protected static final float restitution = 0.01f;
+    protected static final float density = 10f;
+
     /**
      * The default constructor of the class. Should never be used!
      */
@@ -91,11 +95,14 @@ public class SolidObject {
         //Rotating the top xy-plane of the stack (the one created above) to the current degree of the body
         gc.rotate(Math.toDegrees(body.getAngle()));
         //Drawing the body so that the center of the visual representation is in the new xy-planes origin
-        gc.setFill(color);
         float halfWidth = GameComponent.metersToPix(width.floatValue()) / 2;
         float halfHeight = GameComponent.metersToPix(height.floatValue()) / 2;
         if (image == null){gc.fillRect(-halfWidth, -halfHeight, 2 * halfWidth, 2 * halfHeight);}
-        else{gc.drawImage(image, -halfWidth, -halfHeight);}
+        else{
+            gc.setFill(color);
+            gc.drawImage(image, -halfWidth, -halfHeight);
+        }
+
         //Popping the stack, removing the top element, thus leaving the original xy-plane at the top
         gc.restore();
     }
@@ -116,9 +123,9 @@ public class SolidObject {
         gc.rotate(Math.toDegrees(body.getAngle()));
         //Drawing the body so that the center of the visual representation is in the new xy-planes origin
         gc.setFill(color);
-        float pixRadious  = GameComponent.metersToPix(radious.floatValue());
+        float pixRadious = GameComponent.metersToPix(radious.floatValue());
         if (image == null) {gc.fillOval(-pixRadious, -pixRadious, 2 * pixRadious, 2 * pixRadious);}
-        else if (color != null) {gc.drawImage(image, -pixRadious/2, pixRadious/2);}
+        else {gc.drawImage(image, -pixRadious, -pixRadious);}
         //Popping the stack, removing the top element, thus leaving the original xy-plane at the top
         gc.restore();
     }
@@ -154,7 +161,7 @@ public class SolidObject {
         //Casting the attatched 'Shape' to CircleShape (this must be a circleshape for the Fixture to be a circle)
         CircleShape circle = (CircleShape) fixture.getShape();
         //Calculating the global coordinates of the circles center
-        Vec2 fixturePos = new Vec2(body.getPosition().x - circle.m_p.x, body.getPosition().y - circle.m_p.y);
+        Vec2 fixturePos = new Vec2(body.getPosition().x + circle.m_p.x, body.getPosition().y + circle.m_p.y);
         Float radious = fixture.getShape().getRadius();
         //Drawing the circle
         drawCircle(gc, fixturePos, radious.doubleValue());
@@ -188,9 +195,20 @@ public class SolidObject {
     }
 
     /**
+     * Sets the restitution of all of the 'Fixtures' of a solidObject thus changing the restitution of the entire body.
+     * @param restitution The new restitutionvalue.
+     */
+    public void setRestitution(float restitution){
+        for (Fixture fixture = body.getFixtureList(); fixture != null; fixture = fixture.getNext()){
+            fixture.setRestitution(restitution);
+        }
+    }
+
+    /**
      * equals function looking at the objects id to check if this is the exact same object as the one compared with. This is
      * used in collisionchecks and in the 'gamelogic.Map' where objects are staged for removal/addition to check so that objects are exactly
-     * the same.
+     * the same. It is also used in the 'ContactListenerGame' to only run the callback on the objects actually colliding thus saving
+     * processortime and memmory.
      * @param obj The object to compare with.
      * @return true if both objects are identical (has the same id).
      */

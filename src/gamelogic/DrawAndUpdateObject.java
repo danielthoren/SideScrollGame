@@ -5,7 +5,7 @@ import javafx.scene.canvas.GraphicsContext;
 /**
  * Interface for all of the objects that needs updating and drawing
  */
-public interface DrawAndUpdateObject extends GameObject {
+public interface DrawAndUpdateObject extends GameObject{
     /**
      * The function that updates the object every frame
      */

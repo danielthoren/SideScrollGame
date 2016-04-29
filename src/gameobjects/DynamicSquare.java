@@ -11,9 +11,6 @@ import org.jbox2d.dynamics.World;
  */
 public class DynamicSquare extends Square {
 
-    private float density = 10;
-    private float restitution = 0.01f;
-
     /**
      * Creates a square on wich realtime physics is applied.
      * @param world The world in wich to add its body
@@ -50,9 +47,5 @@ public class DynamicSquare extends Square {
         this.body.getFixtureList().setRestitution(restitution);
         this.body.getFixtureList().setDensity(density);
         this.body.setFixedRotation(false);
-    }
-
-    public void setRestitution(float restitution) {
-        this.restitution = restitution;
     }
 }

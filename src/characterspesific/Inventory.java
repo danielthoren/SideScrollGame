@@ -1,7 +1,7 @@
 package characterspesific;
 
-import gameobjects.Player;
-import gameobjects.SquareInventoryItem;
+import gameobjects.*;
+import gameobjects.InventoryItemParent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +12,7 @@ import java.util.List;
 public class Inventory {
 
     private Player player;
-    private List<SquareInventoryItem> inventoryItemList;
+    private List<InventoryItemParent> inventoryItemList;
     private int equippedItemIndex;
     private int occupiedInventorySlots;
     private int maxInventorySize;
@@ -24,7 +24,7 @@ public class Inventory {
     public Inventory(Player player) {
         this.player = player;
 
-        inventoryItemList = new ArrayList<SquareInventoryItem>(4);
+        inventoryItemList = new ArrayList<InventoryItemParent>(4);
         //The size of the current inventory
         occupiedInventorySlots = 0;
         //Default value
@@ -47,7 +47,7 @@ public class Inventory {
      * Adds item and equipps it if the inventory is not full.
      * @param inventoryItem The item to be added to the inventory.
      */
-    public boolean addItem(SquareInventoryItem inventoryItem){
+    public boolean addItem(InventoryItemParent inventoryItem){
         if (occupiedInventorySlots < maxInventorySize) {
             if (equippedItemIndex != -1) {
                 inventoryItemList.get(equippedItemIndex).unEquip();

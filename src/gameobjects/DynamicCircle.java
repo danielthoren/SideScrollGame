@@ -10,8 +10,6 @@ import org.jbox2d.dynamics.World;
  * Created by daniel on 2016-03-31.
  */
 public class DynamicCircle extends Circle {
-    private float density;
-    private float restitution;
 
     /**
      * Creates a square on wich realtime physics is applied.

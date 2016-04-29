@@ -1,6 +1,7 @@
 package gameobjects; /**
  * Created by daniel on 2016-03-12.
  */
+import gamelogic.GameObject;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -60,9 +61,9 @@ public class Circle extends SolidObject implements DrawAndUpdateObject
 
 	//Creating the fixture of the body. The concrete part that can be touched (the part that can collide)
 	fixtureDef.shape = circleShape;
-	fixtureDef.density = 0f;
+	fixtureDef.density = density;
 	fixtureDef.friction = friction;
-	fixtureDef.restitution = 0f;
+	fixtureDef.restitution = restitution;
 
 	//Creating the body using the fixtureDef and the BodyDef created beneath
 	BodyDef bodyDef = new BodyDef();
@@ -85,11 +86,6 @@ public class Circle extends SolidObject implements DrawAndUpdateObject
      * @param gc The GraphicsContext to be used to draw with
      */
     public void draw(GraphicsContext gc){
-	if (image == null){
-	    super.drawCircle(gc, body.getPosition(), radious);
-	}
-	else{
-	    super.drawSquare(gc, body.getPosition(), radious, radious);
-	}
+	drawCircle(gc, body.getPosition(), radious);
     }
 }

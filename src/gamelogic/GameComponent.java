@@ -27,8 +27,7 @@ public class GameComponent extends Parent
     private double height, width;                           //The height and width of the window in pixels
     private int velocityIterations, positionIterations;     //Values deciding the accuracy of velocity and position
     private Map currentMap;
-    private static int currentMapNumber = 1;                        ///////////////////Value needs to be moved to user interface!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
+    private static int currentMapNumber = 1;
     /**
      * Instanciates a game.
      * @param height The height of the window in pixels
@@ -78,9 +77,9 @@ public class GameComponent extends Parent
      * @param nanosecScienceLast The time scinse the last update in nanoseconds
      */
     public void update(float nanosecScienceLast){
-        world.step(nanosecScienceLast / 1000000000, velocityIterations,positionIterations);
         currentMap.removeStagedOBjects();
         currentMap.addStagedObjects();
+        world.step(nanosecScienceLast / 1000000000, velocityIterations,positionIterations);
         for (Iterator<DrawAndUpdateObject> iterator = currentMap.getDrawAndUpdateObjectList().iterator(); iterator.hasNext();){
             DrawAndUpdateObject obj = iterator.next();
                 obj.update();
