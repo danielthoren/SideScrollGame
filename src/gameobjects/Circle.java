@@ -25,7 +25,7 @@ public class Circle extends SolidObject implements DrawAndUpdateObject
      * @param friction The friction of the body
      * @param image The image to display over the body (visible part of the circle)
      */
-    public Circle(int ID, World world, Vec2 pos, float friction, Image image) {
+    public Circle(long ID, World world, Vec2 pos, float friction, Image image) {
 	super(ID, pos, friction, image);
 	this.radious = (double) GameComponent.pixToMeters((float) image.getWidth() / 2);
 	createBody(world);
@@ -40,7 +40,7 @@ public class Circle extends SolidObject implements DrawAndUpdateObject
      * @param color The color of the circle
      * @param radious The radious of the circle
      */
-    public Circle(int ID, World world, Vec2 pos, float friction, Color color, double radious){
+    public Circle(long ID, World world, Vec2 pos, float friction, Color color, double radious){
 	super(ID, pos, friction, color);
 	this.radious = radious;
 	createBody(world);

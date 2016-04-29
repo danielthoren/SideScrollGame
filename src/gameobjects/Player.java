@@ -48,7 +48,7 @@ public class Player extends SolidObject implements DrawAndUpdateObject, Collisio
     private static final int DEFAULT_MAX_HEALTH = 100;
     private static final Vec2 DEFAULT_MAX_VELOCITY = new Vec2(10f, 20f);
 
-    public Player(int ID, World world, Vec2 position, float friction, float density, Vec2 acceleration, Vec2 deceleration, Sprite sprite) {
+    public Player(long ID, World world, Vec2 position, float friction, float density, Vec2 acceleration, Vec2 deceleration, Sprite sprite) {
         super(ID, position, friction);
         this.acceleration = acceleration;
         this.deceleration = deceleration;
@@ -82,7 +82,7 @@ public class Player extends SolidObject implements DrawAndUpdateObject, Collisio
 
     }
 
-    public Player(int ID, World world, Vec2 position, float friction, float density, Vec2 acceleration, Vec2 deceleration, Color color, Vec2 size) {
+    public Player(long ID, World world, Vec2 position, float friction, float density, Vec2 acceleration, Vec2 deceleration, Color color, Vec2 size) {
         super(ID, position, friction, color);
         this.acceleration = acceleration;
         this.deceleration = deceleration;
@@ -209,12 +209,12 @@ public class Player extends SolidObject implements DrawAndUpdateObject, Collisio
 
         //Setting the group index to be able to prevent collision between the player and certain objects (for example
         //between the player and the inventory-items)
-        upperCircle.filter.groupIndex = -ID;
-        middleBox.filter.groupIndex = -ID;
-        bottomCircle.filter.groupIndex = -ID;
-        bottomSensor.filter.groupIndex = -ID;
-        leftSensor.filter.groupIndex = -ID;
-        rightSensor.filter.groupIndex = -ID;
+        upperCircle.filter.groupIndex = -(int)ID;
+        middleBox.filter.groupIndex = -(int)ID;
+        bottomCircle.filter.groupIndex = -(int)ID;
+        bottomSensor.filter.groupIndex = -(int)ID;
+        leftSensor.filter.groupIndex = -(int)ID;
+        rightSensor.filter.groupIndex = -(int)ID;
 
         //Creating the body using the fixtureDef and the BodyDef created beneath
         BodyDef bodyDef = new BodyDef();

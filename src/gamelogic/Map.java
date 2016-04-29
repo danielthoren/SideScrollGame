@@ -51,16 +51,15 @@ public class Map
      * Removes objects staged for removal and clears the 'StagedForRemoval' lists
      */
     public void removeStagedOBjects (){
+        //List used to keep track of wich id:s bodies have been removed. Used to prevent multiple removals of the same body.
+        //If a item that will be staged for removal when collision occurs with a type of object then two such bodies will
+        //be added to the 'stagedForRemoval' if the item collides with two objects of said type between one step.
         Collection bodyIDRemoved = new ArrayList<>();
         //Destroying all of the bodies that are staged for removal
         for (Body body : bodiesStagedForRemoval){
             if (!bodyIDRemoved.contains(((GameObject)body.getUserData()).getId())) {
-                world.destroyBody(body);
                 bodyIDRemoved.add(((GameObject)body.getUserData()).getId());
-            }
-            else{
-                System.out.println("Same body staged for removal more than once! ID of the object owning the body: " +
-                                   ((GameObject) body.getUserData()).getId());
+                world.destroyBody(body);
             }
         }
         //Removing all of the 'DrawAndUpdate' objects from the maps global list

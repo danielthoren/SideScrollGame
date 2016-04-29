@@ -14,7 +14,7 @@ public class Sword extends InventoryItemParent implements CollisionListener
     protected int damage;
     protected boolean hasDamaged;
 
-    public Sword(final int ID, final World world, final Vec2 position, final float friction, final Image image,
+    public Sword(final long ID, final World world, final Vec2 position, final float friction, final Image image,
 		 final boolean isSquare, int damage)
     {
 	super(ID, world, position, friction, image, isSquare);

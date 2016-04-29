@@ -10,11 +10,14 @@ import characterspesific.PowerUps;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Class does all the logic in the game that depends on
+ */
 public class GameLogic implements DrawAndUpdateObject
 {
     private PowerUpFactory powerUpFactory;
-    private long timeSinceLastPowerup;
-    private final int iD;
+    private long timeSinceLastPowerUp;
+    private final long iD;
 
     //Default values, can be changed with setters
     //Todo Move default size and time values to a more appropriate position
@@ -24,9 +27,9 @@ public class GameLogic implements DrawAndUpdateObject
 
     List<JumpHandler> jumpHandlers = new ArrayList<JumpHandler>();
 
-    public GameLogic(int iD, World world) {
+    public GameLogic(long iD, World world) {
         this.iD = iD;
-        timeSinceLastPowerup = System.currentTimeMillis();
+        timeSinceLastPowerUp = System.currentTimeMillis();
 
         Image boxTexture = LoadMap.getInstance().loadImage("/textures/squareTextures/FirstAid.jpg", HEAL_BOX_SIZE);
         Image coinTexture = LoadMap.getInstance().loadImage("/textures/circleTextures/Coin.png", COIN_SIZE);
@@ -37,11 +40,11 @@ public class GameLogic implements DrawAndUpdateObject
 
     public void update(){
 
-        if (System.currentTimeMillis() - timeSinceLastPowerup > timeBetweenPowerups) {
+        if (System.currentTimeMillis() - timeSinceLastPowerUp > timeBetweenPowerups) {
             PowerUps powerUps = powerUpFactory.powerUp(LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber()).getWorld());
             LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber()).addDrawAndUpdateObject(powerUps);
             LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber()).addCollisionListener(powerUps);
-            timeSinceLastPowerup = System.currentTimeMillis();
+            timeSinceLastPowerUp = System.currentTimeMillis();
         }
     }
 
@@ -51,7 +54,7 @@ public class GameLogic implements DrawAndUpdateObject
      */
     public void draw(GraphicsContext gc){}
 
-    public int getId(){
+    public long getId(){
         return iD;
     }
 }

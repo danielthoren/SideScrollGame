@@ -11,10 +11,6 @@ import gamelogic.LoadMap;
 import gamelogic.Map;
 
 /**
- * Created by kristiansikiric on 2016-04-09.
- */
-
-/**
  * This class creates a box that can be picked up by the player. The box contains heal
  * given to the player when picked up.
  */
@@ -30,7 +26,7 @@ public class FirstAidBox extends DynamicSquare implements PowerUps
      * @param image     The iamge of the coin
      * @param ID    The ID of the coin
      */
-    public FirstAidBox(int ID, World world, Vec2 pos, float friction, int heal, Image image) {
+    public FirstAidBox(long ID, World world, Vec2 pos, float friction, int heal, Image image) {
         super(ID, world, pos, friction, image);
         this.heal = heal;
         body.setUserData(this);
@@ -47,7 +43,7 @@ public class FirstAidBox extends DynamicSquare implements PowerUps
      * @param height    The height if the box
      * @param ID    The id of the box
      */
-    public FirstAidBox(int ID, World world, Vec2 pos, float friction, int heal, Color color, double width, double height) {
+    public FirstAidBox(long ID, World world, Vec2 pos, float friction, int heal, Color color, double width, double height) {
         super(ID, world, pos, friction, color, width, height);
         this.heal = heal;
         body.setUserData(this);

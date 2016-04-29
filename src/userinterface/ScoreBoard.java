@@ -50,7 +50,7 @@ public final class ScoreBoard implements DrawAndUpdateObject
         players.add(player);
     }
 
-    public int getId(){
+    public long getId(){
         return OBJECT_ID;
     }
 }

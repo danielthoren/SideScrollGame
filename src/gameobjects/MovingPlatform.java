@@ -27,7 +27,7 @@ public class MovingPlatform extends Square{
      * @param image   The image texture on the platform
      * @param endPos  The end posistion
      */
-    public MovingPlatform(int ID, World world, Vec2 pos, float friction, Image image, Vec2 endPos) {
+    public MovingPlatform(long ID, World world, Vec2 pos, float friction, Image image, Vec2 endPos) {
         super(ID, world, pos, friction, image);
         startPos = pos;
         this.endPos = endPos;

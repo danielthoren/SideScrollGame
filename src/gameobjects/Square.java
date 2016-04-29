@@ -28,7 +28,7 @@ public class Square extends SolidObject implements DrawAndUpdateObject
      * @param friction The friction of the body
      * @param image The image to display over the body (visible part of the square)
      */
-    public Square(int ID, World world, Vec2 pos, float friction, Image image) {
+    public Square(long ID, World world, Vec2 pos, float friction, Image image) {
 	super(ID, pos, friction, image);
 	width = image.getWidth() / LoadMap.getInstance().getPixPerMeter();
 	height = image.getHeight() / LoadMap.getInstance().getPixPerMeter();
@@ -46,7 +46,7 @@ public class Square extends SolidObject implements DrawAndUpdateObject
      * @param width The width of the square in meters (world coordinates)
      * @param height The height of the square in meters (world coordinates)
      */
-    public Square(int ID, World world, Vec2 pos, float friction, Color color, double width, double height){
+    public Square(long ID, World world, Vec2 pos, float friction, Color color, double width, double height){
 	super(ID, pos, friction, color);
 	this.width = width;
 	this.height = height;

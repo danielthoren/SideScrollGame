@@ -63,13 +63,11 @@ public class PowerUpFactory {
             case (0):
                 int heal = random.nextInt(healthBound);
                 if (firstAidTexture == null) {
-                    int currentId = LoadMap.getObjectID();  //Gets the current ID from class load map.
-                    firstAidBox = new FirstAidBox(currentId, world, new Vec2(new Random().nextFloat() * 2, new Random().nextFloat() * 4),
+                    firstAidBox = new FirstAidBox(LoadMap.getObjectID(), world, new Vec2(new Random().nextFloat() * 2, new Random().nextFloat() * 4),
                             1f, heal, this.color, boxSize.x, boxSize.y); //Creates the box.
                 }
                 else{
-                    int currentId = LoadMap.getObjectID();  //Gets the current ID from class load map.
-                    firstAidBox = new FirstAidBox(currentId, world, new Vec2(new Random().nextFloat() * 2, new Random().nextFloat() * 4),
+                    firstAidBox = new FirstAidBox(LoadMap.getObjectID(), world, new Vec2(new Random().nextFloat() * 2, new Random().nextFloat() * 4),
                                                   1f, heal, firstAidTexture); //Creates the box.
                 }
                 return firstAidBox;
@@ -78,13 +76,11 @@ public class PowerUpFactory {
             case (1):
                 //This case i similar to the previous. The diffrence being that we create a coin and not a box.
                 if(coinTexture == null){
-                int currentId = LoadMap.getObjectID();
-                powerUpCoin = new PowerUpCoin(currentId, world, new Vec2(new Random().nextFloat() * 2, new Random().nextFloat() * 4),
+                powerUpCoin = new PowerUpCoin(LoadMap.getObjectID(), world, new Vec2(new Random().nextFloat() * 2, new Random().nextFloat() * 4),
                                               0.3f, this.color, coinRadious, jumpHandlers.get(lenList));
                 }
                 else {
-                    int currentId = LoadMap.getObjectID();
-                    powerUpCoin = new PowerUpCoin(currentId, world, new Vec2(new Random().nextFloat() * 2, new Random().nextFloat() * 4),
+                    powerUpCoin = new PowerUpCoin(LoadMap.getObjectID(), world, new Vec2(new Random().nextFloat() * 2, new Random().nextFloat() * 4),
                                                   0.3f, coinTexture, jumpHandlers.get(lenList));
                 }
                 return powerUpCoin;

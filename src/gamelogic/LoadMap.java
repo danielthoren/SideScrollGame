@@ -27,7 +27,7 @@ public final class LoadMap {
 
     //Todo Move the pixtometer constant to mapfile
     private final static float PIX_PER_METER = 100;
-    private static int objectID = 2;
+    private static long objectID = 2;
 
     private LoadMap() {
         maps = new HashMap<Integer, Map>();}
@@ -86,8 +86,6 @@ public final class LoadMap {
 
             //gameObjects.add(new gameobjects.MovingPlatform(world, new Vec2(0f, 3f), 1f, Color.WHEAT, 1d, 0.1d, new Vec2(7f, 4f)));
             //gameObjects.add(new gameobjects.MovingPlatform(world, new Vec2(1f, 3f), 1f, Color.BISQUE, 1d, 0.1d, new Vec2(1f, 5f)));
-
-
 
 
             Vec2 position = new Vec2(6f, 5f);
@@ -164,7 +162,7 @@ public final class LoadMap {
         return maps.get(mapNumber);
     }
 
-    public static int getObjectID() {
+    public static long getObjectID() {
         objectID++;
         return objectID;
     }

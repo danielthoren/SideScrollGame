@@ -19,7 +19,7 @@ public class Sprite implements DrawAndUpdateObject
     private int numberOfFrames;
     private int currFrameNumber;
     private int currFramesSinceUpdate;
-    private final int id;
+    private final long id;
     private Vec2 currentOffset;
     private Vec2 stopFrame;
     private Vec2 position;
@@ -39,7 +39,7 @@ public class Sprite implements DrawAndUpdateObject
      * @param position The center-position of the sprite in world coordinates
      * @param angle The angle of the sprite
      */
-    public Sprite(int id, Image image, int columns, int rows, int numberOfFrames, int updateInterval, Vec2 position, float angle) {
+    public Sprite(long id, Image image, int columns, int rows, int numberOfFrames, int updateInterval, Vec2 position, float angle) {
         this.columns = columns;
         this.angle = angle;
         this.image = image;
@@ -133,7 +133,7 @@ public class Sprite implements DrawAndUpdateObject
 
     public Vec2 getSpriteWindowSize() {return spriteWindowSize;}
 
-    public int getId() {return id;}
+    public long getId() {return id;}
 
     public void setPosition(Vec2 position) {this.position = position;}
 

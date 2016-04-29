@@ -21,7 +21,7 @@ public class SolidObject {
     protected Image image;    //The image representing the square in the visual realm (=none if no image)
     protected Color color;    //The color of the square (=none if no color)
     protected float friction; //The friction of the square´s body
-    protected final int ID;   //The id of the solidobject
+    protected final long ID;   //The id of the solidobject
 
     //Default values that can be changed by setters
     protected static final float restitution = 0.01f;
@@ -44,7 +44,7 @@ public class SolidObject {
      * @param pos The position at wich to place the Object (units in meters)
      * @param friction The friction of the body
      */
-    public SolidObject(int ID, Vec2 pos, float friction) {
+    public SolidObject(long ID, Vec2 pos, float friction) {
         this.friction = friction;
         this.pos = pos;
         this.ID = ID;
@@ -58,7 +58,7 @@ public class SolidObject {
      * @param friction The friction of the body
      * @param image The image to display over the body (visible part of the object).
      */
-    public SolidObject(int ID, Vec2 pos, float friction, Image image) {
+    public SolidObject(long ID, Vec2 pos, float friction, Image image) {
         this.image = image;
         this.ID = ID;
         this.friction = friction;
@@ -72,7 +72,7 @@ public class SolidObject {
      * @param friction The fiction of the body
      * @param color The color of the object
      */
-    public SolidObject(int ID, Vec2 pos, float friction, Color color){
+    public SolidObject(long ID, Vec2 pos, float friction, Color color){
         this.friction = friction;
         this.pos = pos;
         this.ID = ID;
@@ -219,7 +219,7 @@ public class SolidObject {
     }
 
 
-    public int getId(){
+    public long getId(){
         return ID;
     }
 

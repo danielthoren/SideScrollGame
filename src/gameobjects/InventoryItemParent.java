@@ -37,7 +37,7 @@ public class InventoryItemParent implements InventoryItem
      * @param friction The friction of the object.
      * @param image The image of the object.
      */
-    public InventoryItemParent(int ID, World world, Vec2 position, float friction, Image image, boolean isSquare) {
+    public InventoryItemParent(long ID, World world, Vec2 position, float friction, Image image, boolean isSquare) {
         this.world = world;
         if (isSquare){
             dynamicSquare = new DynamicSquare(ID, world, position, friction, image);
@@ -154,7 +154,7 @@ public class InventoryItemParent implements InventoryItem
         solidObject.body.getFixtureList().setSensor(false);
         solidObject.body.setFixedRotation(true);
         solidObject.body.setTransform(solidObject.body.getPosition(), relativeAngle);
-        setGroupIndex(-player.getId());
+        setGroupIndex(-(int)player.getId());
         calcRelativePos(player);
         this.player = player;
     }
@@ -173,7 +173,7 @@ public class InventoryItemParent implements InventoryItem
      * Returns the id of the 'gameobjects.SolidObject' of the items body
      * @return int id
      */
-    public int getId(){
+    public long getId(){
         return solidObject.getId();
     }
 

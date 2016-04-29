@@ -27,7 +27,7 @@ public class PowerUpCoin extends DynamicCircle implements PowerUps
      * @param ID    The id of the coin
      * @param jumpHandler   The jumphandler coinatined and given to the player when collided with
      */
-    public PowerUpCoin(int ID, World world, Vec2 pos, float friction,
+    public PowerUpCoin(long ID, World world, Vec2 pos, float friction,
                        Image image, JumpHandler jumpHandler) {
         super(ID, world, pos, friction, image);
         body.setUserData(this);
@@ -42,7 +42,7 @@ public class PowerUpCoin extends DynamicCircle implements PowerUps
      * @param ID    The id of the coin
      * @param jumpHandler   The jumphandler coinatined and given to the player when collided with
      */
-    public PowerUpCoin(int ID,World world, Vec2 pos, float friction,
+    public PowerUpCoin(long ID,World world, Vec2 pos, float friction,
                        Color color, double radious, JumpHandler jumpHandler) {
         super(ID, world, pos, friction, color, radious);
         body.getFixtureList().setSensor(false); //Makes the coin a sensor

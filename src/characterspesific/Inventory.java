@@ -1,7 +1,6 @@
 package characterspesific;
 
 import gameobjects.*;
-import gameobjects.InventoryItemParent;
 
 import java.util.ArrayList;
 import java.util.List;
