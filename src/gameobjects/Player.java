@@ -327,7 +327,8 @@ public class Player extends SolidObject implements DrawAndUpdateObject, Collisio
      * @param health The health of the player.
      */
     public void resetHealth(int health){
-        actualHealth = visibleHealth = health;
+        visibleHealth = health;
+        actualHealth = visibleHealth;
     }
 
     /**

@@ -6,28 +6,25 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
  * This singelton draws the score of the players.
  */
-public class ScoreBoard implements DrawAndUpdateObject
+public final class ScoreBoard implements DrawAndUpdateObject
 {
     private static ScoreBoard ourInstance = new ScoreBoard();
-    private static List<Player> players; //Holds the players.
-    private static int ID = -1;
+    private static List<Player> players = new ArrayList<>(2);
+    private final static int OBJECT_ID = -1;
 
     public static ScoreBoard getInstance() {
         return ourInstance;
     }
 
-    private ScoreBoard() {
-        players = new ArrayList<>(2);
-    }
+    private ScoreBoard() {}
 
-    public void update(){
-
-    }
+    public void update(){}
 
     /**
      * Draws the score of each players.
@@ -53,7 +50,7 @@ public class ScoreBoard implements DrawAndUpdateObject
         players.add(player);
     }
 
-    public int getID(){
-        return ID;
+    public int getId(){
+        return OBJECT_ID;
     }
 }

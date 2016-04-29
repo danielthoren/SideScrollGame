@@ -21,9 +21,7 @@ import java.util.Iterator;
 public class GameComponent extends Parent
 {
     private Canvas canvas;                                  //The canvas on wich to draw on
-    private GraphicsContext gc;                             //The GraphicsContext with wich to draw
     private World world;
-    private double height, width;                           //The height and width of the window in pixels
     private int velocityIterations, positionIterations;     //Values deciding the accuracy of velocity and position
     private Map currentMap;
     private static int currentMapNumber = 1;
@@ -34,9 +32,6 @@ public class GameComponent extends Parent
      * @param width The width of the window in pixels
      */
     public GameComponent(double height, double width){
-        this.height = height;
-        this.width = width;
-
         LoadMap.getInstance().loadMap(currentMapNumber);
         currentMap = LoadMap.getInstance().getMap(currentMapNumber);
         world = currentMap.getWorld();
@@ -49,7 +44,7 @@ public class GameComponent extends Parent
         positionIterations = 3;  //Accuracy of jbox2d position simulation
 
         canvas = new Canvas(width, height);
-        gc = canvas.getGraphicsContext2D();
+        GraphicsContext gc = canvas.getGraphicsContext2D();
         getChildren().add(canvas);
         this.requestFocus();
 

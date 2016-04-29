@@ -95,11 +95,11 @@ public class SolidObject {
         //Rotating the top xy-plane of the stack (the one created above) to the current degree of the body
         gc.rotate(Math.toDegrees(body.getAngle()));
         //Drawing the body so that the center of the visual representation is in the new xy-planes origin
+        gc.setFill(color);
         float halfWidth = GameComponent.metersToPix(width.floatValue()) / 2;
         float halfHeight = GameComponent.metersToPix(height.floatValue()) / 2;
         if (image == null){gc.fillRect(-halfWidth, -halfHeight, 2 * halfWidth, 2 * halfHeight);}
         else{
-            gc.setFill(color);
             gc.drawImage(image, -halfWidth, -halfHeight);
         }
 
@@ -214,12 +214,12 @@ public class SolidObject {
      */
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof GameObject && ((GameObject) obj).getID() == ID){return true;}
+        if (obj instanceof GameObject && ((GameObject) obj).getId() == ID){return true;}
         else {return false;}
     }
 
 
-    public int getID(){
+    public int getId(){
         return ID;
     }
 

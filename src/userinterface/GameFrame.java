@@ -24,11 +24,8 @@ import javafx.stage.Stage;
 public class GameFrame extends Application
 {
     private String windowName;
+    //Field is initialized in the 'start' function that is called from the javaFX thread.
     private GameComponent gameComponent;
-    private GameLoop gameLoop;
-
-    private boolean gameRunning;
-
 
     //Todo Move values to user interface/launcher
     private static final double GAME_HEIGHT = 600;
@@ -41,8 +38,7 @@ public class GameFrame extends Application
     @Override
     public  void start(Stage primaryStage){
         //Initializing userinterface.GameFrame
-        gameRunning = true;
-        gameLoop = new GameLoop(this);
+        GameLoop gameLoop = new GameLoop(this);
         gameComponent = new GameComponent(GAME_HEIGHT, GAME_WIDTH);
 
         //Giving 'gameComponent' focus

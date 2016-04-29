@@ -5,6 +5,7 @@ import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.World;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -50,23 +51,23 @@ public class Map
      * Removes objects staged for removal and clears the 'StagedForRemoval' lists
      */
     public void removeStagedOBjects (){
-        List<Integer> ids = new ArrayList<>();
+        Collection bodyIDRemoved = new ArrayList<>();
         //Destroying all of the bodies that are staged for removal
         for (Body body : bodiesStagedForRemoval){
-            if (!ids.contains(((GameObject)body.getUserData()).getID())) {
+            if (!bodyIDRemoved.contains(((GameObject)body.getUserData()).getId())) {
                 world.destroyBody(body);
-                ids.add(((GameObject)body.getUserData()).getID());
+                bodyIDRemoved.add(((GameObject)body.getUserData()).getId());
             }
             else{
                 System.out.println("Same body staged for removal more than once! ID of the object owning the body: " +
-                                   ((GameObject) body.getUserData()).getID());
+                                   ((GameObject) body.getUserData()).getId());
             }
         }
         //Removing all of the 'DrawAndUpdate' objects from the maps global list
         for (DrawAndUpdateObject objectRemove : drawANdUpdateObjectsStagedForRemoval){
             for (Iterator<DrawAndUpdateObject> iterator = drawAndUpdateObjectList.iterator(); iterator.hasNext();){
                 DrawAndUpdateObject object = iterator.next();
-                if (objectRemove.getID() == object.getID()){
+                if (objectRemove.getId() == object.getId()){
                     iterator.remove();
                 }
             }
@@ -75,7 +76,7 @@ public class Map
         for (InputListener listenerRemova : inputListenersStagedForRemoval){
             for (Iterator<InputListener> iterator = inputListenerList.iterator(); iterator.hasNext();) {
                 InputListener inputListener = iterator.next();
-                if (inputListener.getID() == listenerRemova.getID()){
+                if (inputListener.getId() == listenerRemova.getId()){
                     iterator.remove();
                 }
             }
@@ -84,7 +85,7 @@ public class Map
         for (CollisionListener collisionListenerRemove : collisionListenersStagedForRemoval){
             for (Iterator<CollisionListener> iterator = collisionListenerList.iterator(); iterator.hasNext();){
                 CollisionListener collisionListener = iterator.next();
-                if (collisionListener.getID() == collisionListenerRemove.getID()) {
+                if (collisionListener.getId() == collisionListenerRemove.getId()) {
                     iterator.remove();
                 }
             }
@@ -128,15 +129,13 @@ public class Map
 
     public void addDrawAndUpdateObject(DrawAndUpdateObject object) {drawAndUpdateObjectsStagedForAddition.add(object);}
 
-    public void addInputListener(InputListener object) { inputListenersStagedForAddition.add(object); }
+    public void addInputListener(InputListener object) { inputListenersStagedForAddition.add(object);}
 
-    public void addCollisionListener(CollisionListener object) { collisionListenersStagedForAddition.add(object); }
+    public void addCollisionListener(CollisionListener object) { collisionListenersStagedForAddition.add(object);}
 
     public List<DrawAndUpdateObject> getDrawAndUpdateObjectList() {return drawAndUpdateObjectList;}
 
-    public List<InputListener> getInputListenerList() {
-        return inputListenerList;
-    }
+    public List<InputListener> getInputListenerList() {return inputListenerList;}
 
     public List<CollisionListener> getCollisionListenerList() {return collisionListenerList;}
 

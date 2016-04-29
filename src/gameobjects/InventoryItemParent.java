@@ -154,7 +154,7 @@ public class InventoryItemParent implements InventoryItem
         solidObject.body.getFixtureList().setSensor(false);
         solidObject.body.setFixedRotation(true);
         solidObject.body.setTransform(solidObject.body.getPosition(), relativeAngle);
-        setGroupIndex(-player.getID());
+        setGroupIndex(-player.getId());
         calcRelativePos(player);
         this.player = player;
     }
@@ -164,7 +164,7 @@ public class InventoryItemParent implements InventoryItem
      */
     public void drop(){
         solidObject.body.setFixedRotation(false);
-        setGroupIndex(-1);
+        setGroupIndex(0);
         player = null;
     }
 
@@ -173,8 +173,8 @@ public class InventoryItemParent implements InventoryItem
      * Returns the id of the 'gameobjects.SolidObject' of the items body
      * @return int id
      */
-    public int getID(){
-        return solidObject.getID();
+    public int getId(){
+        return solidObject.getId();
     }
 
     /**
@@ -185,7 +185,7 @@ public class InventoryItemParent implements InventoryItem
     @Override
     public boolean equals(Object object){
         if (object instanceof InventoryItemParent){
-            if (this.getID() == ((InventoryItemParent) object).getID()){
+            if (this.getId() == ((InventoryItemParent) object).getId()){
                 return true;
             }
         }

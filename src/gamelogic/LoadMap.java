@@ -22,17 +22,18 @@ import java.util.*;
 public final class LoadMap {
 
 
-    private final static LoadMap instance = new LoadMap();
+    private final static LoadMap INSTANCE = new LoadMap();
     private AbstractMap<Integer, Map> maps;
 
-    private static float pixPerMeter = 100;
+    //Todo Move the pixtometer constant to mapfile
+    private final static float PIX_PER_METER = 100;
     private static int objectID = 2;
 
     private LoadMap() {
         maps = new HashMap<Integer, Map>();}
 
     public static LoadMap getInstance(){
-        return instance;
+        return INSTANCE;
     }
 
     /**
@@ -80,7 +81,7 @@ public final class LoadMap {
             
             gameObjects.add(new Square(getObjectID(), world, new Vec2(0f, 3f), 1f, Color.BEIGE, 0.4d, 6d));
             gameObjects.add(new Square(getObjectID(), world, new Vec2(7f, 3f), 1f, Color.BEIGE, 0.4f, 6f));
-            Square bottomSquare = new Square(getObjectID(), world, new Vec2(0f, 5.5f), 0.8f, Color.AZURE, 14.35d, 0.4d);
+            DrawAndUpdateObject bottomSquare = new Square(getObjectID(), world, new Vec2(0f, 5.5f), 0.8f, Color.AZURE, 14.35d, 0.4d);
             gameObjects.add(bottomSquare);
 
             //gameObjects.add(new gameobjects.MovingPlatform(world, new Vec2(0f, 3f), 1f, Color.WHEAT, 1d, 0.1d, new Vec2(7f, 4f)));
@@ -157,7 +158,7 @@ public final class LoadMap {
         return new Vec2(0, 20f);
     }
 
-    public float getPixPerMeter(){return pixPerMeter;}
+    public float getPixPerMeter(){return PIX_PER_METER;}
 
     public Map getMap(int mapNumber){
         return maps.get(mapNumber);

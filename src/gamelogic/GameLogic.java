@@ -12,7 +12,6 @@ import java.util.List;
 
 public class GameLogic implements DrawAndUpdateObject
 {
-    private World world;
     private PowerUpFactory powerUpFactory;
     private long timeSinceLastPowerup;
     private final int iD;
@@ -26,7 +25,6 @@ public class GameLogic implements DrawAndUpdateObject
     List<JumpHandler> jumpHandlers = new ArrayList<JumpHandler>();
 
     public GameLogic(int iD, World world) {
-        this.world = world;
         this.iD = iD;
         timeSinceLastPowerup = System.currentTimeMillis();
 
@@ -53,7 +51,7 @@ public class GameLogic implements DrawAndUpdateObject
      */
     public void draw(GraphicsContext gc){}
 
-    public int getID(){
+    public int getId(){
         return iD;
     }
 }
