@@ -50,6 +50,18 @@ public class Map
      * Removes objects staged for removal and clears the 'StagedForRemoval' lists
      */
     public void removeStagedOBjects (){
+        List<Integer> ids = new ArrayList<>();
+        //Destroying all of the bodies that are staged for removal
+        for (Body body : bodiesStagedForRemoval){
+            if (!ids.contains(((GameObject)body.getUserData()).getID())) {
+                world.destroyBody(body);
+                ids.add(((GameObject)body.getUserData()).getID());
+            }
+            else{
+                System.out.println("Same body staged for removal more than once! ID of the object owning the body: " +
+                                   ((GameObject) body.getUserData()).getID());
+            }
+        }
         //Removing all of the 'DrawAndUpdate' objects from the maps global list
         for (DrawAndUpdateObject objectRemove : drawANdUpdateObjectsStagedForRemoval){
             for (Iterator<DrawAndUpdateObject> iterator = drawAndUpdateObjectList.iterator(); iterator.hasNext();){
@@ -75,15 +87,6 @@ public class Map
                 if (collisionListener.getID() == collisionListenerRemove.getID()) {
                     iterator.remove();
                 }
-            }
-        }
-        //Destroying all of the bodies that are staged for removal
-        for (Body body : bodiesStagedForRemoval){
-            if (body != null) {
-                world.destroyBody(body);
-            }
-            else {
-                System.out.println("null body");
             }
         }
         //Clearing all of the 'StagedForRemoval' lists

@@ -64,7 +64,7 @@ public class PowerUpCoin extends DynamicCircle implements PowerUps
     public void beginContact(Contact contact) {
         if (contact.getFixtureA().getBody().getUserData().equals(this) && contact.getFixtureB().getBody().getUserData() instanceof Player){
             ((Player) contact.getFixtureB().getBody().getUserData()).setCurrentJumpHandler(jumpHandler);
-            ((Player) contact.getFixtureA().getBody().getUserData()).setStartTime(true);
+            ((Player) contact.getFixtureB().getBody().getUserData()).setStartTime(true);
             Map map = LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber());
             map.removeBody(body);
             map.removeCollisionListener(this);

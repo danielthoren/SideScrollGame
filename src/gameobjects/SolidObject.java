@@ -214,7 +214,7 @@ public class SolidObject {
      */
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof GameObject && ((GameObject) obj).getID() == this.getID()){return true;}
+        if (obj instanceof GameObject && ((GameObject) obj).getID() == ID){return true;}
         else {return false;}
     }
 

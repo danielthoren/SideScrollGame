@@ -21,7 +21,6 @@ import gamelogic.Map;
 public class FirstAidBox extends DynamicSquare implements PowerUps
 {
     private int heal;
-    private final int ID;
 
     /**
      * Creates a box that will symbolize a first aid kit
@@ -33,7 +32,6 @@ public class FirstAidBox extends DynamicSquare implements PowerUps
      */
     public FirstAidBox(int ID, World world, Vec2 pos, float friction, int heal, Image image) {
         super(ID, world, pos, friction, image);
-        this.ID = ID;
         this.heal = heal;
         body.setUserData(this);
         setRestitution(1f);
@@ -51,7 +49,6 @@ public class FirstAidBox extends DynamicSquare implements PowerUps
      */
     public FirstAidBox(int ID, World world, Vec2 pos, float friction, int heal, Color color, double width, double height) {
         super(ID, world, pos, friction, color, width, height);
-        this.ID = ID;
         this.heal = heal;
         body.setUserData(this);
         setRestitution(1f);
@@ -95,23 +92,4 @@ public class FirstAidBox extends DynamicSquare implements PowerUps
      * @return the healh held by the box
      */
     public int getHeal() {return heal;}
-
-    /**
-     * @return the ID of the box
-     */
-    public int getID() {return ID;}
-
-    /**
-     * Overrides the method 'equals.()'
-     * @param obj The object that should be evaluated
-     * @return boolean
-     */
-    @Override
-    public boolean equals(Object obj) {
-        if (obj instanceof FirstAidBox && ((FirstAidBox) obj).getID() == this.getID()){return true;}
-        else {return false;}
-    }
-
-
-
 }
