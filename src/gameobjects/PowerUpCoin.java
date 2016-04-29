@@ -23,8 +23,6 @@ public class PowerUpCoin extends DynamicCircle implements PowerUps
      * @param world The world where it will be created
      * @param pos   The position of the coin
      * @param friction  The friction of the coin
-     * @param density   The density of the coin
-     * @param restitution   The restitution of the coin
      * @param image     The image of the coin
      * @param ID    The id of the coin
      * @param jumpHandler   The jumphandler coinatined and given to the player when collided with
@@ -41,8 +39,6 @@ public class PowerUpCoin extends DynamicCircle implements PowerUps
      * @param world The world where it will be created
      * @param pos   The position of the coin
      * @param friction  The friction of the coin
-     * @param density   The density of the coin
-     * @param restitution   The restitution of the coin
      * @param ID    The id of the coin
      * @param jumpHandler   The jumphandler coinatined and given to the player when collided with
      */

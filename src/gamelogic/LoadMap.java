@@ -25,19 +25,21 @@ public final class LoadMap {
     private final static LoadMap instance = new LoadMap();
     private AbstractMap<Integer, Map> maps;
 
-    private static float pixPerMeter;
-    private static int objectID;
+    private static float pixPerMeter = 100;
+    private static int objectID = 2;
 
     private LoadMap() {
-        maps = new HashMap<Integer, Map>();
-        objectID = 2;
-        pixPerMeter = 100;
-    }
+        maps = new HashMap<Integer, Map>();}
 
     public static LoadMap getInstance(){
         return instance;
     }
 
+    /**
+     * Function loading specified map. At the moment it only instantiates hardcoded objects.
+     * Todo make loadmap use serializable to load objects. Make saveMap function that saves a map using serializable.
+     * @param mapNumber
+     */
     public void loadMap(Integer mapNumber){
 
         World world = new World(getMapGravity(mapNumber));
@@ -144,7 +146,7 @@ public final class LoadMap {
                 image = new Image(Main.class.getResourceAsStream(path), GameComponent.metersToPix(size.x), GameComponent.metersToPix(size.y), false, false);
             }
         }
-        catch (NullPointerException | IllegalArgumentException e ){
+        catch (NullPointerException e ){
             image = new Image(Main.class.getResourceAsStream("/textures/squareTextures/ErrorSquare.png"), GameComponent.metersToPix(size.x), GameComponent.metersToPix(size.y), false, false);
         }
         return image;

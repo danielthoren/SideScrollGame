@@ -24,18 +24,15 @@ import javafx.stage.Stage;
 public class GameFrame extends Application
 {
     private String windowName;
-    private Stage primaryStage;
     private GameComponent gameComponent;
     private GameLoop gameLoop;
 
-    private long lastFpsTime = 0;
-    private long lastLoopTime;
-    private int fps = 0;
     private boolean gameRunning;
-    private int targetFPS;
 
-    private double gameHeight = 600;
-    private double gameWidth = 800;
+
+    //Todo Move values to user interface/launcher
+    private static final double GAME_HEIGHT = 600;
+    private static final double GAME_WIDTH = 800;
 
     /**
      * The 'start' function is called to initialize the contents of the 'Application' when the 'launch()' function is called.
@@ -44,10 +41,9 @@ public class GameFrame extends Application
     @Override
     public  void start(Stage primaryStage){
         //Initializing userinterface.GameFrame
-        targetFPS = 1;
         gameRunning = true;
         gameLoop = new GameLoop(this);
-        gameComponent = new GameComponent(gameHeight, gameWidth);
+        gameComponent = new GameComponent(GAME_HEIGHT, GAME_WIDTH);
 
         //Giving 'gameComponent' focus
         Platform.runLater(new Runnable()
@@ -84,9 +80,8 @@ public class GameFrame extends Application
         VBox topContainer = new VBox();
         //Creating objects to put in the container (topContainer)
         MenuBar menuBar = new MenuBar();
-        Text fps = new Text();
         //Adding objects to the topContainer
-        topContainer.getChildren().addAll(menuBar, fps);
+        topContainer.getChildren().addAll(menuBar);
         //Creating menues and putting them in the menuBar
         Menu file = new Menu("File");
         menuBar.getMenus().addAll(file);
@@ -134,7 +129,7 @@ public class GameFrame extends Application
      *
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
+    public synchronized static void main(String[] args) {
         launch(args);
     }
 }

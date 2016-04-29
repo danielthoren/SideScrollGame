@@ -23,11 +23,11 @@ public class GameComponent extends Parent
     private Canvas canvas;                                  //The canvas on wich to draw on
     private GraphicsContext gc;                             //The GraphicsContext with wich to draw
     private World world;
-    private ContactListenerGame contactListenerGame;
     private double height, width;                           //The height and width of the window in pixels
     private int velocityIterations, positionIterations;     //Values deciding the accuracy of velocity and position
     private Map currentMap;
     private static int currentMapNumber = 1;
+    private static final long NANOS_PER_SECOND = 1000000000;
     /**
      * Instanciates a game.
      * @param height The height of the window in pixels
@@ -41,6 +41,7 @@ public class GameComponent extends Parent
         currentMap = LoadMap.getInstance().getMap(currentMapNumber);
         world = currentMap.getWorld();
 
+        ContactListenerGame contactListenerGame;
         contactListenerGame = new ContactListenerGame();
         world.setContactListener(contactListenerGame);
 
@@ -72,24 +73,29 @@ public class GameComponent extends Parent
     }
 
     /**
-     * Updates all of the game objects
-     * Using the 'Iterator' to iterate o
+     * Updates all of the game objects. Since 'jBox2d' is not threadsafe the method is syncronized with the
      * @param nanosecScienceLast The time scinse the last update in nanoseconds
      */
-    public void update(float nanosecScienceLast){
+    public synchronized void update(float nanosecScienceLast){
         currentMap.removeStagedOBjects();
         currentMap.addStagedObjects();
-        world.step(nanosecScienceLast / 1000000000, velocityIterations,positionIterations);
-        for (Iterator<DrawAndUpdateObject> iterator = currentMap.getDrawAndUpdateObjectList().iterator(); iterator.hasNext();){
+        try {
+            world.step(nanosecScienceLast / NANOS_PER_SECOND, velocityIterations, positionIterations);
+        }
+        catch (ArrayIndexOutOfBoundsException e){
+            e.printStackTrace();
+            System.exit(0);
+        }
+        for (Iterator<DrawAndUpdateObject> iterator = currentMap.getDrawAndUpdateObjectList().iterator(); iterator.hasNext();) {
             DrawAndUpdateObject obj = iterator.next();
-                obj.update();
+            obj.update();
         }
     }
 
     /**
      * Draws all of the game objects on the 'canvas'
      */
-    public void draw(){
+    public synchronized void draw(){
         GraphicsContext gc = canvas.getGraphicsContext2D();
         gc.clearRect(0,0, canvas.getWidth(), canvas.getHeight());
         for (DrawAndUpdateObject obj : currentMap.getDrawAndUpdateObjectList()){

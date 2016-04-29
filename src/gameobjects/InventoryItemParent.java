@@ -110,6 +110,7 @@ public class InventoryItemParent implements InventoryItem
                 newAngle = -Math.abs(solidObject.getBody().getAngle());
             }
             solidObject.getBody().setTransform(newPos, newAngle);
+            solidObject.getBody().setFixedRotation(true);
         }
     }
 

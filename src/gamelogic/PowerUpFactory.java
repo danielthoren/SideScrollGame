@@ -14,11 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-
-/**
- * Created by kristiansikiric on 2016-04-21.
- */
-
 /**
  * This class returns either a firsaidbox or a jump powerup given a random number.
  */

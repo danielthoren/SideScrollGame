@@ -32,33 +32,21 @@ public class Player extends SolidObject implements DrawAndUpdateObject, Collisio
     private World world;
     private JumpHandler currentJumpHandler;
     private Inventory inventory;
-    private KeyCode runLeftCode;
-    private KeyCode runRightCode;
-    private KeyCode jumpCode;
-    private KeyCode pickUpCode;
-    private KeyCode dropItemCode;
+    private KeyCode runRightCode, jumpCode, runLeftCode, pickUpCode, dropItemCode;
     private Sprite sprite;
-    private Vec2 maxVelocity;
-    private Vec2 acceleration;
-    private Vec2 deceleration;
-    private Vec2 size;
-    private float restitution;
-    private float density;
+    private Vec2 maxVelocity, acceleration, deceleration, size;
+    private float restitution, density;
     private final float sensorThickness;
-    private boolean isRunning;
-    private boolean grounded;
-    private boolean collisionLeft;
-    private boolean collisionRight;
-    private boolean pickUpItem;
-    private static boolean drawSensors = false;                //Used for debugging, draws the sensorFixtures of the player
-    private static boolean debugDraw = false;                 //Used for debugging, draws the bodyfixtures over the sprite
-    private int score;                                        //The score of the player
-    private int actualHealth;                                 //Here we apply the gamelogic.
-    private int visibleHealth;                                //This is the health we are showing.
-    private long velocityZeroTimer;                           //Keeps track of how long the bodys y velocity has been 0
-    private int maxHealth = 100;
+    private boolean isRunning, pickUpItem, grounded, collisionLeft, collisionRight;
+    private static final boolean DRAW_SENSORS = false;                //Used for debugging, draws the sensorFixtures of the player
+    private static final boolean DEBUG_DRAW = false;                 //Used for debugging, draws the bodyfixtures over the sprite
+    private int score, actualHealth, visibleHealth, maxHealth;
+    private long velocityZeroTimer;
     private boolean startTime = false;
-    private int PowerUpTime=0;
+    private int powerUpTime = 0;
+
+    private static final int DEFAULT_MAX_HEALTH = 100;
+    private static final Vec2 DEFAULT_MAX_VELOCITY = new Vec2(10f, 20f);
 
     public Player(int ID, World world, Vec2 position, float friction, float density, Vec2 acceleration, Vec2 deceleration, Sprite sprite) {
         super(ID, position, friction);
@@ -80,9 +68,10 @@ public class Player extends SolidObject implements DrawAndUpdateObject, Collisio
         collisionRight = false;
         pickUpItem = false;
         //Default values, can be changed with setters
-        maxVelocity = new Vec2(10f, 20f);
+        maxVelocity = DEFAULT_MAX_VELOCITY;
         createBody(world);
         currentJumpHandler = new DefaultJumpHandler();
+        maxHealth = DEFAULT_MAX_HEALTH;
         resetHealth(maxHealth);
         //Default valued, can be changed with setters
         pickUpCode = KeyCode.E;
@@ -113,9 +102,10 @@ public class Player extends SolidObject implements DrawAndUpdateObject, Collisio
         collisionLeft = false;
         collisionRight = false;
         //Default values, can be changed with setters
-        maxVelocity = new Vec2(10f, 20f);
+        maxVelocity = DEFAULT_MAX_VELOCITY;
         createBody(world);
         currentJumpHandler = new DefaultJumpHandler();
+        maxHealth = DEFAULT_MAX_HEALTH;
         resetHealth(maxHealth);
         //Default valued, can be changed with setters
         pickUpCode = KeyCode.E;
@@ -152,21 +142,23 @@ public class Player extends SolidObject implements DrawAndUpdateObject, Collisio
         Vec2 bottomCirclePos;
         if (size.y / size.x >= 1) {
             radious = size.x/2;
-            middleBoxSize = new Vec2(size.x - size.x / 50 , size.x);
-            upperCirclePos = ((size.y - radious*4)/2 > 0) ? (new Vec2(0f, -((size.y - radious * 4) / 2) - radious)) : (new Vec2(0f, -radious));
-            bottomCirclePos = ((size.y - radious*4)/2 > 0) ? (new Vec2(0f, ((size.y - radious * 4) / 2) + radious)) : (new Vec2(0f, radious));
+            //size.x/50 is a scalable small number that is substracted from the middlebox to avoid an edge between the circle and the box.
+            middleBoxSize = new Vec2(size.x - size.x / 50 , radious * 2);
+            upperCirclePos = ((size.y - radious*4)/2 > 0) ? (new Vec2(0, -((size.y - radious * 4) / 2) - radious)) : (new Vec2(0, -radious));
+            bottomCirclePos = ((size.y - radious*4)/2 > 0) ? (new Vec2(0, ((size.y - radious * 4) / 2) + radious)) : (new Vec2(0, radious));
         }
         else{
             radious = size.y/2;
+            //size.x/50 is a scalable small number that is substracted from the middlebox to avoid an edge between the circle and the box.
             middleBoxSize = new Vec2(size.y - size.y / 50, size.y);
-            upperCirclePos = ((size.x - radious*4)/2 > 0) ? (new Vec2(-((size.x - radious * 4) / 2) - radious, 0f)) : (new Vec2(-radious, 0f));
-            bottomCirclePos = ((size.x - radious*4)/2 > 0) ? (new Vec2(((size.x - radious * 4) / 2) + radious, 0f)) : (new Vec2(radious, 0f));
+            upperCirclePos = ((size.x - radious*4)/2 > 0) ? (new Vec2(-((size.x - radious * 4) / 2) - radious, 0)) : (new Vec2(-radious, 0));
+            bottomCirclePos = ((size.x - radious*4)/2 > 0) ? (new Vec2(((size.x - radious * 4) / 2) + radious, 0)) : (new Vec2(radious, 0));
         }
-        Vec2 bottomSensorPos = new Vec2(0f, bottomCirclePos.y + radious);
+        Vec2 bottomSensorPos = new Vec2(0, bottomCirclePos.y + radious);
         Vec2 bottomSensorSize = new Vec2(size.x - size.x / 4, sensorThickness * 2);
-        Vec2 leftSensorPos = new Vec2(-size.x / 2 - sensorThickness, 0f);
+        Vec2 leftSensorPos = new Vec2(-size.x / 2 - sensorThickness, 0);
         Vec2 leftSensorSize = new Vec2(sensorThickness, size.y - size.y/5);
-        Vec2 rightSensorPos = new Vec2(size.x/2 + sensorThickness, 0f);
+        Vec2 rightSensorPos = new Vec2(size.x/2 + sensorThickness, 0);
         Vec2 rightSensorSize = new Vec2(sensorThickness, size.y - size.y/5);
 
         //Initializing the shapes
@@ -245,9 +237,9 @@ public class Player extends SolidObject implements DrawAndUpdateObject, Collisio
         runHandler();
         int sixSeconds = 360;
         if(startTime){
-            PowerUpTime++;
-            if (PowerUpTime > sixSeconds){
-                PowerUpTime = 0;
+            powerUpTime++;
+            if (powerUpTime > sixSeconds){
+                powerUpTime = 0;
                 setCurrentJumpHandler(new DefaultJumpHandler());
                 setStartTime(false);
             }
@@ -317,13 +309,13 @@ public class Player extends SolidObject implements DrawAndUpdateObject, Collisio
     @Override
     public void draw(GraphicsContext gc) {
         drawHealthBar(gc);
-        if (sprite == null || debugDraw) {
+        if (sprite == null || DEBUG_DRAW) {
             for (Fixture fixture = body.getFixtureList(); fixture != null; fixture = fixture.getNext()) {
                 if (fixture.getType() == ShapeType.CIRCLE) {
                     drawCircleFixture(gc, fixture);
                 } else if (fixture.getType() == ShapeType.POLYGON && !fixture.isSensor()) {
                     drawBoxPolygonFixture(gc, fixture);
-                } else if (fixture.getType() == ShapeType.POLYGON && fixture.isSensor() && drawSensors) {
+                } else if (fixture.getType() == ShapeType.POLYGON && fixture.isSensor() && DRAW_SENSORS) {
                     drawSensor(gc, fixture, ((SensorStatus) fixture.getUserData()).isDrawSensor());
                 }
             }

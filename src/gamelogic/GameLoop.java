@@ -8,50 +8,61 @@ import userinterface.GameFrame;
  */
 public class GameLoop extends AnimationTimer
 {
-    private long lastFpsTime = 0;
-    private long lastLoopTime = System.nanoTime();
-    private int fps = 0;
-	private GameFrame gameFrame;
+    private long lastFpsTime;
+    private long lastLoopTime;
+    private int fps;
+    private int currFps;
+    private GameFrame gameFrame;
+    private static final long NANOS_PER_SECOND = 1000000000;
 
-	/**
-	 * Initialices the 'Gameloop'
-	 * @param gameFrame The 'userinterface.GameFrame to update
+    /**
+     * Initialices the 'Gameloop'
+     * @param gameFrame The 'userinterface.GameFrame to update
      */
     public GameLoop(GameFrame gameFrame) {
-		this.gameFrame = gameFrame;
+	this.gameFrame = gameFrame;
+	currFps = 0;
+	fps = 0;
+	lastFpsTime = 0;
+	lastLoopTime = System.nanoTime();
     }
 
-	/**
-	 * The function called for every interval. Holds the code that updates and draws the game every frame.
-	 * @param now
+    /**
+     * The function called for every interval. Holds the code that updates and draws the game every frame.
+     * @param now the current time in nanoseconds.
      */
-	@Override
-	public void handle(long now)
+    @Override
+    public void handle(long now)
     {
-		//Calclate the time the previous rendering has taken
-		float updateLength = now - lastLoopTime;
-		lastLoopTime = now;
+	//Calclate the time the previous rendering has taken
+	/*
+	long updateLength = System.nanoTime() - lastLoopTime;
+	lastLoopTime = System.nanoTime();
+	*/
+	long updateLength = now - lastLoopTime;
+	lastLoopTime = now;
 
-		// update the frame counter
-		lastFpsTime += updateLength;
-		fps++;
+	// update the frame counter
+	lastFpsTime += updateLength;
+	fps++;
 
-		// update our FPS counter if a second has passed since
-		// we last recorded
-		if (lastFpsTime >= 1000000000)
-		{
-			//System.out.println("(FPS: "+fps+")");
-			lastFpsTime = 0;
-			fps = 0;
-		}
-
-		// update the gameFrame logic
-		gameFrame.update(updateLength);
-		// draw everyting
-		gameFrame.draw();
+	// update our FPS counter if a second has passed since
+	// we last recorded
+	if (lastFpsTime >= NANOS_PER_SECOND)
+	{
+	    //System.out.println("(FPS: "+fps+")");
+	    lastFpsTime = 0;
+	    currFps = fps;
+	    fps = 0;
 	}
 
-	public int getFps() {
-		return fps;
-	}
+	// update the gameFrame logic
+	gameFrame.update(updateLength);
+	// draw everyting
+	gameFrame.draw();
+    }
+
+    public int getFps() {
+	return currFps;
+    }
 }

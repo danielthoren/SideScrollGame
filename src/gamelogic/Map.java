@@ -79,7 +79,12 @@ public class Map
         }
         //Destroying all of the bodies that are staged for removal
         for (Body body : bodiesStagedForRemoval){
-            world.destroyBody(body);
+            if (body != null) {
+                world.destroyBody(body);
+            }
+            else {
+                System.out.println("null body");
+            }
         }
         //Clearing all of the 'StagedForRemoval' lists
         bodiesStagedForRemoval.clear();
