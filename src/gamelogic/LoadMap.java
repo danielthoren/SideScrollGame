@@ -108,6 +108,7 @@ public final class LoadMap {
             Player player = new Player(getObjectID(), world, position, friction, density, acceleration, deceleration, sprite);
 
             ScoreBoard.getInstance().addPlayers(player);
+            player.setSpriteIdleFrame(8,1);
             player.setJumpCode(KeyCode.W);
             player.setRunLeftCode(KeyCode.A);
             player.setRunRightCode(KeyCode.D);
@@ -120,6 +121,7 @@ public final class LoadMap {
             Player player2 = new Player(getObjectID(), world, position, friction, density, acceleration, deceleration, sprite2);
 
             ScoreBoard.getInstance().addPlayers(player2);
+            player2.setSpriteIdleFrame(8,1);
             player2.setJumpCode(KeyCode.UP);
             player2.setRunRightCode(KeyCode.RIGHT);
             player2.setRunLeftCode(KeyCode.LEFT);
