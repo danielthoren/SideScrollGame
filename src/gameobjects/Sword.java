@@ -84,6 +84,7 @@ public class Sword extends InventoryItemParent implements CollisionListener
      * @param contact A object containing the two bodies and fixtures that made contact. It also contains collisiondata
      */
     public void beginContact(Contact contact){
+        //noinspection ChainOfInstanceofChecks
         if (contact.getFixtureA().getBody().getUserData().equals(solidObject) &&
                 contact.getFixtureB().getBody().getUserData() instanceof Player){
             currentCollidingPlayer = (Player) contact.getFixtureB().getBody().getUserData();
@@ -117,10 +118,12 @@ public class Sword extends InventoryItemParent implements CollisionListener
      * @param contact A object containing the two bodies and fixtures that made contact. It also contains collisiondata
      */
     public void endContact(Contact contact){
-        if (contact.getFixtureA().getBody().getUserData().equals(solidObject) &&
-            contact.getFixtureB().getBody().getUserData() instanceof Player ||
-            contact.getFixtureB().getBody().getUserData().equals(solidObject) &&
-            contact.getFixtureA().getBody().getUserData() instanceof Player){
+        //noinspection ChainOfInstanceofChecks
+        if (contact.getFixtureA().getBody().getUserData().equals(solidObject) && contact.getFixtureB().getBody().getUserData() instanceof Player){
+            hasDamaged = false;
+            currentCollidingPlayer = null;
+        }
+        else if (contact.getFixtureB().getBody().getUserData().equals(solidObject) && contact.getFixtureA().getBody().getUserData() instanceof Player){
             hasDamaged = false;
             currentCollidingPlayer = null;
         }

@@ -169,6 +169,7 @@ public class Player extends SolidObject implements DrawAndUpdateObject, Collisio
         if (size.y / size.x >= 1) {
             radious = size.x/2;
             //size.x/50 is a scalable small number that is substracted from the middlebox to avoid an edge between the circle and the box.
+            //noinspection MagicNumber
             middleBoxSize = new Vec2(size.x - size.x / 50 , radious * 2);
             upperCirclePos = (new Vec2(0, (size.y - radious * 4) / 2 > 0 ? -((size.y - radious * 4) / 2) - radious : -radious));
             bottomCirclePos = (new Vec2(0, (size.y - radious * 4) / 2 > 0 ? (size.y - radious * 4) / 2 + radious : radious));
@@ -176,6 +177,7 @@ public class Player extends SolidObject implements DrawAndUpdateObject, Collisio
         else{
             radious = size.y/2;
             //size.x/50 is a scalable small number that is substracted from the middlebox to avoid an edge between the circle and the box.
+            //noinspection MagicNumber
             middleBoxSize = new Vec2(size.y - size.y / 50, size.y);
             upperCirclePos = (new Vec2((size.x - radious * 4) / 2 > 0 ? -((size.x - radious * 4) / 2) - radious : -radious, 0));
             bottomCirclePos = (new Vec2((size.x - radious * 4) / 2 > 0 ? (size.x - radious * 4) / 2 + radious : radious, 0));

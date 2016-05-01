@@ -16,6 +16,8 @@ public final class ScoreBoard implements DrawAndUpdateObject
     private static ScoreBoard ourInstance = new ScoreBoard();
     private static Collection<Player> players = new ArrayList<>(2);
     private final static int OBJECT_ID = -1;
+    private static int yPosition = 50;
+    private static int xPosition = 100;
 
     public static ScoreBoard getOurInstance() {
         return ourInstance;
@@ -30,14 +32,13 @@ public final class ScoreBoard implements DrawAndUpdateObject
      * @param gc The GraphicsContext with wich to draw
      */
     public void draw(GraphicsContext gc){
-        int x = 100;    //This is the x-coordinate of the text drawn on the screen.
-        int y = 50; // This is the y-coordinate of the text drawn on the screen.
+        int yTemp = yPosition;
         int whichPlayer = 1;
         gc.setFill(Color.WHEAT);
         for (Player player : players){
-            gc.fillText("gameobjects.Player" + whichPlayer+ " score: " + Integer.toString(player.getScore()), x,y);
+            gc.fillText("gameobjects.Player" + whichPlayer+ " score: " + Integer.toString(player.getScore()), xPosition, yTemp);
             whichPlayer ++;
-            y *= 2; //Increases the y-coordinate for each player so the text is drawn in a nice line.
+          yTemp *= 2; //Increases the y-coordinate for each player so the text is drawn in a nice line.
         }
     }
 
@@ -52,4 +53,8 @@ public final class ScoreBoard implements DrawAndUpdateObject
     public long getId(){
         return OBJECT_ID;
     }
+
+    public static void setyPosition(final int yPosition) {ScoreBoard.yPosition = yPosition;}
+
+    public static void setxPosition(final int xPosition) {ScoreBoard.xPosition = xPosition;}
 }

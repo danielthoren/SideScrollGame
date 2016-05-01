@@ -62,6 +62,7 @@ public class PowerUpCoin extends DynamicCircle implements PowerUps
      * (thus we can safely cast the object contained inside the 'UserData' to 'Player'.
      */
     public void beginContact(Contact contact) {
+        //noinspection ChainOfInstanceofChecks
         if (contact.getFixtureA().getBody().getUserData().equals(this) && contact.getFixtureB().getBody().getUserData() instanceof Player){
             ((Player) contact.getFixtureB().getBody().getUserData()).setCurrentJumpHandler(jumpHandler);
             ((Player) contact.getFixtureB().getBody().getUserData()).setStartTime(true);
