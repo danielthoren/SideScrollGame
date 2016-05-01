@@ -8,7 +8,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 /**
- * This singelton draws the score of the players.
+ * This singelton draws the score of the players. There should never be more than one scoreboard, thus the scoreboard is a
+ * singelton. 
  */
 public final class ScoreBoard implements DrawAndUpdateObject
 {

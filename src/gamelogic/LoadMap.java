@@ -18,7 +18,8 @@ import java.util.*;
 
 /**
  * The singelton that loads and holds the map. This is a singelton since there is no need for more than one maploader.
- * All maps and objects can be loaded from this one class.
+ * All maps and objects can be loaded from this one class. This saves system resources since there is no need for more than one
+ * class that loads maps.
  */
 @SuppressWarnings("ALL")
 public final class LoadMap {
@@ -141,6 +142,12 @@ public final class LoadMap {
         }
     }
 
+    /**
+     * Tries to load images, if the path is invalid then load errortexture.
+     * @param path The path to load from.
+     * @param size The size of the image, if the vector is (0,0) then it loads the default size.
+     * @return Returns a javafx image.
+     */
     public Image loadImage(String path, Vec2 size){
         Image image;
         try{
