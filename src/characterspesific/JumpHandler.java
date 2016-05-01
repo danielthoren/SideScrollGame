@@ -3,8 +3,8 @@ package characterspesific;
 import gameobjects.Player;
 
 /**
- * Created by daniel on 2016-04-10.
+ * Specifies functions for jumphandlers used to make players jump.
  */
 public interface JumpHandler {
-    public void jump(Player player);
+    void jump(Player player);
 }

@@ -80,7 +80,11 @@ public class FirstAidBox extends DynamicSquare implements PowerUps
 
     /**
      * Not needed in this case.
+<<<<<<< HEAD
+     * @param contact Datacontainer containing information about the contact.
+=======
      * @param contact The contact.
+>>>>>>> Develop
      */
     public void endContact(Contact contact){}
 

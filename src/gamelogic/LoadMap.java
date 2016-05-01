@@ -17,7 +17,8 @@ import sun.applet.Main;
 import java.util.*;
 
 /**
- * The singelton that loads and holds the map.
+ * The singelton that loads and holds the map. This is a singelton since there is no need for more than one maploader.
+ * All maps and objects can be loaded from this one class.
  */
 @SuppressWarnings("ALL")
 public final class LoadMap {
@@ -41,7 +42,7 @@ public final class LoadMap {
      * Function loading specified map. At the moment it only instantiates hardcoded objects.
      * It was planed to keep this code in a file that would be loaded and thats why it holds so many magic numbers.
      * Todo make loadmap use serializable to load objects. Make saveMap function that saves a map using serializable.
-     * @param mapNumber
+     * @param mapNumber The number of the map to be loaded
      */
     public void loadMap(Integer mapNumber){
 
@@ -94,7 +95,6 @@ public final class LoadMap {
 
             Vec2 acceleration = new Vec2(50f, 800f);
             Vec2 deceleration = new Vec2(100f, 0f);
-            Vec2 size = new Vec2(0.3f, 0.8f); //Must have a ration bigger than 1:2
             float friction = 1f;
             float density = 1f;
 
@@ -110,6 +110,7 @@ public final class LoadMap {
             Player player = new Player(getObjectID(), world, position, friction, density, acceleration, deceleration, sprite);
 
             ScoreBoard.getOurInstance().addPlayers(player);
+            player.setSpriteIdleFrame(8,1);
             player.setJumpCode(KeyCode.W);
             player.setRunLeftCode(KeyCode.A);
             player.setRunRightCode(KeyCode.D);
@@ -122,6 +123,7 @@ public final class LoadMap {
             Player player2 = new Player(getObjectID(), world, position, friction, density, acceleration, deceleration, sprite2);
 
             ScoreBoard.getOurInstance().addPlayers(player2);
+            player2.setSpriteIdleFrame(8,1);
             player2.setJumpCode(KeyCode.UP);
             player2.setRunRightCode(KeyCode.RIGHT);
             player2.setRunLeftCode(KeyCode.LEFT);

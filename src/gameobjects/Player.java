@@ -26,6 +26,9 @@ import gamelogic.LoadMap;
 import gamelogic.Map;
 import gamelogic.SensorStatus;
 
+/**
+ * Class that holds the player wich is controlled by the user playing the game.
+ */
 public class Player extends SolidObject implements DrawAndUpdateObject, CollisionListener, InputListener
 {
     private Direction direction;
@@ -34,6 +37,7 @@ public class Player extends SolidObject implements DrawAndUpdateObject, Collisio
     private Inventory inventory;
     private KeyCode runRightCode, jumpCode, runLeftCode, pickUpCode, dropItemCode;
     private Sprite sprite;
+    private Vec2 spriteIdleFrame;
     private Vec2 maxVelocity, acceleration, deceleration, size;
     private float restitution, density;
     private final float sensorThickness;
@@ -48,77 +52,97 @@ public class Player extends SolidObject implements DrawAndUpdateObject, Collisio
 
     private static final int DEFAULT_MAX_HEALTH = 100;
     private static final Vec2 DEFAULT_MAX_VELOCITY = new Vec2(10f, 20f);
+    private static final float GROUNDED_THRESHOLD = 0.01f;
+    private static final int APPROXIMATED_FRAME_TIME = 16;
 
+    /**
+     * Instantiates a player with the given parameters.
+     * @param ID The id of this specific gameObject. Used to identify and compare objects with each other.
+     * @param world The world in wich to create the player.
+     * @param position The position at wich to create the player.
+     * @param friction The friction of the player body.
+     * @param density The density of the player body.
+     * @param acceleration The acceleration of the player. Used to accelerate when running/jumping.
+     * @param deceleration The deceleration of the player. Used to stop the player from running.
+     * @param sprite The prite of thep layer. Used to draw the player.
+     */
     public Player(long ID, World world, Vec2 position, float friction, float density, Vec2 acceleration, Vec2 deceleration, Sprite sprite) {
         super(ID, position, friction);
-        this.acceleration = acceleration;
-        this.deceleration = deceleration;
-        this.world = world;
         this.size = sprite.getActualSizeOfSprite();
-        this.density = density;
         this.sprite = sprite;
-        inventory = new Inventory(this);
-        restitution = 0;
-        score = 0;
+        spriteIdleFrame = new Vec2(1,1);
+        color = null;
         sensorThickness = size.x / 10;
-        velocityZeroTimer = -1;
-        direction = Direction.NONE;
-        isRunning = false;
-        grounded = false;
-        collisionLeft = false;
-        collisionRight = false;
-        pickUpItem = false;
-        //Default values, can be changed with setters
-        maxVelocity = DEFAULT_MAX_VELOCITY;
-        createBody(world);
-        currentJumpHandler = new DefaultJumpHandler();
-        maxHealth = DEFAULT_MAX_HEALTH;
-        resetHealth(maxHealth);
-        //Default valued, can be changed with setters
-        pickUpCode = KeyCode.E;
-        runLeftCode = KeyCode.A;
-        runRightCode = KeyCode.D;
-        jumpCode = KeyCode.W;
-        dropItemCode = KeyCode.G;
-
+        constructorInit(world, density, acceleration, deceleration);
     }
 
+    /**
+     * Instantiates a player with the given parameters.
+     * @param ID The id of this specific gameObject. Used to identify and compare objects with each other.
+     * @param world The world in wich to create the player.
+     * @param position The position at wich to create the player.
+     * @param friction The friction of the player body.
+     * @param density The density of the player body.
+     * @param acceleration The acceleration of the player. Used to accelerate when running/jumping.
+     * @param deceleration The deceleration of the player. Used to stop the player from running.
+     * @param color The color of the visual representation of the players body.
+     * @param size The size of the players body.
+     */
     public Player(long ID, World world, Vec2 position, float friction, float density, Vec2 acceleration, Vec2 deceleration, Color color, Vec2 size) {
         super(ID, position, friction, color);
+        this.size = size;
+        this.color = color;
+        sprite = null;
+        sensorThickness = size.x / 10;
+        constructorInit(world, density, acceleration, deceleration);
+    }
+
+    /**
+     * Initializationvalues shared by the constructors. Used to initialize the player.
+     * @param world The current game world.
+     * @param density The density of the player.
+     * @param acceleration The acceleration of the player.
+     * @param deceleration The deceleration of the player.
+     */
+    private void constructorInit(World world, float density, Vec2 acceleration, Vec2 deceleration){
         this.acceleration = acceleration;
         this.deceleration = deceleration;
         this.world = world;
-        this.size = size;
         this.density = density;
-        restitution = 0;
         inventory = new Inventory(this);
+        restitution = 0;
         score = 0;
-        sprite = null;
-        sensorThickness = size.x / 10;
         velocityZeroTimer = -1;
         direction = Direction.NONE;
         isRunning = false;
         grounded = false;
-        pickUpItem = false;
         collisionLeft = false;
         collisionRight = false;
+        pickUpItem = false;
         //Default values, can be changed with setters
         maxVelocity = DEFAULT_MAX_VELOCITY;
         createBody(world);
         currentJumpHandler = new DefaultJumpHandler();
         maxHealth = DEFAULT_MAX_HEALTH;
         resetHealth(maxHealth);
-        //Default valued, can be changed with setters
+        //Default values, can be changed with setters
         pickUpCode = KeyCode.E;
         runLeftCode = KeyCode.A;
         runRightCode = KeyCode.D;
         jumpCode = KeyCode.W;
         dropItemCode = KeyCode.G;
-
     }
 
-    
-
+    /**
+     * Creates the players body using the 'size' parameter to create the different shapes that the body consists of.
+     * The body is built up by two circles and a square that sit on top of each other in the following order:
+     * circle
+     * square
+     * circle
+     * This is to make the body move smoothly in the game world and to give a valid representation of collision with the
+     * player body.
+     * @param world The world in wich to create the player body.
+     */
     private void createBody(World world){
         FixtureDef upperCircle = new FixtureDef();
         FixtureDef middleBox = new FixtureDef();
@@ -234,6 +258,10 @@ public class Player extends SolidObject implements DrawAndUpdateObject, Collisio
         body.setSleepingAllowed(false);
     }
 
+    /**
+     * The update function runs every frame and updates the functions in player that needs updating. For exapmle it updates
+     * the acceleration/deceleration of the player. It also checks that the sensor of the player body is not wrong and so on.
+     */
     public void update(){
         runHandler();
         if(startTime){
@@ -246,9 +274,9 @@ public class Player extends SolidObject implements DrawAndUpdateObject, Collisio
         }
 
         //Ensures that the sensorvalue is not wrong. If velocity.y is 0 for two frames then the character is grounded
-        if (body.getLinearVelocity().y > -0.01 && body.getLinearVelocity().y < 0.01 && !grounded){
+        if (body.getLinearVelocity().y > -GROUNDED_THRESHOLD && body.getLinearVelocity().y < GROUNDED_THRESHOLD && !grounded){
             if (velocityZeroTimer == -1){velocityZeroTimer = System.currentTimeMillis();}
-            else if (System.currentTimeMillis() - velocityZeroTimer >= 32){
+            else if (System.currentTimeMillis() - velocityZeroTimer >= APPROXIMATED_FRAME_TIME * 2){
                 velocityZeroTimer = -1;
                 grounded = true;
             }
@@ -260,7 +288,7 @@ public class Player extends SolidObject implements DrawAndUpdateObject, Collisio
         //Handling updates for the sprite if the player has one.
         if (sprite != null){
 
-            if (!isRunning){sprite.freezeOnFrame(8, 1);}
+            if (!isRunning){sprite.freezeOnFrame((int)spriteIdleFrame.x, (int)spriteIdleFrame.y);}
             else{sprite.startSprite();}
             //Updating the sprites position so that the sprite is drawn over the player body.
             sprite.setPosition(body.getPosition());
@@ -309,6 +337,7 @@ public class Player extends SolidObject implements DrawAndUpdateObject, Collisio
     @Override
     public void draw(GraphicsContext gc) {
         drawHealthBar(gc);
+        //'DEBUG_DRAW' used for debugging. It draws the body and the texture so that one can obserbe their relative positions.
         if (sprite == null || DEBUG_DRAW) {
             for (Fixture fixture = body.getFixtureList(); fixture != null; fixture = fixture.getNext()) {
                 if (fixture.getType() == ShapeType.CIRCLE) {
@@ -323,7 +352,7 @@ public class Player extends SolidObject implements DrawAndUpdateObject, Collisio
     }
 
     /**
-     * Sets the health.
+     * Sets the health to the given parameter.
      * @param health The health of the player.
      */
     public void resetHealth(int health){
@@ -398,14 +427,17 @@ public class Player extends SolidObject implements DrawAndUpdateObject, Collisio
      */
     public void heal(int heal){
         if (actualHealth + heal > maxHealth){
-            int tmp = maxHealth - actualHealth;
-            damage(-tmp); //Damage is called with negative value because -(-) = +.
+            damage(-(maxHealth - actualHealth)); //Damage is called with negative value because -(-) = +.
         }
         else{
             damage(-heal);
         }
     }
 
+    /**
+     * Handles the inputs that the player listenes to.
+     * @param event The KeyEvent contains all the information about the input.
+     */
     public void inputAction(KeyEvent event){
         if (event.getEventType().equals(KeyEvent.KEY_PRESSED)) {
             if (event.getCode() == runLeftCode) {
@@ -439,6 +471,12 @@ public class Player extends SolidObject implements DrawAndUpdateObject, Collisio
         }
     }
 
+    /**
+     * Handles the collisionchecks of the player. If a sensor collides with something then set the specific sensor
+     * collision statis to either true or false. This is used to determine if the player can jump or not (the bottomsensor
+     * must collide with something) among other things.
+     * @param contact A object containing the two bodies and fixtures that made contact. It also contains collisiondata
+     */
     public void beginContact(Contact contact){
         boolean playerContact = false;
         if (contact.getFixtureA().getBody().getUserData().equals(this) && contact.getFixtureA().isSensor()){
@@ -457,6 +495,12 @@ public class Player extends SolidObject implements DrawAndUpdateObject, Collisio
         }
     }
 
+    /**
+     * Handles the collisionchecks of the player. If a sensor collides with something then set the specific sensor
+     * collision statis to either true or false. This is used to determine if the player can jump or not (the bottomsensor
+     * must collide with something) among other things.
+     * @param contact A object containing the two bodies and fixtures that made contact. It also contains collisiondata
+     */
     public void endContact(Contact contact){
         if (contact.getFixtureA().getBody().getUserData().equals(this) && contact.getFixtureA().isSensor()){
             sensorSwitch(contact.getFixtureA(), false);
@@ -468,6 +512,12 @@ public class Player extends SolidObject implements DrawAndUpdateObject, Collisio
             }
     }
 
+    /**
+     * Checks wich sensor has collided and then sets the appropriate flag to the specified value.
+     * This is used to determine if the player is on the ground of not (among other things).
+     * @param fixture The sensor Fixture that has collided.
+     * @param setValue The value to set the flag to (false if collision has ended and true if collision has begun)
+     */
     private void sensorSwitch(Fixture fixture, boolean setValue){
         switch (((SensorStatus)fixture.getUserData()).getPosition()){
             case DOWN :grounded = setValue;
@@ -479,6 +529,9 @@ public class Player extends SolidObject implements DrawAndUpdateObject, Collisio
         }
     }
 
+    /**
+     * Calls the jumphandlerfunction that then makes the player jump.
+     */
     private void jump(){
         currentJumpHandler.jump(this);
     }
@@ -499,43 +552,35 @@ public class Player extends SolidObject implements DrawAndUpdateObject, Collisio
 
     public boolean getCollisionRight() {return collisionRight;}
 
-    public void setRunRightCode(KeyCode runRightCode) {
-        this.runRightCode = runRightCode;
-    }
+    public void setRunRightCode(KeyCode runRightCode) {this.runRightCode = runRightCode;}
 
-    public void setRunLeftCode(KeyCode runLeftCode) {
-        this.runLeftCode = runLeftCode;
-    }
+    public void setRunLeftCode(KeyCode runLeftCode) {this.runLeftCode = runLeftCode;}
 
-    public void setJumpCode(KeyCode jumpCode) {
-        this.jumpCode = jumpCode;
-    }
+    public void setJumpCode(KeyCode jumpCode) {this.jumpCode = jumpCode;}
 
     public Vec2 getPosition() {return body.getPosition();}
 
-    public int getScore() {
-        return score;
-    }
+    public int getScore() {return score;}
 
-    public int getActualHealth() {
-        return actualHealth;
-    }
+    public int getActualHealth() {return actualHealth;}
 
-    public int getVisibleHealth() {
-        return visibleHealth;
-    }
+    public int getVisibleHealth() {return visibleHealth;}
 
 
-    public void setCurrentJumpHandler(JumpHandler currentJumpHandler) {
-        this.currentJumpHandler = currentJumpHandler;
-    }
+    public void setCurrentJumpHandler(JumpHandler currentJumpHandler) {this.currentJumpHandler = currentJumpHandler;}
 
     public boolean isPickUpItem() {return pickUpItem;}
 
-    public void setStartTime(boolean startTime) {
-        this.startTime = startTime;
-    }
+    public void setStartTime(boolean startTime) {this.startTime = startTime;}
 
     public Direction getDirection() {return direction;}
 
+    /**
+     * Ensures that the vector can only contain integers
+     * @param x The x position of the idleframe.
+     * @param y The y position of the idleframe.
+     */
+    public void setSpriteIdleFrame(int x, int y) {
+        this.spriteIdleFrame = new Vec2(x, y);
+    }
 }

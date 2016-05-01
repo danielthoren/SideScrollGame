@@ -43,7 +43,6 @@ public class GameComponent extends Parent
         positionIterations = 3;  //Accuracy of jbox2d position simulation
 
         canvas = new Canvas(width, height);
-        GraphicsContext gc = canvas.getGraphicsContext2D();
         getChildren().add(canvas);
         this.requestFocus();
 
