@@ -9,7 +9,6 @@ import javafx.scene.input.KeyEvent;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.World;
 
-
 /**
  * This is the class that handles all the logic in the game. It is also a child of the class 'Parent' wich extends
  * 'Node'. Thus making this class a child of 'Node'. This enables the class to be added to another 'Node' or subclass
@@ -17,7 +16,6 @@ import org.jbox2d.dynamics.World;
  * wich is added to this class (in the same manner as this class is added to another subclass of 'Node' higher up in the SceneGraph).
  * The 'Canvas' instance is used to draw all of the game objects on.
  */
-@SuppressWarnings("unused")
 public class GameComponent extends Parent
 {
     private Canvas canvas;                                  //The canvas on wich to draw on

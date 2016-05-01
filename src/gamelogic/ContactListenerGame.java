@@ -8,8 +8,9 @@ import org.jbox2d.collision.Manifold;
 /**
  * The contactlistener iterates over all of the objects implementing the 'gamelogic.CollisionListener' interface, informing them
  * of the collision if they have collided. This is set to the 'Worlds' contactlistener in 'GameComponent'.
+ *
+ * !OBS Is used in gamecomponent when setting the 'Worlds' contactlistener
  */
-@SuppressWarnings("unused")
 public class ContactListenerGame implements ContactListener
 {
     /**
