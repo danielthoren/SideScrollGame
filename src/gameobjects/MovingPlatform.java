@@ -11,7 +11,6 @@ import org.jbox2d.dynamics.World;
 /**
  * This class creates a movingplatform.
  */
-@SuppressWarnings("unused")
 public class MovingPlatform extends Square{
     private Vec2 startPos;                  //The start posistion of the platform
     private Vec2 endPos;                    // The position where the platform should return
@@ -81,7 +80,7 @@ public class MovingPlatform extends Square{
                 body.setLinearVelocity(negativeVelocity);
             }
         }
-        if (body.getPosition().x <= startPos.x) {
+        else if (body.getPosition().x <= startPos.x) {
             body.setLinearVelocity(positiveVelocity);
         }
         else if (body.getPosition().x >= endPos.x){
