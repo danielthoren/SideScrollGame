@@ -91,6 +91,8 @@ public class Player extends SolidObject implements DrawAndUpdateObject, Collisio
     public Player(long ID, World world, Vec2 position, float friction, float density, Vec2 acceleration, Vec2 deceleration, Color color, Vec2 size) {
         super(ID, position, friction, color);
         this.size = size;
+        this.color = color;
+        spriteIdleFrame = null;
         sprite = null;
         sensorThickness = size.x / 10;
         constructorInit(world, density, acceleration, deceleration);
@@ -112,7 +114,7 @@ public class Player extends SolidObject implements DrawAndUpdateObject, Collisio
         restitution = 0;
         score = 0;
         velocityZeroTimer = -1;
-        direction = Direction.NONE;
+        direction = Direction.RIGHT;
         isRunning = false;
         grounded = false;
         collisionLeft = false;
@@ -169,16 +171,16 @@ public class Player extends SolidObject implements DrawAndUpdateObject, Collisio
             //size.x/50 is a scalable small number that is substracted from the middlebox to avoid an edge between the circle and the box.
             //noinspection MagicNumber
             middleBoxSize = new Vec2(size.x - size.x / 50 , radious * 2);
-            upperCirclePos = ((size.y - radious*4)/2 > 0) ? (new Vec2(0, -((size.y - radious * 4) / 2) - radious)) : (new Vec2(0, -radious));
-            bottomCirclePos = ((size.y - radious*4)/2 > 0) ? (new Vec2(0, ((size.y - radious * 4) / 2) + radious)) : (new Vec2(0, radious));
+            upperCirclePos = (new Vec2(0, (size.y - radious * 4) / 2 > 0 ? -((size.y - radious * 4) / 2) - radious : -radious));
+            bottomCirclePos = (new Vec2(0, (size.y - radious * 4) / 2 > 0 ? (size.y - radious * 4) / 2 + radious : radious));
         }
         else{
             radious = size.y/2;
             //size.x/50 is a scalable small number that is substracted from the middlebox to avoid an edge between the circle and the box.
             //noinspection MagicNumber
             middleBoxSize = new Vec2(size.y - size.y / 50, size.y);
-            upperCirclePos = ((size.x - radious*4)/2 > 0) ? (new Vec2(-((size.x - radious * 4) / 2) - radious, 0)) : (new Vec2(-radious, 0));
-            bottomCirclePos = ((size.x - radious*4)/2 > 0) ? (new Vec2(((size.x - radious * 4) / 2) + radious, 0)) : (new Vec2(radious, 0));
+            upperCirclePos = (new Vec2((size.x - radious * 4) / 2 > 0 ? -((size.x - radious * 4) / 2) - radious : -radious, 0));
+            bottomCirclePos = (new Vec2((size.x - radious * 4) / 2 > 0 ? (size.x - radious * 4) / 2 + radious : radious, 0));
         }
         Vec2 bottomSensorPos = new Vec2(0, bottomCirclePos.y + radious);
         Vec2 bottomSensorSize = new Vec2(size.x - size.x / 4, sensorThickness * 2);

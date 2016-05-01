@@ -3,7 +3,9 @@ package characterspesific;
 import gameobjects.Player;
 import gamelogic.DrawAndUpdateObject;
 
-@SuppressWarnings("unused")
+/**
+ * Interface of every item that can be picked up.
+ */
 public interface InventoryItem extends DrawAndUpdateObject
 {
     /**
@@ -18,11 +20,7 @@ public interface InventoryItem extends DrawAndUpdateObject
 
     /**
      * Method that makes the player pick up the item
-<<<<<<< HEAD
      * @param player The player that picks up the item.
-=======
-     * @param player The player that picks up the item
->>>>>>> Develop
      */
     void pickUp(Player player);
 
