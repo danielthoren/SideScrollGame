@@ -81,7 +81,7 @@ public class MovingPlatform extends Square{
                 body.setLinearVelocity(negativeVelocity);
             }
         }
-        if (body.getPosition().x <= startPos.x) {
+        else if (body.getPosition().x <= startPos.x) {
             body.setLinearVelocity(positiveVelocity);
         }
         else if (body.getPosition().x >= endPos.x){
