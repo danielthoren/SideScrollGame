@@ -63,7 +63,7 @@ public class Sword extends InventoryItemParent implements CollisionListener
         if (contact.getFixtureA().getBody().getUserData().equals(solidObject) &&
                 contact.getFixtureB().getBody().getUserData() instanceof Player){
             currentCollidingPlayer = (Player) contact.getFixtureB().getBody().getUserData();
-            if (player != null && !hasDamaged && !((Player) contact.getFixtureB().getBody().getUserData()).equals(player)) {
+            if (player != null && !hasDamaged && !contact.getFixtureB().getBody().getUserData().equals(player)) {
                 currentCollidingPlayer.damage(damage);
                 hasDamaged = true;
             }
@@ -71,7 +71,7 @@ public class Sword extends InventoryItemParent implements CollisionListener
         else if (contact.getFixtureB().getBody().getUserData().equals(solidObject) &&
                 contact.getFixtureA().getBody().getUserData() instanceof Player){
             currentCollidingPlayer = (Player) contact.getFixtureA().getBody().getUserData();
-            if (player != null && !hasDamaged && !((Player) contact.getFixtureA().getBody().getUserData()).equals(player)) {
+            if (player != null && !hasDamaged && !contact.getFixtureA().getBody().getUserData().equals(player)) {
                 currentCollidingPlayer.damage(damage);
                 hasDamaged = true;
             }
