@@ -47,7 +47,7 @@ public class MovingPlatform extends Square{
      * @param height The height of the platform
      * @param endPos The posistion where the platform should return
      */
-    public MovingPlatform(int objectID, World world, Vec2 pos, float friction, Color color, double width, double height, Vec2 endPos) {
+    public MovingPlatform(long objectID, World world, Vec2 pos, float friction, Color color, double width, double height, Vec2 endPos) {
         super(objectID, world, pos, friction, color, width, height);
         startPos = pos;
         this.endPos = endPos;
@@ -71,8 +71,8 @@ public class MovingPlatform extends Square{
      */
     @Override
     public void update(){
-        //If endpos.x == startpos.x the speed is set in this if-statement
-        //so we dont get any problems with the inequaliety.
+        //If endpos.x == startpos.x the speed is set depending on the y-position. Otherwise the velicity will never change
+        //direction and the platform will continue endlessly.
         if (endPos.x == startPos.x){
             if (body.getPosition().y <= startPos.y){
                 body.setLinearVelocity(positiveVelocity);
@@ -81,7 +81,7 @@ public class MovingPlatform extends Square{
                 body.setLinearVelocity(negativeVelocity);
             }
         }
-        else if (body.getPosition().x <= startPos.x) {
+        if (body.getPosition().x <= startPos.x) {
             body.setLinearVelocity(positiveVelocity);
         }
         else if (body.getPosition().x >= endPos.x){
@@ -97,6 +97,7 @@ public class MovingPlatform extends Square{
         //If endpos.x == startpos.x it means that the platform will only move
         //in the y-direction. Therefore setting this speed in a different if-statement
         // so we dont get division by zero.
+        //!OBS: if startpos.x == startpos.y then there is no xVelocity, thus it is set to zero.
         if (endPos.x - startPos.x == 0) {
             Double xVelocity = 0d;
             Double yVelocity = platformSpeed * Math.sin(Math.PI/2);

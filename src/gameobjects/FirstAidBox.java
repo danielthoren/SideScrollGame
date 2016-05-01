@@ -3,6 +3,7 @@ package gameobjects;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import org.jbox2d.common.Vec2;
+import org.jbox2d.dynamics.Fixture;
 import org.jbox2d.dynamics.World;
 import org.jbox2d.dynamics.contacts.Contact;
 import characterspesific.PowerUps;
@@ -24,13 +25,12 @@ public class FirstAidBox extends DynamicSquare implements PowerUps
      * @param pos   The position of the coin
      * @param friction  The friction of the coin
      * @param image     The iamge of the coin
-     * @param objectID    The objectID of the coin
+     * @param objectID    The iD of the coin
      */
     public FirstAidBox(long objectID, World world, Vec2 pos, float friction, int heal, Image image) {
         super(objectID, world, pos, friction, image);
         this.heal = heal;
         body.setUserData(this);
-        setRestitution(1f);
     }
 
     /**
@@ -47,7 +47,6 @@ public class FirstAidBox extends DynamicSquare implements PowerUps
         super(objectID, world, pos, friction, color, width, height);
         this.heal = heal;
         body.setUserData(this);
-        setRestitution(1f);
     }
 
     /**
@@ -62,15 +61,19 @@ public class FirstAidBox extends DynamicSquare implements PowerUps
      * (thus we can safely cast the object contained inside the 'UserData' to 'Player'.
      */
     public void beginContact(Contact contact){
-        if (contact.getFixtureA().getBody().getUserData().equals(this) && contact.getFixtureB().getBody().getUserData() instanceof Player){
-            ((Player) contact.getFixtureB().getBody().getUserData()).heal(heal);
-            Map map = LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber());
-            map.removeBody(body);
-            map.removeCollisionListener(this);
-            map.removeDrawAndUpdateObject(this);
-        }
-        else if (contact.getFixtureB().getBody().getUserData().equals(this) && contact.getFixtureA().getBody().getUserData() instanceof Player){
-            ((Player) contact.getFixtureA().getBody().getUserData()).heal(heal);
+        beginContactCheck(contact.getFixtureA(), contact.getFixtureB());
+        beginContactCheck(contact.getFixtureB(), contact.getFixtureA());
+    }
+
+    /**
+     * Helps the 'beginContact' function to check collisions and take action appropriatly. For more detailed comments read the
+     * comments on said function.
+     * @param fixtureA One of the fixtures in the check.
+     * @param fixtureB One of the fixtures in the check.
+     */
+    private void beginContactCheck(Fixture fixtureA, Fixture fixtureB){
+        if (fixtureA.getBody().getUserData().equals(this) && fixtureB.getBody().getUserData() instanceof Player){
+            ((Player) fixtureB.getBody().getUserData()).heal(heal);
             Map map = LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber());
             map.removeBody(body);
             map.removeCollisionListener(this);
@@ -80,11 +83,7 @@ public class FirstAidBox extends DynamicSquare implements PowerUps
 
     /**
      * Not needed in this case.
-<<<<<<< HEAD
      * @param contact Data container containing information about the contact.
-=======
-     * @param contact Datacontainer containing information about the contact.
->>>>>>> 0d785578a64f27efe99df6e6fb03d1014469cbfc
      */
     public void endContact(Contact contact){}
 }

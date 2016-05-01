@@ -21,7 +21,7 @@ public class SolidObject {
     protected Image image;    //The image representing the square in the visual realm (=none if no image)
     protected Color color;    //The color of the square (=none if no color)
     protected float friction; //The friction of the square´s body
-    protected final long objectID;   //The id of the solidobject
+    protected final long iD;   //The id of the solidobject
 
     //Default values that can be changed by setters
     protected static final float RESTITUTION = 0.01f;
@@ -32,7 +32,7 @@ public class SolidObject {
      */
     protected SolidObject(){
         this.pos = null;
-        this.objectID = -1;
+        this.iD = -1;
         this.body = null;
         this.image = null;
         this.color = null;
@@ -44,10 +44,10 @@ public class SolidObject {
      * @param pos The position at wich to place the Object (units in meters)
      * @param friction The friction of the body
      */
-    public SolidObject(long objectID, Vec2 pos, float friction) {
+    public SolidObject(long iD, Vec2 pos, float friction) {
         this.friction = friction;
         this.pos = pos;
-        this.objectID = objectID;
+        this.iD = iD;
         color = null;
         image = null;
     }
@@ -58,9 +58,9 @@ public class SolidObject {
      * @param friction The friction of the body
      * @param image The image to display over the body (visible part of the object).
      */
-    public SolidObject(long objectID, Vec2 pos, float friction, Image image) {
+    public SolidObject(long iD, Vec2 pos, float friction, Image image) {
         this.image = image;
-        this.objectID = objectID;
+        this.iD = iD;
         this.friction = friction;
         this.pos = pos;
         color = null;
@@ -72,10 +72,10 @@ public class SolidObject {
      * @param friction The fiction of the body
      * @param color The color of the object
      */
-    public SolidObject(long objectID, Vec2 pos, float friction, Color color){
+    public SolidObject(long iD, Vec2 pos, float friction, Color color){
         this.friction = friction;
         this.pos = pos;
-        this.objectID = objectID;
+        this.iD = iD;
         this.color = color;
         this.image = null;
     }
@@ -214,13 +214,13 @@ public class SolidObject {
      */
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof GameObject && ((GameObject) obj).getId() == objectID){return true;}
+        if (obj instanceof GameObject && ((GameObject) obj).getId() == iD){return true;}
         else {return false;}
     }
 
 
     public long getId(){
-        return objectID;
+        return iD;
     }
 
     public Body getBody() {return body;}

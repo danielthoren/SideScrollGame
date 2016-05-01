@@ -29,7 +29,6 @@ import gamelogic.SensorStatus;
 /**
  * Class that holds the player wich is controlled by the user playing the game.
  */
-@SuppressWarnings("unused")
 public class Player extends SolidObject implements DrawAndUpdateObject, CollisionListener, InputListener
 {
     private Direction direction;
@@ -49,8 +48,9 @@ public class Player extends SolidObject implements DrawAndUpdateObject, Collisio
     private long velocityZeroTimer;
     private boolean startTime = false;
     private int powerUpTime = 0;
-    private static final int SIX_SECONDS = 360;
 
+    //!OBS: DefaultValues
+    private static final int SIX_SECONDS = 360;
     private static final int DEFAULT_MAX_HEALTH = 100;
     private static final Vec2 DEFAULT_MAX_VELOCITY = new Vec2(10f, 20f);
     private static final float GROUNDED_THRESHOLD = 0.01f;
@@ -58,7 +58,7 @@ public class Player extends SolidObject implements DrawAndUpdateObject, Collisio
 
     /**
      * Instantiates a player with the given parameters.
-     * @param ID The id of this specific gameObject. Used to identify and compare objects with each other.
+     * @param id The id of this specific gameObject. Used to identify and compare objects with each other.
      * @param world The world in wich to create the player.
      * @param position The position at wich to create the player.
      * @param friction The friction of the player body.
@@ -67,8 +67,8 @@ public class Player extends SolidObject implements DrawAndUpdateObject, Collisio
      * @param deceleration The deceleration of the player. Used to stop the player from running.
      * @param sprite The prite of thep layer. Used to draw the player.
      */
-    public Player(long ID, World world, Vec2 position, float friction, float density, Vec2 acceleration, Vec2 deceleration, Sprite sprite) {
-        super(ID, position, friction);
+    public Player(long id, World world, Vec2 position, float friction, float density, Vec2 acceleration, Vec2 deceleration, Sprite sprite) {
+        super(id, position, friction);
         this.size = sprite.getActualSizeOfSprite();
         this.sprite = sprite;
         spriteIdleFrame = new Vec2(1,1);
@@ -78,7 +78,7 @@ public class Player extends SolidObject implements DrawAndUpdateObject, Collisio
 
     /**
      * Instantiates a player with the given parameters.
-     * @param ID The id of this specific gameObject. Used to identify and compare objects with each other.
+     * @param id The id of this specific gameObject. Used to identify and compare objects with each other.
      * @param world The world in wich to create the player.
      * @param position The position at wich to create the player.
      * @param friction The friction of the player body.
@@ -88,10 +88,9 @@ public class Player extends SolidObject implements DrawAndUpdateObject, Collisio
      * @param color The color of the visual representation of the players body.
      * @param size The size of the players body.
      */
-    public Player(long ID, World world, Vec2 position, float friction, float density, Vec2 acceleration, Vec2 deceleration, Color color, Vec2 size) {
-        super(ID, position, friction, color);
+    public Player(long id, World world, Vec2 position, float friction, float density, Vec2 acceleration, Vec2 deceleration, Color color, Vec2 size) {
+        super(id, position, friction, color);
         this.size = size;
-        this.color = color;
         spriteIdleFrame = null;
         sprite = null;
         sensorThickness = size.x / 10;
@@ -142,6 +141,9 @@ public class Player extends SolidObject implements DrawAndUpdateObject, Collisio
      * circle
      * This is to make the body move smoothly in the game world and to give a valid representation of collision with the
      * player body.
+     *
+     * !OBS: The function can be shorted but it would be pointless since all that happens in the function is the creation of the different parts
+     * of the body, how the parts shoudl look, be sized and positioned relative to each other. Thus the function is left as it is.
      * @param world The world in wich to create the player body.
      */
     private void createBody(World world){
@@ -237,12 +239,12 @@ public class Player extends SolidObject implements DrawAndUpdateObject, Collisio
 
         //Setting the group index to be able to prevent collision between the player and certain objects (for example
         //between the player and the inventory-items)
-        upperCircle.filter.groupIndex = -(int) objectID;
-        middleBox.filter.groupIndex = -(int) objectID;
-        bottomCircle.filter.groupIndex = -(int) objectID;
-        bottomSensor.filter.groupIndex = -(int) objectID;
-        leftSensor.filter.groupIndex = -(int) objectID;
-        rightSensor.filter.groupIndex = -(int) objectID;
+        upperCircle.filter.groupIndex = -(int) iD;
+        middleBox.filter.groupIndex = -(int) iD;
+        bottomCircle.filter.groupIndex = -(int) iD;
+        bottomSensor.filter.groupIndex = -(int) iD;
+        leftSensor.filter.groupIndex = -(int) iD;
+        rightSensor.filter.groupIndex = -(int) iD;
 
         //Creating the body using the fixtureDef and the BodyDef created beneath
         BodyDef bodyDef = new BodyDef();
@@ -571,7 +573,6 @@ public class Player extends SolidObject implements DrawAndUpdateObject, Collisio
     public int getActualHealth() {return actualHealth;}
 
     public int getVisibleHealth() {return visibleHealth;}
-
 
     public void setCurrentJumpHandler(JumpHandler currentJumpHandler) {this.currentJumpHandler = currentJumpHandler;}
 

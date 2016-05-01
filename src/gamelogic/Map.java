@@ -36,7 +36,6 @@ public class Map
      * @param drawAndUpdateObjectList The objects implementing the 'DrawAndUpdate' interface.
      * @param gameObjectsListen The objects implementing the 'InputListener' interface.
      * @param gameObjectsCollision The objects implementing the 'CollisionListener' interface.
-     * @param gravity The gravityvector of the world.
      */
     public Map(World world, List<DrawAndUpdateObject> drawAndUpdateObjectList, List<InputListener> gameObjectsListen, List<CollisionListener> gameObjectsCollision) {
         this.drawAndUpdateObjectList = drawAndUpdateObjectList;

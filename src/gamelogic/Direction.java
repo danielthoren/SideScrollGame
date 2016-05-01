@@ -7,7 +7,7 @@ public enum Direction {
     /**
      * Describes the direction up (up on the screen)
      */
-    UP,
+    UPWARDS,
 
     /**
      * Describes the direction down (down on the screen)

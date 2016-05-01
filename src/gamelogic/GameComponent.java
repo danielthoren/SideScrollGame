@@ -70,7 +70,7 @@ public class GameComponent extends Parent
      * Updates all of the game objects. Since 'jBox2d' is not threadsafe the method is syncronized with the
      * @param nanosecScienceLast The time scinse the last update in nanoseconds
      */
-    public synchronized void update(float nanosecScienceLast){
+    public void update(float nanosecScienceLast){
         currentMap.removeStagedOBjects();
         currentMap.addStagedObjects();
         try {
@@ -88,7 +88,7 @@ public class GameComponent extends Parent
     /**
      * Draws all of the game objects on the 'canvas'
      */
-    public synchronized void draw(){
+    public void draw(){
         GraphicsContext gc = canvas.getGraphicsContext2D();
         gc.clearRect(0,0, canvas.getWidth(), canvas.getHeight());
         for (DrawAndUpdateObject obj : currentMap.getDrawAndUpdateObjectList()){

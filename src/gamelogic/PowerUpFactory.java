@@ -17,7 +17,6 @@ import java.util.Random;
 /**
  * This class returns either a firsaidbox or a jump powerup given a random number.
  */
-@SuppressWarnings("unused")
 public class PowerUpFactory {
     private List<JumpHandler> jumpHandlers;
     private Image firstAidTexture = null;
@@ -26,12 +25,14 @@ public class PowerUpFactory {
     private Random random;
     private float coinRadious;
     private Vec2 boxSize = null;
+    private float friction;
 
     //Todo move constant to appropriate position
     private final static int HEALTH_BOUND = 30;
 
-    public PowerUpFactory(float coinRadious, Vec2 boxSize, Color color) {
+    public PowerUpFactory(float friction, float coinRadious, Vec2 boxSize, Color color) {
         this.color = color;
+        this.friction = friction;
         this.coinRadious = coinRadious;
         this.boxSize = boxSize;
         jumpHandlers = new ArrayList<>();
@@ -39,9 +40,9 @@ public class PowerUpFactory {
         random = new Random();
     }
 
-
-    public PowerUpFactory(Image firstAidBoxTexture, Image powerUpCoinTexture) {
+    public PowerUpFactory(float friction, Image firstAidBoxTexture, Image powerUpCoinTexture) {
         this.firstAidTexture = firstAidBoxTexture;
+        this.friction = friction;
         this.coinTexture = powerUpCoinTexture;
         jumpHandlers = new ArrayList<>();
         jumpHandlers.add(new WallJumpHandler());
@@ -64,11 +65,11 @@ public class PowerUpFactory {
                 int heal = random.nextInt(HEALTH_BOUND);
                 if (firstAidTexture == null) {
                     firstAidBox = new FirstAidBox(LoadMap.getObjectID(), world, new Vec2(new Random().nextFloat() * 2, new Random().nextFloat() * 4),
-                            1f, heal, this.color, boxSize.x, boxSize.y); //Creates the box.
+                            friction, heal, this.color, boxSize.x, boxSize.y); //Creates the box.
                 }
                 else{
                     firstAidBox = new FirstAidBox(LoadMap.getObjectID(), world, new Vec2(new Random().nextFloat() * 2, new Random().nextFloat() * 4),
-                                                  1f, heal, firstAidTexture); //Creates the box.
+                                                  friction, heal, firstAidTexture); //Creates the box.
                 }
                 return firstAidBox;
 
@@ -77,11 +78,11 @@ public class PowerUpFactory {
                 //This case i similar to the previous. The diffrence being that we create a coin and not a box.
                 if(coinTexture == null){
                 powerUpCoin = new PowerUpCoin(LoadMap.getObjectID(), world, new Vec2(new Random().nextFloat() * 2, new Random().nextFloat() * 4),
-                                              1f, this.color, coinRadious, jumpHandlers.get(lenList));
+                                              friction, this.color, coinRadious, jumpHandlers.get(lenList));
                 }
                 else {
                     powerUpCoin = new PowerUpCoin(LoadMap.getObjectID(), world, new Vec2(new Random().nextFloat() * 2, new Random().nextFloat() * 4),
-                                                  1f, coinTexture, jumpHandlers.get(lenList));
+                                                  friction, coinTexture, jumpHandlers.get(lenList));
                 }
                 return powerUpCoin;
             default:

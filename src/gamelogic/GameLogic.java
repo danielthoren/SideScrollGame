@@ -18,7 +18,8 @@ public class GameLogic implements DrawAndUpdateObject
     //Todo Move default size and time values to a more appropriate position
     private static final Vec2 HEAL_BOX_SIZE = new Vec2(0.4f, 0.4f);
     private static final Vec2 COIN_SIZE = new Vec2(0.2f, 0.2f);
-    private static final long TIME_BETWEEN_POWERUPS = 100;
+    private static final long TIME_BETWEEN_POWERUPS = 5000;
+    private static final float FRICTION = 0.5f;
 
     public GameLogic(long objectId) {
         this.id = objectId;
@@ -27,7 +28,7 @@ public class GameLogic implements DrawAndUpdateObject
         Image boxTexture = LoadMap.getInstance().loadImage("/textures/squareTextures/FirstAid.jpg", HEAL_BOX_SIZE);
         Image coinTexture = LoadMap.getInstance().loadImage("/textures/circleTextures/Coin.png", COIN_SIZE);
 
-        powerUpFactory = new PowerUpFactory(boxTexture, coinTexture);
+        powerUpFactory = new PowerUpFactory(FRICTION, boxTexture, coinTexture);
         //powerUpFactory = new PowerUpFactory(0.2f, new Vec2(0.2f, 0.2f), Color.WHITE);
     }
 

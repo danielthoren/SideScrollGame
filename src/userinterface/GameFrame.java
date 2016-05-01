@@ -70,11 +70,7 @@ public class GameFrame extends Application
 
     /**
      * Creates the Vbox instance, and the contents therin, to be placed on the windows top.
-<<<<<<< HEAD
      * @return returns a topcontainer containing menues specific to the game.
-=======
-     * @return returns a top container containing menues specific to the game.
->>>>>>> Develop
      */
     private VBox createTopMenues(){
         VBox topContainer = new VBox();

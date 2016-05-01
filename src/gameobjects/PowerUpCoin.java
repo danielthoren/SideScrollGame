@@ -48,7 +48,6 @@ public class PowerUpCoin extends DynamicCircle implements PowerUps
         body.getFixtureList().setSensor(false); //Makes the coin a sensor
         body.setUserData(this);
         this.jumpHandler = jumpHandler;
-        setRestitution(1f);
     }
     /**
      * This method checks if the player have collided whit the coin, if it has the player is given the jumphandler held

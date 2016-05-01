@@ -2,6 +2,7 @@ package gamelogic;
 
 import gameobjects.DynamicCircle;
 import gameobjects.DynamicSquare;
+import gameobjects.MovingPlatform;
 import gameobjects.Player;
 import gameobjects.Sprite;
 import gameobjects.Square;
@@ -89,8 +90,8 @@ public final class LoadMap {
             DrawAndUpdateObject bottomSquare = new Square(getObjectID(), world, new Vec2(0f, 5.5f), 0.8f, Color.AZURE, 14.35d, 0.4d);
             gameObjects.add(bottomSquare);
 
-            //gameObjects.add(new gameobjects.MovingPlatform(world, new Vec2(0f, 3f), 1f, Color.WHEAT, 1d, 0.1d, new Vec2(7f, 4f)));
-            //gameObjects.add(new gameobjects.MovingPlatform(world, new Vec2(1f, 3f), 1f, Color.BISQUE, 1d, 0.1d, new Vec2(1f, 5f)));
+            gameObjects.add(new MovingPlatform(getObjectID(), world, new Vec2(0f, 3f), 1f, Color.WHEAT, 1d, 0.1d, new Vec2(7f, 4f)));
+            gameObjects.add(new MovingPlatform(getObjectID(), world, new Vec2(1f, 3f), 1f, Color.BISQUE, 1d, 0.1d, new Vec2(1f, 5f)));
 
 
             Vec2 position = new Vec2(6f, 5f);
@@ -108,7 +109,7 @@ public final class LoadMap {
             gameObjects.add(sprite2);
             gameObjects.add(sprite);
 
-            //gameobjects.Player player = new gameobjects.Player(objectID++, world, position, friction, DENSITY, acceleration, deceleration, size, Color.BLUE);
+            //gameobjects.Player player = new gameobjects.Player(iD++, world, position, friction, DENSITY, acceleration, deceleration, size, Color.BLUE);
             Player player = new Player(getObjectID(), world, position, friction, density, acceleration, deceleration, sprite);
 
             ScoreBoard.getOurInstance().addPlayers(player);
@@ -121,7 +122,7 @@ public final class LoadMap {
             gameObjectsCollision.add(player);
 
 
-            //gameobjects.Player player2 = new gameobjects.Player(objectID++, world, position, friction, DENSITY, acceleration, deceleration, size, Color.BLANCHEDALMOND);
+            //gameobjects.Player player2 = new gameobjects.Player(iD++, world, position, friction, DENSITY, acceleration, deceleration, size, Color.BLANCHEDALMOND);
             Player player2 = new Player(getObjectID(), world, position, friction, density, acceleration, deceleration, sprite2);
 
             ScoreBoard.getOurInstance().addPlayers(player2);

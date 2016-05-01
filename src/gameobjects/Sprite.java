@@ -9,7 +9,6 @@ import gamelogic.GameComponent;
 /**
  * Class handling a simple sprite. It contains draw-functions for the sprite image.
  */
-@SuppressWarnings("unused")
 public class Sprite implements DrawAndUpdateObject
 {
 
@@ -47,7 +46,6 @@ public class Sprite implements DrawAndUpdateObject
         this.updateInterval = updateInterval;
         this.id = id;
         currentOffset = new Vec2(0,0);
-        final Vec2 stopFrame = new Vec2(0, 0);
         flip = false;
         freeze = false;
         spriteWindowSize = new Vec2((float) image.getWidth() / columns, (float) image.getHeight() / rows);
