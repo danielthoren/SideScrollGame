@@ -32,6 +32,15 @@ public class Map
 
     private Vec2 gravity;
 
+    /**
+     * Creates an instance of 'Map' wich is a container for all of the world objects. It also contains an abstractionlayer
+     * for removing and adding new objects to the world, preventing the program from crashing.
+     * @param world The world containing the bodies of the starting objects.
+     * @param drawAndUpdateObjectList The objects implementing the 'DrawAndUpdate' interface.
+     * @param gameObjectsListen The objects implementing the 'InputListener' interface.
+     * @param gameObjectsCollision The objects implementing the 'CollisionListener' interface.
+     * @param gravity The gravityvector of the world.
+     */
     public Map(World world, List<DrawAndUpdateObject> drawAndUpdateObjectList, List<InputListener> gameObjectsListen, List<CollisionListener> gameObjectsCollision, Vec2 gravity) {
         this.drawAndUpdateObjectList = drawAndUpdateObjectList;
         this.collisionListenerList = gameObjectsCollision;
@@ -48,13 +57,15 @@ public class Map
     }
 
     /**
-     * Removes objects staged for removal and clears the 'StagedForRemoval' lists
+     * Removes objects staged for removal and clears the 'StagedForRemoval' lists. Theese lists are a buffer to prevent
+     * instantanious removal of objects during runtime, if objects were removed during iteration over lists containing theese
+     * objects or during the world step then the program would crash.
      */
     public void removeStagedOBjects (){
         //List used to keep track of wich id:s bodies have been removed. Used to prevent multiple removals of the same body.
         //If a item that will be staged for removal when collision occurs with a type of object then two such bodies will
         //be added to the 'stagedForRemoval' if the item collides with two objects of said type between one step.
-        Collection bodyIDRemoved = new ArrayList<>();
+        Collection<Long> bodyIDRemoved = new ArrayList<>();
         //Destroying all of the bodies that are staged for removal
         for (Body body : bodiesStagedForRemoval){
             if (!bodyIDRemoved.contains(((GameObject)body.getUserData()).getId())) {
@@ -97,7 +108,9 @@ public class Map
 }
 
     /**
-     * Adding objects staged for addition and clears the 'StagedForAddition' lists
+     * Adding objects staged for addition and clears the 'StagedForAddition' lists. Theese lists are a buffer to prevent
+     * instantanious addition of objects during runtime, if objects were removed during iteration over lists containing theese
+     * objects or during the world step then the program would crash.
      */
     public void addStagedObjects (){
         //Adding all of the staged 'DrawAndUpdate' objects to the maps global list
