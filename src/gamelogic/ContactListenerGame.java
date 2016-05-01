@@ -53,7 +53,7 @@ public class ContactListenerGame implements ContactListener
     	 * Note: the oldManifold parameter is pooled, so it will be the same object for every callback
     	 * for each thread.
     	 * @param contact An object containing information about the collision.
-    	 * @param oldManifold
+    	 * @param oldManifold Datacontainer containing box2d specific data.
     	 */
     public void preSolve(Contact contact, Manifold oldManifold){
 
