@@ -14,7 +14,6 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 /**
@@ -70,7 +69,7 @@ public class GameFrame extends Application
 
     /**
      * Creates the Vbox instance, and the contents therin, to be placed on the windows top.
-     * @return
+     * @return The top container
      */
     private VBox createTopMenues(){
         VBox topContainer = new VBox();

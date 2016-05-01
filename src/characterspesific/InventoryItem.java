@@ -17,7 +17,7 @@ public interface InventoryItem extends DrawAndUpdateObject
 
     /**
      * Method that makes the player pick up the item
-     * @param player
+     * @param player The player that picks up the item
      */
     public void pickUp(Player player);
 

@@ -1,7 +1,7 @@
 package gameobjects; /**
  * Created by daniel on 2016-03-12.
  */
-import gamelogic.GameObject;
+
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -25,8 +25,8 @@ public class Circle extends SolidObject implements DrawAndUpdateObject
      * @param friction The friction of the body
      * @param image The image to display over the body (visible part of the circle)
      */
-    public Circle(long ID, World world, Vec2 pos, float friction, Image image) {
-	super(ID, pos, friction, image);
+    public Circle(long objectID, World world, Vec2 pos, float friction, Image image) {
+	super(objectID, pos, friction, image);
 	this.radious = (double) GameComponent.pixToMeters((float) image.getWidth() / 2);
 	createBody(world);
 	body.setUserData(this);
@@ -40,8 +40,8 @@ public class Circle extends SolidObject implements DrawAndUpdateObject
      * @param color The color of the circle
      * @param radious The radious of the circle
      */
-    public Circle(long ID, World world, Vec2 pos, float friction, Color color, double radious){
-	super(ID, pos, friction, color);
+    public Circle(long objectID, World world, Vec2 pos, float friction, Color color, double radious){
+	super(objectID, pos, friction, color);
 	this.radious = radious;
 	createBody(world);
 	body.setUserData(this);
@@ -61,9 +61,9 @@ public class Circle extends SolidObject implements DrawAndUpdateObject
 
 	//Creating the fixture of the body. The concrete part that can be touched (the part that can collide)
 	fixtureDef.shape = circleShape;
-	fixtureDef.density = density;
+	fixtureDef.density = DENSITY;
 	fixtureDef.friction = friction;
-	fixtureDef.restitution = restitution;
+	fixtureDef.restitution = RESTITUTION;
 
 	//Creating the body using the fixtureDef and the BodyDef created beneath
 	BodyDef bodyDef = new BodyDef();

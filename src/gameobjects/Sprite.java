@@ -14,14 +14,12 @@ public class Sprite implements DrawAndUpdateObject
 
     private final Image image;          //Holds the SpriteImage
     private final int columns;          //Holds the amount of columns in the image
-    private final int rows;             //Holds the amount of rows in the image
     private int updateInterval;         //Holds the amount of frames before changing image
     private int numberOfFrames;
     private int currFrameNumber;
     private int currFramesSinceUpdate;
     private final long id;
     private Vec2 currentOffset;
-    private Vec2 stopFrame;
     private Vec2 position;
     private Vec2 actualSizeOfSprite;    //Holds an approximate value of the actual imagesize inside of the spriteImages
     private final Vec2 spriteWindowSize;
@@ -44,12 +42,11 @@ public class Sprite implements DrawAndUpdateObject
         this.angle = angle;
         this.image = image;
         this.position = position;
-        this.rows = rows;
         this.numberOfFrames = numberOfFrames;
         this.updateInterval = updateInterval;
         this.id = id;
         currentOffset = new Vec2(0,0);
-        stopFrame = new Vec2(0,0);
+        final Vec2 stopFrame = new Vec2(0, 0);
         flip = false;
         freeze = false;
         spriteWindowSize = new Vec2((float) image.getWidth() / columns, (float) image.getHeight() / rows);

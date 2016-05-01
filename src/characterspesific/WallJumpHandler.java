@@ -8,7 +8,7 @@ import org.jbox2d.common.Vec2;
  */
 public class WallJumpHandler implements JumpHandler {
 
-    DefaultJumpHandler defaultJumpHandler;
+    private DefaultJumpHandler defaultJumpHandler;
 
     /**
      * Creates a characterspesific.WallJumpHandler, the default characterspesific.JumpHandler takes no arguments except for in the jump function.
@@ -23,7 +23,7 @@ public class WallJumpHandler implements JumpHandler {
         if (player.getGrounded()) {
             defaultJumpHandler.jump(player);
         }
-        if (player.getLeftCollision() || player.getRightCollision()){
+        if (player.getCollisionLeft() || player.getCollisionRight()){
             Vec2 velocity = player.getBody().getLinearVelocity();
             float impulseY = player.getBody().getMass() * 5;
             float impulseX = player.getBody().getMass() * 3;

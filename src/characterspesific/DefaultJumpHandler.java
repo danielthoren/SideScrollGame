@@ -9,11 +9,6 @@ import org.jbox2d.common.Vec2;
 public class DefaultJumpHandler implements JumpHandler {
 
     /**
-     * Creates a default characterspesific.JumpHandler, the default characterspesific.JumpHandler takes no arguments except for in the jump function.
-     */
-    public DefaultJumpHandler() {
-    }
-    /**
      * The jump function that must be called from the object that is supposed to jump.
      */
     public void jump(Player player) {

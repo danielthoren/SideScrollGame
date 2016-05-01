@@ -9,7 +9,6 @@ import javafx.scene.input.KeyEvent;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.World;
 
-import java.util.Iterator;
 
 /**
  * This is the class that handles all the logic in the game. It is also a child of the class 'Parent' wich extends
@@ -81,8 +80,7 @@ public class GameComponent extends Parent
             e.printStackTrace();
             System.exit(0);
         }
-        for (Iterator<DrawAndUpdateObject> iterator = currentMap.getDrawAndUpdateObjectList().iterator(); iterator.hasNext();) {
-            DrawAndUpdateObject obj = iterator.next();
+        for (DrawAndUpdateObject obj : currentMap.getDrawAndUpdateObjectList()) {
             obj.update();
         }
     }

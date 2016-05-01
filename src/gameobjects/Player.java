@@ -44,6 +44,7 @@ public class Player extends SolidObject implements DrawAndUpdateObject, Collisio
     private long velocityZeroTimer;
     private boolean startTime = false;
     private int powerUpTime = 0;
+    private static final int SIX_SECONDS = 360;
 
     private static final int DEFAULT_MAX_HEALTH = 100;
     private static final Vec2 DEFAULT_MAX_VELOCITY = new Vec2(10f, 20f);
@@ -209,12 +210,12 @@ public class Player extends SolidObject implements DrawAndUpdateObject, Collisio
 
         //Setting the group index to be able to prevent collision between the player and certain objects (for example
         //between the player and the inventory-items)
-        upperCircle.filter.groupIndex = -(int)ID;
-        middleBox.filter.groupIndex = -(int)ID;
-        bottomCircle.filter.groupIndex = -(int)ID;
-        bottomSensor.filter.groupIndex = -(int)ID;
-        leftSensor.filter.groupIndex = -(int)ID;
-        rightSensor.filter.groupIndex = -(int)ID;
+        upperCircle.filter.groupIndex = -(int) objectID;
+        middleBox.filter.groupIndex = -(int) objectID;
+        bottomCircle.filter.groupIndex = -(int) objectID;
+        bottomSensor.filter.groupIndex = -(int) objectID;
+        leftSensor.filter.groupIndex = -(int) objectID;
+        rightSensor.filter.groupIndex = -(int) objectID;
 
         //Creating the body using the fixtureDef and the BodyDef created beneath
         BodyDef bodyDef = new BodyDef();
@@ -235,13 +236,12 @@ public class Player extends SolidObject implements DrawAndUpdateObject, Collisio
 
     public void update(){
         runHandler();
-        int sixSeconds = 360;
         if(startTime){
             powerUpTime++;
-            if (powerUpTime > sixSeconds){
+            if (powerUpTime > SIX_SECONDS){
                 powerUpTime = 0;
-                setCurrentJumpHandler(new DefaultJumpHandler());
-                setStartTime(false);
+                currentJumpHandler =new DefaultJumpHandler();
+                startTime = false;
             }
         }
 
@@ -344,8 +344,8 @@ public class Player extends SolidObject implements DrawAndUpdateObject, Collisio
      * @param gc The graphicscontext on which to draw on.
      */
     private void drawHealthBar(GraphicsContext gc){
-        int healthBarWidth = 100;
-        int healthBarHeight = 20;
+        final int healthBarWidth = 100;
+        final int healthBarHeight = 20;
         //This bar shows how much health you have lost.
         gc.setFill(Color.RED);
         gc.fillRect(GameComponent.metersToPix(body.getPosition().x) - healthBarWidth / 2,
@@ -397,9 +397,8 @@ public class Player extends SolidObject implements DrawAndUpdateObject, Collisio
      * @param heal The amount the player should be healed.
      */
     public void heal(int heal){
-        int tmp;
         if (actualHealth + heal > maxHealth){
-            tmp = maxHealth - actualHealth;
+            int tmp = maxHealth - actualHealth;
             damage(-tmp); //Damage is called with negative value because -(-) = +.
         }
         else{
@@ -496,9 +495,9 @@ public class Player extends SolidObject implements DrawAndUpdateObject, Collisio
 
     public boolean getGrounded() {return grounded;}
 
-    public boolean getLeftCollision() {return collisionLeft;}
+    public boolean getCollisionLeft() {return collisionLeft;}
 
-    public boolean getRightCollision() {return collisionRight;}
+    public boolean getCollisionRight() {return collisionRight;}
 
     public void setRunRightCode(KeyCode runRightCode) {
         this.runRightCode = runRightCode;

@@ -22,13 +22,12 @@ public class PowerUpFactory {
     private Image firstAidTexture;
     private Image coinTexture;
     private Color color;
-    private Random randomHealth;
     private Random random;
     private float coinRadious;
     private Vec2 boxSize;
 
     //Todo move constant to appropriate position
-    private final static int healthBound = 30;
+    private final static int HEALTH_BOUND = 30;
 
     public PowerUpFactory(float coinRadious, Vec2 boxSize, Color color) {
         this.color = color;
@@ -61,7 +60,7 @@ public class PowerUpFactory {
         PowerUpCoin powerUpCoin;
         switch (randomPowerUP) {
             case (0):
-                int heal = random.nextInt(healthBound);
+                int heal = random.nextInt(HEALTH_BOUND);
                 if (firstAidTexture == null) {
                     firstAidBox = new FirstAidBox(LoadMap.getObjectID(), world, new Vec2(new Random().nextFloat() * 2, new Random().nextFloat() * 4),
                             1f, heal, this.color, boxSize.x, boxSize.y); //Creates the box.
@@ -77,11 +76,11 @@ public class PowerUpFactory {
                 //This case i similar to the previous. The diffrence being that we create a coin and not a box.
                 if(coinTexture == null){
                 powerUpCoin = new PowerUpCoin(LoadMap.getObjectID(), world, new Vec2(new Random().nextFloat() * 2, new Random().nextFloat() * 4),
-                                              0.3f, this.color, coinRadious, jumpHandlers.get(lenList));
+                                              1f, this.color, coinRadious, jumpHandlers.get(lenList));
                 }
                 else {
                     powerUpCoin = new PowerUpCoin(LoadMap.getObjectID(), world, new Vec2(new Random().nextFloat() * 2, new Random().nextFloat() * 4),
-                                                  0.3f, coinTexture, jumpHandlers.get(lenList));
+                                                  1f, coinTexture, jumpHandlers.get(lenList));
                 }
                 return powerUpCoin;
             default:
