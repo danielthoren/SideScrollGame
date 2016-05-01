@@ -17,6 +17,7 @@ import java.util.Random;
 /**
  * This class returns either a firsaidbox or a jump powerup given a random number.
  */
+@SuppressWarnings("unused")
 public class PowerUpFactory {
     private List<JumpHandler> jumpHandlers;
     private Image firstAidTexture;

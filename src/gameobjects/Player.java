@@ -29,6 +29,7 @@ import gamelogic.SensorStatus;
 /**
  * Class that holds the player wich is controlled by the user playing the game.
  */
+@SuppressWarnings("unused")
 public class Player extends SolidObject implements DrawAndUpdateObject, CollisionListener, InputListener
 {
     private Direction direction;
@@ -71,7 +72,6 @@ public class Player extends SolidObject implements DrawAndUpdateObject, Collisio
         this.size = sprite.getActualSizeOfSprite();
         this.sprite = sprite;
         spriteIdleFrame = new Vec2(1,1);
-        color = null;
         sensorThickness = size.x / 10;
         constructorInit(world, density, acceleration, deceleration);
     }
@@ -91,7 +91,6 @@ public class Player extends SolidObject implements DrawAndUpdateObject, Collisio
     public Player(long ID, World world, Vec2 position, float friction, float density, Vec2 acceleration, Vec2 deceleration, Color color, Vec2 size) {
         super(ID, position, friction, color);
         this.size = size;
-        this.color = color;
         sprite = null;
         sensorThickness = size.x / 10;
         constructorInit(world, density, acceleration, deceleration);
@@ -521,12 +520,15 @@ public class Player extends SolidObject implements DrawAndUpdateObject, Collisio
      * @param setValue The value to set the flag to (false if collision has ended and true if collision has begun)
      */
     private void sensorSwitch(Fixture fixture, boolean setValue){
+        //The cases beneath are the only ones that are going to be sent to this function due to how the body is built up. More might
+        //be added later though.
+        //noinspection EnumSwitchStatementWhichMissesCases
         switch (((SensorStatus)fixture.getUserData()).getPosition()){
-            case DOWN :grounded = setValue;
+            case DOWN : grounded = setValue;
                 break;
-            case LEFT:collisionLeft = setValue;
+            case LEFT: collisionLeft = setValue;
                 break;
-            case RIGHT:collisionRight = setValue;
+            case RIGHT: collisionRight = setValue;
                 break;
         }
     }

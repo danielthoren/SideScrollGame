@@ -5,12 +5,11 @@ import org.jbox2d.callbacks.ContactListener;
 import org.jbox2d.dynamics.contacts.Contact;
 import org.jbox2d.collision.Manifold;
 
-import java.util.List;
-
 /**
  * The contactlistener iterates over all of the objects implementing the 'gamelogic.CollisionListener' interface, informing them
- * of the collision if they have collided.
+ * of the collision if they have collided. This is set to the 'Worlds' contactlistener in 'GameComponent'.
  */
+@SuppressWarnings("unused")
 public class ContactListenerGame implements ContactListener
 {
     /**
@@ -18,7 +17,7 @@ public class ContactListenerGame implements ContactListener
      * @param contact An object containing information about the collision.
      */
     public void beginContact(Contact contact) {
-	List<CollisionListener> listeners = LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber()).getCollisionListenerList();
+	Iterable<CollisionListener> listeners = LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber()).getCollisionListenerList();
 	for (CollisionListener obj : listeners){
 	    if (contact.getFixtureA().getBody().getUserData().equals(obj) || contact.getFixtureB().getBody().getUserData().equals(obj)){
 		obj.beginContact(contact);
@@ -31,7 +30,7 @@ public class ContactListenerGame implements ContactListener
      * @param contact An object containing information about the collision.
      */
     public void endContact(Contact contact){
-	List<CollisionListener> listeners = LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber()).getCollisionListenerList();
+	Iterable<CollisionListener> listeners = LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber()).getCollisionListenerList();
 	for (CollisionListener obj : listeners){
 	    if (contact.getFixtureA().getBody().getUserData().equals(obj) || contact.getFixtureB().getBody().getUserData().equals(obj)){
 		obj.endContact(contact);

@@ -6,6 +6,7 @@ import userinterface.GameFrame;
 /**
  * Responsible for updating and drawing the game at a constant rate. It also keeps track of the current fps.
  */
+@SuppressWarnings("unused")
 public class GameLoop extends AnimationTimer
 {
     private long lastFpsTime;

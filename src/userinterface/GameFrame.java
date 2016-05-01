@@ -20,6 +20,7 @@ import javafx.stage.Stage;
  * This is the main class of the game. It creates the window in wich the game and all menues is drawn. It also
  * instantiates the game and runs it.
  */
+@SuppressWarnings("unused")
 public class GameFrame extends Application
 {
     private String windowName;
@@ -69,11 +70,7 @@ public class GameFrame extends Application
 
     /**
      * Creates the Vbox instance, and the contents therin, to be placed on the windows top.
-<<<<<<< HEAD
      * @return returns a topcontainer containing menues specific to the game.
-=======
-     * @return The top container
->>>>>>> Develop
      */
     private VBox createTopMenues(){
         VBox topContainer = new VBox();
@@ -114,10 +111,11 @@ public class GameFrame extends Application
 
     }
 
-    public GameFrame(String windowName) {this.windowName = windowName;}
-
+    /**
+     * Constructor is called from superclass when the mainclass calls launch.
+     */
     public GameFrame(){
-        this.windowName = "userinterface.GameFrame";
+        windowName = "GameFrame";
     }
 
     /**
@@ -128,7 +126,7 @@ public class GameFrame extends Application
      *
      * @param args the command line arguments
      */
-    public synchronized static void main(String[] args) {
+    public static void main(String[] args) {
         launch(args);
     }
 }

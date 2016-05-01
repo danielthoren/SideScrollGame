@@ -1,6 +1,5 @@
 package gamelogic;
 
-import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.World;
 
@@ -30,8 +29,6 @@ public class Map
 
     private World world;
 
-    private Vec2 gravity;
-
     /**
      * Creates an instance of 'Map' wich is a container for all of the world objects. It also contains an abstractionlayer
      * for removing and adding new objects to the world, preventing the program from crashing.
@@ -41,11 +38,10 @@ public class Map
      * @param gameObjectsCollision The objects implementing the 'CollisionListener' interface.
      * @param gravity The gravityvector of the world.
      */
-    public Map(World world, List<DrawAndUpdateObject> drawAndUpdateObjectList, List<InputListener> gameObjectsListen, List<CollisionListener> gameObjectsCollision, Vec2 gravity) {
+    public Map(World world, List<DrawAndUpdateObject> drawAndUpdateObjectList, List<InputListener> gameObjectsListen, List<CollisionListener> gameObjectsCollision) {
         this.drawAndUpdateObjectList = drawAndUpdateObjectList;
         this.collisionListenerList = gameObjectsCollision;
         this.inputListenerList = gameObjectsListen;
-        this.gravity = gravity;
         this.world = world;
         drawANdUpdateObjectsStagedForRemoval = new ArrayList<>(2);
         inputListenersStagedForRemoval = new ArrayList<>(2);
@@ -145,13 +141,11 @@ public class Map
 
     public void addCollisionListener(CollisionListener object) { collisionListenersStagedForAddition.add(object);}
 
-    public List<DrawAndUpdateObject> getDrawAndUpdateObjectList() {return drawAndUpdateObjectList;}
+    public Iterable<DrawAndUpdateObject> getDrawAndUpdateObjectList() {return drawAndUpdateObjectList;}
 
-    public List<InputListener> getInputListenerList() {return inputListenerList;}
+    public Iterable<InputListener> getInputListenerList() {return inputListenerList;}
 
-    public List<CollisionListener> getCollisionListenerList() {return collisionListenerList;}
-
-    public Vec2 getGravity() {return gravity;}
+    public Iterable<CollisionListener> getCollisionListenerList() {return collisionListenerList;}
 
     public World getWorld() {return world;}
 }

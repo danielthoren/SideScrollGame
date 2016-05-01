@@ -1,8 +1,8 @@
 package gamelogic;
 
 /**
- * Created by daniel on 2016-03-31.
+ * Enum describing directions in the gameworld.
  */
 public enum Direction {
-    UP, DOWN, LEFT, RIGHT, NONE
+    @SuppressWarnings("unused")UP, DOWN, LEFT, RIGHT, NONE
 }

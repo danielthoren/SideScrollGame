@@ -9,6 +9,7 @@ import gamelogic.GameComponent;
 /**
  * Class handling a simple sprite. It contains draw-functions for the sprite image.
  */
+@SuppressWarnings("unused")
 public class Sprite implements DrawAndUpdateObject
 {
 

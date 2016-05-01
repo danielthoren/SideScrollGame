@@ -62,7 +62,6 @@ public class FirstAidBox extends DynamicSquare implements PowerUps
      * (thus we can safely cast the object contained inside the 'UserData' to 'Player'.
      */
     public void beginContact(Contact contact){
-        //noinspection ChainOfInstanceofChecks,ChainOfInstanceofChecks
         if (contact.getFixtureA().getBody().getUserData().equals(this) && contact.getFixtureB().getBody().getUserData() instanceof Player){
             ((Player) contact.getFixtureB().getBody().getUserData()).heal(heal);
             Map map = LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber());
@@ -84,9 +83,4 @@ public class FirstAidBox extends DynamicSquare implements PowerUps
      * @param contact Datacontainer containing information about the contact.
      */
     public void endContact(Contact contact){}
-
-    /**
-     * @return the healh held by the box
-     */
-    public int getHeal() {return heal;}
 }

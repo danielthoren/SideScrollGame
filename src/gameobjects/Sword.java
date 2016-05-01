@@ -5,9 +5,11 @@ import gamelogic.GameComponent;
 import gamelogic.LoadMap;
 import javafx.scene.image.Image;
 import org.jbox2d.common.Vec2;
+import org.jbox2d.dynamics.Fixture;
 import org.jbox2d.dynamics.World;
 import org.jbox2d.dynamics.contacts.Contact;
 
+@SuppressWarnings("unused")
 public class Sword extends InventoryItemParent implements CollisionListener
 {
 
@@ -60,19 +62,21 @@ public class Sword extends InventoryItemParent implements CollisionListener
      * @param contact A object containing the two bodies and fixtures that made contact. It also contains collisiondata
      */
     public void beginContact(Contact contact){
-        //noinspection ChainOfInstanceofChecks
-        if (contact.getFixtureA().getBody().getUserData().equals(solidObject) &&
-                contact.getFixtureB().getBody().getUserData() instanceof Player){
-            currentCollidingPlayer = (Player) contact.getFixtureB().getBody().getUserData();
-            if (player != null && !hasDamaged && !contact.getFixtureB().getBody().getUserData().equals(player)) {
-                currentCollidingPlayer.damage(damage);
-                hasDamaged = true;
-            }
-        }
-        else if (contact.getFixtureB().getBody().getUserData().equals(solidObject) &&
-                contact.getFixtureA().getBody().getUserData() instanceof Player){
-            currentCollidingPlayer = (Player) contact.getFixtureA().getBody().getUserData();
-            if (player != null && !hasDamaged && !contact.getFixtureA().getBody().getUserData().equals(player)) {
+        beginContactCheck(contact.getFixtureA(), contact.getFixtureB());
+        beginContactCheck(contact.getFixtureB(), contact.getFixtureA());
+    }
+
+    /**
+     * Helps the 'beginContact' function to check for certain collisions. for more detailed comments on what theese two functions
+     * do read the comments on said function.
+     * @param fixtureA One of the fixtures used in the check.
+     * @param fixtureB One of the fixtures used in the check.
+     */
+    private void beginContactCheck(Fixture fixtureA, Fixture fixtureB){
+        if (fixtureA.getBody().getUserData().equals(solidObject) &&
+                fixtureB.getBody().getUserData() instanceof Player){
+            currentCollidingPlayer = (Player) fixtureB.getBody().getUserData();
+            if (player != null && !hasDamaged && !fixtureB.getBody().getUserData().equals(player)) {
                 currentCollidingPlayer.damage(damage);
                 hasDamaged = true;
             }
@@ -94,12 +98,18 @@ public class Sword extends InventoryItemParent implements CollisionListener
      * @param contact A object containing the two bodies and fixtures that made contact. It also contains collisiondata
      */
     public void endContact(Contact contact){
-        //noinspection ChainOfInstanceofChecks
-        if (contact.getFixtureA().getBody().getUserData().equals(solidObject) && contact.getFixtureB().getBody().getUserData() instanceof Player){
-            hasDamaged = false;
-            currentCollidingPlayer = null;
-        }
-        else if (contact.getFixtureB().getBody().getUserData().equals(solidObject) && contact.getFixtureA().getBody().getUserData() instanceof Player){
+        endContactCheck(contact.getFixtureA(), contact.getFixtureB());
+        endContactCheck(contact.getFixtureB(), contact.getFixtureA());
+    }
+
+    /**
+     * Checks if this stops colliding with a player, then set the field 'HasDamaged' to 'false'.
+     * For more detailed comments se the function 'endContact' that this function is called from.
+     * @param fixtureA The first fixture to be used in check.
+     * @param fixtureB The second fixture to be used in check.
+     */
+    private void endContactCheck(Fixture fixtureA, Fixture fixtureB){
+        if (fixtureA.getBody().getUserData().equals(solidObject) && fixtureB.getBody().getUserData() instanceof Player){
             hasDamaged = false;
             currentCollidingPlayer = null;
         }

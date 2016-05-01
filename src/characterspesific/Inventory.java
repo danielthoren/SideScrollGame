@@ -8,6 +8,7 @@ import java.util.List;
 /**
  * The inventory of a player
  */
+@SuppressWarnings("unused")
 public class Inventory {
 
     private Player player;
@@ -46,7 +47,7 @@ public class Inventory {
      * Adds item and equipps it if the inventory is not full.
      * @param inventoryItem The item to be added to the inventory.
      */
-    public boolean addItem(InventoryItemParent inventoryItem){
+    public void addItem(InventoryItemParent inventoryItem){
         if (occupiedInventorySlots < maxInventorySize) {
             if (equippedItemIndex != -1) {
                 inventoryItemList.get(equippedItemIndex).unEquip();
@@ -54,9 +55,7 @@ public class Inventory {
             inventoryItemList.add(inventoryItem);
             inventoryItem.pickUp(player);
             equippedItemIndex = inventoryItemList.indexOf(inventoryItem);
-            return true;
         }
-        return false;
     }
 
     public void dropCurrentItem(){
@@ -66,8 +65,4 @@ public class Inventory {
             equippedItemIndex = -1;
         }
     }
-
-    public int getOccupiedInventorySlots() {return occupiedInventorySlots;}
-
-    public void setOccupiedInventorySlots(int occupiedInventorySlots) {this.occupiedInventorySlots = occupiedInventorySlots;}
 }

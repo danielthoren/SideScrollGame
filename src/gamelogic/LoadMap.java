@@ -37,6 +37,8 @@ public final class LoadMap {
     public static LoadMap getInstance(){
         return INSTANCE;
     }
+    //Todo Read value from file
+    private static final Vec2 GRAVITY = new Vec2(0, 20);
 
     /**
      * Function loading specified map. At the moment it only instantiates hardcoded objects.
@@ -46,7 +48,7 @@ public final class LoadMap {
      */
     public void loadMap(Integer mapNumber){
 
-        World world = new World(getMapGravity(mapNumber));
+        World world = new World(GRAVITY);
 
         if (!maps.containsKey(mapNumber)){
 
@@ -132,9 +134,9 @@ public final class LoadMap {
             gameObjectsCollision.add(player2);
 
             gameObjects.add(ScoreBoard.getOurInstance());
-            gameObjects.add(new GameLogic(LoadMap.getObjectID(), world));
+            gameObjects.add(new GameLogic(LoadMap.getObjectID()));
 
-            Map map = new Map(world, gameObjects, gameObjectsListen, gameObjectsCollision, getMapGravity(mapNumber));
+            Map map = new Map(world, gameObjects, gameObjectsListen, gameObjectsCollision);
             maps.put(mapNumber, map);
         }
     }
@@ -153,11 +155,6 @@ public final class LoadMap {
             image = new Image(Main.class.getResourceAsStream("/textures/squareTextures/ErrorSquare.png"), GameComponent.metersToPix(size.x), GameComponent.metersToPix(size.y), false, false);
         }
         return image;
-    }
-
-    public Vec2 getMapGravity(int mapNumber){
-        //Todo gravity constant needs to be moved to appropriate location
-        return new Vec2(0, 20f);
     }
 
     public float getPixPerMeter(){return PIX_PER_METER;}

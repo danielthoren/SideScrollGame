@@ -3,12 +3,7 @@ package gamelogic;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import org.jbox2d.common.Vec2;
-import org.jbox2d.dynamics.World;
-import characterspesific.JumpHandler;
 import characterspesific.PowerUps;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Class does all the logic in the game that depends on
@@ -25,9 +20,7 @@ public class GameLogic implements DrawAndUpdateObject
     private static final Vec2 COIN_SIZE = new Vec2(0.2f, 0.2f);
     private static final long TIME_BETWEEN_POWERUPS = 100;
 
-    private List<JumpHandler> jumpHandlers = new ArrayList<>();
-
-    public GameLogic(long objectId, World world) {
+    public GameLogic(long objectId) {
         this.id = objectId;
         timeSinceLastPowerUp = System.currentTimeMillis();
 

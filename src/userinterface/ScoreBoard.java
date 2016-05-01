@@ -6,7 +6,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 
 /**
  * This singelton draws the score of the players.
@@ -14,9 +14,10 @@ import java.util.List;
 public final class ScoreBoard implements DrawAndUpdateObject
 {
     private static ScoreBoard ourInstance = new ScoreBoard();
-    private static List<Player> players = new ArrayList<>(2);
+    private static Collection<Player> players = new ArrayList<>(2);
     private final static int OBJECT_ID = -1;
-    private static int yPosition = 50;
+    //Default values, can be changed with setters.
+    @SuppressWarnings("MagicNumber") private static int yPosition = 50;
     private static int xPosition = 100;
 
     public static ScoreBoard getOurInstance() {

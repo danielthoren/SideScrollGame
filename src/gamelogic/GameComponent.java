@@ -17,6 +17,7 @@ import org.jbox2d.dynamics.World;
  * wich is added to this class (in the same manner as this class is added to another subclass of 'Node' higher up in the SceneGraph).
  * The 'Canvas' instance is used to draw all of the game objects on.
  */
+@SuppressWarnings("unused")
 public class GameComponent extends Parent
 {
     private Canvas canvas;                                  //The canvas on wich to draw on
@@ -95,6 +96,7 @@ public class GameComponent extends Parent
         }
     }
 
+    //Todo Move 'drawImage' to a more appropriate location. (Consider moving all of the drawfunctions in 'SolidObject' to abstract class).
     public static void drawImage(GraphicsContext gc, Image image, Vec2 pos, float angle){
         //Saving the current xy-plane to the gc stack
         gc.save();

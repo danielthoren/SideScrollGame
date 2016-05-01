@@ -3,6 +3,7 @@ package characterspesific;
 import gameobjects.Player;
 import gamelogic.DrawAndUpdateObject;
 
+@SuppressWarnings("unused")
 public interface InventoryItem extends DrawAndUpdateObject
 {
     /**

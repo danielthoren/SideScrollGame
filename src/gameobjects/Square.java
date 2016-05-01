@@ -83,15 +83,6 @@ public class Square extends SolidObject implements DrawAndUpdateObject
     }
 
     /**
-     * Returns the world coordiate of the upper left corner of the body. The standard position is based on
-     * the body´s centerpoint.
-     * @return The world coordinates of the upper left corner of the body.
-     */
-    protected Vec2 getUpLeftCorner(){
-	return new Vec2(body.getPosition().x - (width.floatValue()/2), body.getPosition().y + (height.floatValue()/2));
-    }
-
-    /**
      * Regular rectangle object does not need updating, static position.
      */
     public void update(){

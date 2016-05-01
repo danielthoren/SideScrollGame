@@ -27,7 +27,6 @@ public class InventoryItemParent implements InventoryItem
     protected Vec2 relativePos;
     protected float relativeAngle;
     protected final Vec2 size;
-    protected boolean equipped;
 
     /**
      * Initializes a 'gameobjects.InventoryItemParent and puts it at the specified position in the specified world.
@@ -131,7 +130,6 @@ public class InventoryItemParent implements InventoryItem
         if (dynamicSquare == null){
             dynamicCircle.createBody(world);
         }
-        equipped = true;
     }
 
     /**
@@ -143,7 +141,6 @@ public class InventoryItemParent implements InventoryItem
     public void unEquip(){
         LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber()).removeBody(solidObject.body);
         solidObject.body = null;
-        equipped = false;
     }
 
     /**
