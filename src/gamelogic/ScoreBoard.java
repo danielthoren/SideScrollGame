@@ -17,7 +17,7 @@ public final class ScoreBoard implements DrawAndUpdateObject
     private static Collection<Player> players = new ArrayList<>(2);
     private final static int OBJECT_ID = -1;
     //Default values, can be changed with setters.
-    @SuppressWarnings("MagicNumber") private static int yPosition = 50;
+    private static int yPosition = 50;
     private static int xPosition = 100;
 
     public static ScoreBoard getOurInstance() {

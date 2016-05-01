@@ -20,7 +20,6 @@ import javafx.stage.Stage;
  * This is the main class of the game. It creates the window in wich the game and all menues is drawn. It also
  * instantiates the game and runs it.
  */
-@SuppressWarnings("unused")
 public class GameFrame extends Application
 {
     private String windowName;
@@ -38,8 +37,8 @@ public class GameFrame extends Application
     @Override
     public  void start(Stage primaryStage){
         //Initializing userinterface.GameFrame
-        GameLoop gameLoop = new GameLoop(this);
         gameComponent = new GameComponent(GAME_HEIGHT, GAME_WIDTH);
+        GameLoop gameLoop = new GameLoop(gameComponent);
 
         //Giving 'gameComponent' focus
         Platform.runLater(new Runnable()
@@ -93,22 +92,6 @@ public class GameFrame extends Application
         });
 
         return topContainer;
-    }
-
-    /**
-     * Updates the 'gamelogic.GameComponent'
-     * @param nanosScinseLast The time scinse the last update in nanoseconds.
-     */
-    public void update(float nanosScinseLast){
-        gameComponent.update(nanosScinseLast);
-    }
-
-    /**
-     * Draws the 'gamelogic.GameComponent'
-     */
-    public void draw(){
-        gameComponent.draw();
-
     }
 
     /**

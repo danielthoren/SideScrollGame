@@ -1,27 +1,29 @@
 package gamelogic;
 
+import gamelogic.GameComponent;
 import javafx.animation.AnimationTimer;
 import userinterface.GameFrame;
 
 /**
  * Responsible for updating and drawing the game at a constant rate. It also keeps track of the current fps.
+ *
+ * !OBS Is instantiated in 'GameFrame' and used to update the 'GameFrame'
  */
-@SuppressWarnings("unused")
 public class GameLoop extends AnimationTimer
 {
     private long lastFpsTime;
     private long lastLoopTime;
     private int fps;
     private int currFps;
-    private GameFrame gameFrame;
+    private GameComponent gameComponent;
     private static final long NANOS_PER_SECOND = 1000000000;
 
     /**
      * Initialices the 'Gameloop'
-     * @param gameFrame The 'userinterface.GameFrame to update
+     * @param gameComponent The gamecomponent of the game
      */
-    public GameLoop(GameFrame gameFrame) {
-	this.gameFrame = gameFrame;
+    public GameLoop(GameComponent gameComponent) {
+	this.gameComponent = gameComponent;
 	currFps = 0;
 	fps = 0;
 	lastFpsTime = 0;
@@ -58,9 +60,9 @@ public class GameLoop extends AnimationTimer
 	}
 
 	// update the gameFrame logic
-	gameFrame.update(updateLength);
+	gameComponent.update(updateLength);
 	// draw everyting
-	gameFrame.draw();
+	gameComponent.draw();
     }
 
     public int getCurrFps() {
