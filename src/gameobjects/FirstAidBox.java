@@ -24,10 +24,10 @@ public class FirstAidBox extends DynamicSquare implements PowerUps
      * @param pos   The position of the coin
      * @param friction  The friction of the coin
      * @param image     The iamge of the coin
-     * @param ID    The ID of the coin
+     * @param objectID    The objectID of the coin
      */
-    public FirstAidBox(long ID, World world, Vec2 pos, float friction, int heal, Image image) {
-        super(ID, world, pos, friction, image);
+    public FirstAidBox(long objectID, World world, Vec2 pos, float friction, int heal, Image image) {
+        super(objectID, world, pos, friction, image);
         this.heal = heal;
         body.setUserData(this);
         setRestitution(1f);
@@ -41,10 +41,10 @@ public class FirstAidBox extends DynamicSquare implements PowerUps
      * @param color The color of the box
      * @param width The width of the box
      * @param height    The height if the box
-     * @param ID    The id of the box
+     * @param objectID    The id of the box
      */
-    public FirstAidBox(long ID, World world, Vec2 pos, float friction, int heal, Color color, double width, double height) {
-        super(ID, world, pos, friction, color, width, height);
+    public FirstAidBox(long objectID, World world, Vec2 pos, float friction, int heal, Color color, double width, double height) {
+        super(objectID, world, pos, friction, color, width, height);
         this.heal = heal;
         body.setUserData(this);
         setRestitution(1f);
@@ -80,7 +80,11 @@ public class FirstAidBox extends DynamicSquare implements PowerUps
 
     /**
      * Not needed in this case.
+<<<<<<< HEAD
      * @param contact Datacontainer containing information about the contact.
+=======
+     * @param contact The contact.
+>>>>>>> Develop
      */
     public void endContact(Contact contact){}
 

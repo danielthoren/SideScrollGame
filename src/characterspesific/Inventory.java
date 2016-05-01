@@ -23,7 +23,7 @@ public class Inventory {
     public Inventory(Player player) {
         this.player = player;
 
-        inventoryItemList = new ArrayList<InventoryItemParent>(4);
+        inventoryItemList = new ArrayList<>(4);
         //The size of the current inventory
         occupiedInventorySlots = 0;
         //Default value

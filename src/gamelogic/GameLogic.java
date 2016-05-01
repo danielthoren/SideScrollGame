@@ -17,18 +17,18 @@ public class GameLogic implements DrawAndUpdateObject
 {
     private PowerUpFactory powerUpFactory;
     private long timeSinceLastPowerUp;
-    private final long iD;
+    private final long id;
 
     //Default values, can be changed with setters
     //Todo Move default size and time values to a more appropriate position
     private static final Vec2 HEAL_BOX_SIZE = new Vec2(0.4f, 0.4f);
     private static final Vec2 COIN_SIZE = new Vec2(0.2f, 0.2f);
-    private static final long timeBetweenPowerups = 100;
+    private static final long TIME_BETWEEN_POWERUPS = 100;
 
-    List<JumpHandler> jumpHandlers = new ArrayList<JumpHandler>();
+    private List<JumpHandler> jumpHandlers = new ArrayList<>();
 
-    public GameLogic(long iD, World world) {
-        this.iD = iD;
+    public GameLogic(long objectId, World world) {
+        this.id = objectId;
         timeSinceLastPowerUp = System.currentTimeMillis();
 
         Image boxTexture = LoadMap.getInstance().loadImage("/textures/squareTextures/FirstAid.jpg", HEAL_BOX_SIZE);
@@ -40,7 +40,7 @@ public class GameLogic implements DrawAndUpdateObject
 
     public void update(){
 
-        if (System.currentTimeMillis() - timeSinceLastPowerUp > timeBetweenPowerups) {
+        if (System.currentTimeMillis() - timeSinceLastPowerUp > TIME_BETWEEN_POWERUPS) {
             PowerUps powerUps = powerUpFactory.powerUp(LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber()).getWorld());
             LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber()).addDrawAndUpdateObject(powerUps);
             LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber()).addCollisionListener(powerUps);
@@ -55,7 +55,7 @@ public class GameLogic implements DrawAndUpdateObject
     public void draw(GraphicsContext gc){}
 
     public long getId(){
-        return iD;
+        return id;
     }
 }
 

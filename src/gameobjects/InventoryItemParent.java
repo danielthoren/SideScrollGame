@@ -31,22 +31,22 @@ public class InventoryItemParent implements InventoryItem
 
     /**
      * Initializes a 'gameobjects.InventoryItemParent and puts it at the specified position in the specified world.
-     * @param ID The id of the object.
+     * @param objectID The id of the object.
      * @param world The game world to add the object to.
      * @param position The startposition of the object.
      * @param friction The friction of the object.
      * @param image The image of the object.
      */
-    public InventoryItemParent(long ID, World world, Vec2 position, float friction, Image image, boolean isSquare) {
+    public InventoryItemParent(long objectID, World world, Vec2 position, float friction, Image image, boolean isSquare) {
         this.world = world;
         if (isSquare){
-            dynamicSquare = new DynamicSquare(ID, world, position, friction, image);
+            dynamicSquare = new DynamicSquare(objectID, world, position, friction, image);
             solidObject = dynamicSquare;
             drawAndUpdateObject = dynamicSquare;
             dynamicCircle = null;
         }
         else{
-            dynamicCircle = new DynamicCircle(ID, world, position, friction, image);
+            dynamicCircle = new DynamicCircle(objectID, world, position, friction, image);
             solidObject = dynamicCircle;
             drawAndUpdateObject = dynamicCircle;
             dynamicSquare = null;
@@ -55,7 +55,7 @@ public class InventoryItemParent implements InventoryItem
         currentCollidingPlayer = null;
         relativePos = null;
         player = null;
-        //Setting the density of the object to 1. This is the default value of an equipped item and can be changed by setter in superclass.
+        //Setting the DENSITY of the object to 1. This is the default value of an equipped item and can be changed by setter in superclass.
         solidObject.setDensity(1f);
         size = new Vec2(GameComponent.pixToMeters((float) image.getWidth()), GameComponent.pixToMeters((float) image.getHeight()));
     }

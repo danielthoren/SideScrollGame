@@ -21,18 +21,18 @@ public class SolidObject {
     protected Image image;    //The image representing the square in the visual realm (=none if no image)
     protected Color color;    //The color of the square (=none if no color)
     protected float friction; //The friction of the square´s body
-    protected final long ID;   //The id of the solidobject
+    protected final long objectID;   //The id of the solidobject
 
     //Default values that can be changed by setters
-    protected static final float restitution = 0.01f;
-    protected static final float density = 10f;
+    protected static final float RESTITUTION = 0.01f;
+    protected static final float DENSITY = 10f;
 
     /**
      * The default constructor of the class. Should never be used!
      */
     protected SolidObject(){
         this.pos = null;
-        this.ID = -1;
+        this.objectID = -1;
         this.body = null;
         this.image = null;
         this.color = null;
@@ -44,10 +44,10 @@ public class SolidObject {
      * @param pos The position at wich to place the Object (units in meters)
      * @param friction The friction of the body
      */
-    public SolidObject(long ID, Vec2 pos, float friction) {
+    public SolidObject(long objectID, Vec2 pos, float friction) {
         this.friction = friction;
         this.pos = pos;
-        this.ID = ID;
+        this.objectID = objectID;
         color = null;
         image = null;
     }
@@ -58,9 +58,9 @@ public class SolidObject {
      * @param friction The friction of the body
      * @param image The image to display over the body (visible part of the object).
      */
-    public SolidObject(long ID, Vec2 pos, float friction, Image image) {
+    public SolidObject(long objectID, Vec2 pos, float friction, Image image) {
         this.image = image;
-        this.ID = ID;
+        this.objectID = objectID;
         this.friction = friction;
         this.pos = pos;
         color = null;
@@ -72,10 +72,10 @@ public class SolidObject {
      * @param friction The fiction of the body
      * @param color The color of the object
      */
-    public SolidObject(long ID, Vec2 pos, float friction, Color color){
+    public SolidObject(long objectID, Vec2 pos, float friction, Color color){
         this.friction = friction;
         this.pos = pos;
-        this.ID = ID;
+        this.objectID = objectID;
         this.color = color;
         this.image = null;
     }
@@ -185,8 +185,8 @@ public class SolidObject {
     }
 
     /**
-     * Changes the density of all of the 'Fixtures' of a solidObject to specified value.
-     * @param density The density to set the 'Fixtures' to.
+     * Changes the DENSITY of all of the 'Fixtures' of a solidObject to specified value.
+     * @param density The DENSITY to set the 'Fixtures' to.
      */
     public void setDensity(float density) {
         for (Fixture fixture = body.getFixtureList(); fixture != null; fixture = fixture.getNext()){
@@ -195,7 +195,7 @@ public class SolidObject {
     }
 
     /**
-     * Sets the restitution of all of the 'Fixtures' of a solidObject thus changing the restitution of the entire body.
+     * Sets the RESTITUTION of all of the 'Fixtures' of a solidObject thus changing the RESTITUTION of the entire body.
      * @param restitution The new restitutionvalue.
      */
     public void setRestitution(float restitution){
@@ -214,13 +214,13 @@ public class SolidObject {
      */
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof GameObject && ((GameObject) obj).getId() == ID){return true;}
+        if (obj instanceof GameObject && ((GameObject) obj).getId() == objectID){return true;}
         else {return false;}
     }
 
 
     public long getId(){
-        return ID;
+        return objectID;
     }
 
     public Body getBody() {return body;}

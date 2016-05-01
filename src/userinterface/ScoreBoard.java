@@ -6,7 +6,6 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -18,7 +17,7 @@ public final class ScoreBoard implements DrawAndUpdateObject
     private static List<Player> players = new ArrayList<>(2);
     private final static int OBJECT_ID = -1;
 
-    public static ScoreBoard getInstance() {
+    public static ScoreBoard getOurInstance() {
         return ourInstance;
     }
 
@@ -31,14 +30,14 @@ public final class ScoreBoard implements DrawAndUpdateObject
      * @param gc The GraphicsContext with wich to draw
      */
     public void draw(GraphicsContext gc){
-        int x = 100;
-        int y = 50;
+        int x = 100;    //This is the x-coordinate of the text drawn on the screen.
+        int y = 50; // This is the y-coordinate of the text drawn on the screen.
         int whichPlayer = 1;
         gc.setFill(Color.WHEAT);
         for (Player player : players){
             gc.fillText("gameobjects.Player" + whichPlayer+ " score: " + Integer.toString(player.getScore()), x,y);
             whichPlayer ++;
-            y *= 2;
+            y *= 2; //Increases the y-coordinate for each player so the text is drawn in a nice line.
         }
     }
 

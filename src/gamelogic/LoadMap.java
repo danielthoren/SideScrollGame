@@ -20,6 +20,7 @@ import java.util.*;
  * The singelton that loads and holds the map. This is a singelton since there is no need for more than one maploader.
  * All maps and objects can be loaded from this one class.
  */
+@SuppressWarnings("ALL")
 public final class LoadMap {
 
 
@@ -39,6 +40,7 @@ public final class LoadMap {
 
     /**
      * Function loading specified map. At the moment it only instantiates hardcoded objects.
+     * It was planed to keep this code in a file that would be loaded and thats why it holds so many magic numbers.
      * Todo make loadmap use serializable to load objects. Make saveMap function that saves a map using serializable.
      * @param mapNumber The number of the map to be loaded
      */
@@ -67,7 +69,7 @@ public final class LoadMap {
 
 
             Image swordIm = loadImage("/textures/Textures/Sword.png", new Vec2(0.2f, 0.4f));
-            Sword sword = new Sword(getObjectID(), world, new Vec2(5f, 0f), 0.4f, swordIm, true, 50);
+            Sword sword = new Sword(getObjectID(), world, new Vec2(5f, 0f), 0.4f, swordIm, true, 15);
             gameObjects.add(sword);
             gameObjectsCollision.add(sword);
 
@@ -104,10 +106,10 @@ public final class LoadMap {
             gameObjects.add(sprite2);
             gameObjects.add(sprite);
 
-            //gameobjects.Player player = new gameobjects.Player(objectID++, world, position, friction, density, acceleration, deceleration, size, Color.BLUE);
+            //gameobjects.Player player = new gameobjects.Player(objectID++, world, position, friction, DENSITY, acceleration, deceleration, size, Color.BLUE);
             Player player = new Player(getObjectID(), world, position, friction, density, acceleration, deceleration, sprite);
 
-            ScoreBoard.getInstance().addPlayers(player);
+            ScoreBoard.getOurInstance().addPlayers(player);
             player.setSpriteIdleFrame(8,1);
             player.setJumpCode(KeyCode.W);
             player.setRunLeftCode(KeyCode.A);
@@ -117,10 +119,10 @@ public final class LoadMap {
             gameObjectsCollision.add(player);
 
 
-            //gameobjects.Player player2 = new gameobjects.Player(objectID++, world, position, friction, density, acceleration, deceleration, size, Color.BLANCHEDALMOND);
+            //gameobjects.Player player2 = new gameobjects.Player(objectID++, world, position, friction, DENSITY, acceleration, deceleration, size, Color.BLANCHEDALMOND);
             Player player2 = new Player(getObjectID(), world, position, friction, density, acceleration, deceleration, sprite2);
 
-            ScoreBoard.getInstance().addPlayers(player2);
+            ScoreBoard.getOurInstance().addPlayers(player2);
             player2.setSpriteIdleFrame(8,1);
             player2.setJumpCode(KeyCode.UP);
             player2.setRunRightCode(KeyCode.RIGHT);
@@ -129,7 +131,7 @@ public final class LoadMap {
             gameObjects.add(player2);
             gameObjectsCollision.add(player2);
 
-            gameObjects.add(ScoreBoard.getInstance());
+            gameObjects.add(ScoreBoard.getOurInstance());
             gameObjects.add(new GameLogic(LoadMap.getObjectID(), world));
 
             Map map = new Map(world, gameObjects, gameObjectsListen, gameObjectsCollision, getMapGravity(mapNumber));

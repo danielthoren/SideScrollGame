@@ -14,10 +14,10 @@ public class Sword extends InventoryItemParent implements CollisionListener
     protected int damage;
     protected boolean hasDamaged;
 
-    public Sword(final long ID, final World world, final Vec2 position, final float friction, final Image image,
+    public Sword(final long objectID, final World world, final Vec2 position, final float friction, final Image image,
 		 final boolean isSquare, int damage)
     {
-	super(ID, world, position, friction, image, isSquare);
+	super(objectID, world, position, friction, image, isSquare);
 	this.damage = damage;
 	hasDamaged = false;
     }
@@ -63,16 +63,16 @@ public class Sword extends InventoryItemParent implements CollisionListener
         if (contact.getFixtureA().getBody().getUserData().equals(solidObject) &&
                 contact.getFixtureB().getBody().getUserData() instanceof Player){
             currentCollidingPlayer = (Player) contact.getFixtureB().getBody().getUserData();
-            if (player != null && !hasDamaged && !(contact.getFixtureB().getBody().getUserData()).equals(player)) {
-                currentCollidingPlayer.damage(15);
+            if (player != null && !hasDamaged && !((Player) contact.getFixtureB().getBody().getUserData()).equals(player)) {
+                currentCollidingPlayer.damage(damage);
                 hasDamaged = true;
             }
         }
         else if (contact.getFixtureB().getBody().getUserData().equals(solidObject) &&
                 contact.getFixtureA().getBody().getUserData() instanceof Player){
             currentCollidingPlayer = (Player) contact.getFixtureA().getBody().getUserData();
-            if (player != null && !hasDamaged && !(contact.getFixtureA().getBody().getUserData()).equals(player)) {
-                currentCollidingPlayer.damage(15);
+            if (player != null && !hasDamaged && !((Player) contact.getFixtureA().getBody().getUserData()).equals(player)) {
+                currentCollidingPlayer.damage(damage);
                 hasDamaged = true;
             }
         }
@@ -88,6 +88,7 @@ public class Sword extends InventoryItemParent implements CollisionListener
      * this parameter can be used to check wich type of gameobject is collided with and then run methods on said object to get
      * an effect. For example heal the player if we are sure that the object collided with is of the 'Player' class
      * (thus we can safely cast the object contained inside the 'UserData' to 'Player'.
+     * Also the branches are not identical because they evaluate different fixtures.
      *
      * @param contact A object containing the two bodies and fixtures that made contact. It also contains collisiondata
      */

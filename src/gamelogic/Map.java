@@ -47,13 +47,13 @@ public class Map
         this.inputListenerList = gameObjectsListen;
         this.gravity = gravity;
         this.world = world;
-        drawANdUpdateObjectsStagedForRemoval = new ArrayList<DrawAndUpdateObject>(2);
-        inputListenersStagedForRemoval = new ArrayList<InputListener>(2);
-        collisionListenersStagedForRemoval = new ArrayList<CollisionListener>(2);
-        bodiesStagedForRemoval = new ArrayList<Body>(2);
-        drawAndUpdateObjectsStagedForAddition = new ArrayList<DrawAndUpdateObject>(2);
-        inputListenersStagedForAddition = new ArrayList<InputListener>(2);
-        collisionListenersStagedForAddition = new ArrayList<CollisionListener>(2);
+        drawANdUpdateObjectsStagedForRemoval = new ArrayList<>(2);
+        inputListenersStagedForRemoval = new ArrayList<>(2);
+        collisionListenersStagedForRemoval = new ArrayList<>(2);
+        bodiesStagedForRemoval = new ArrayList<>(2);
+        drawAndUpdateObjectsStagedForAddition = new ArrayList<>(2);
+        inputListenersStagedForAddition = new ArrayList<>(2);
+        collisionListenersStagedForAddition = new ArrayList<>(2);
     }
 
     /**

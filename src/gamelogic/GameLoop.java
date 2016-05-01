@@ -62,7 +62,7 @@ public class GameLoop extends AnimationTimer
 	gameFrame.draw();
     }
 
-    public int getFps() {
+    public int getCurrFps() {
 	return currFps;
     }
 }

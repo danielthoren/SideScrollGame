@@ -14,7 +14,7 @@ public interface CollisionListener extends GameObject
      * @param contact A object containing the two bodies and fixtures that made contact. It also contains collisiondata
      *                such as point of contact and so on.
      */
-    public void beginContact(Contact contact);
+    void beginContact(Contact contact);
 
     /**
      * Handles event that needs to happen when contact between objects ends. Do note that this function
@@ -23,5 +23,5 @@ public interface CollisionListener extends GameObject
      * @param contact A object containing the two bodies and fixtures that made contact. It also contains collisiondata
      *                such as point of contact and so on.
      */
-    public void endContact(Contact contact);
+    void endContact(Contact contact);
 }

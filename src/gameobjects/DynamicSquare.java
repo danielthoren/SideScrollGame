@@ -18,8 +18,8 @@ public class DynamicSquare extends Square {
      * @param friction The friction of the body
      * @param image The image representing the body in the visual realm
      */
-    public DynamicSquare(long ID, World world, Vec2 pos, float friction, Image image) {
-        super(ID, world, pos, friction, image);
+    public DynamicSquare(long objectID, World world, Vec2 pos, float friction, Image image) {
+        super(objectID, world, pos, friction, image);
         body.setUserData(this);
         makeDynamic();
     }
@@ -33,19 +33,19 @@ public class DynamicSquare extends Square {
      * @param width The width of the body in meters
      * @param height The height of the body in meters
      */
-    public DynamicSquare(long ID, World world, Vec2 pos, float friction, Color color, double width, double height) {
-        super(ID, world, pos, friction, color, width, height);
+    public DynamicSquare(long objectID, World world, Vec2 pos, float friction, Color color, double width, double height) {
+        super(objectID, world, pos, friction, color, width, height);
         body.setUserData(this);
         makeDynamic();
     }
 
     /**
-     * Makes the body the 'super' classes constructor created dynamic and adds the restitution and density to the body.
+     * Makes the body the 'super' classes constructor created dynamic and adds the RESTITUTION and DENSITY to the body.
      */
     private void makeDynamic(){
         this.body.setType(BodyType.DYNAMIC);
-        this.body.getFixtureList().setRestitution(restitution);
-        this.body.getFixtureList().setDensity(density);
+        this.body.getFixtureList().setRestitution(RESTITUTION);
+        this.body.getFixtureList().setDensity(DENSITY);
         this.body.setFixedRotation(false);
     }
 }

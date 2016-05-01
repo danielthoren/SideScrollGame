@@ -6,7 +6,7 @@ import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.World;
 
-import static java.lang.Math.abs;
+
 
 /**
  * This class creates a movingplatform.
@@ -27,8 +27,8 @@ public class MovingPlatform extends Square{
      * @param image   The image texture on the platform
      * @param endPos  The end posistion
      */
-    public MovingPlatform(long ID, World world, Vec2 pos, float friction, Image image, Vec2 endPos) {
-        super(ID, world, pos, friction, image);
+    public MovingPlatform(long objectID, World world, Vec2 pos, float friction, Image image, Vec2 endPos) {
+        super(objectID, world, pos, friction, image);
         startPos = pos;
         this.endPos = endPos;
         platformSpeed = 1;
@@ -46,8 +46,8 @@ public class MovingPlatform extends Square{
      * @param height The height of the platform
      * @param endPos The posistion where the platform should return
      */
-    public MovingPlatform(int ID, World world, Vec2 pos, float friction, Color color, double width, double height, Vec2 endPos) {
-        super(ID, world, pos, friction, color, width, height);
+    public MovingPlatform(int objectID, World world, Vec2 pos, float friction, Color color, double width, double height, Vec2 endPos) {
+        super(objectID, world, pos, friction, color, width, height);
         startPos = pos;
         this.endPos = endPos;
         platformSpeed = 1;   //The platform speed is set to 1m/s

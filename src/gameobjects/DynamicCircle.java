@@ -18,8 +18,8 @@ public class DynamicCircle extends Circle {
      * @param friction The friction of the body
      * @param image The image representing the body in the visual realm
      */
-    public DynamicCircle(long ID, World world, Vec2 pos, float friction, Image image) {
-        super(ID, world, pos, friction, image);
+    public DynamicCircle(long objectID, World world, Vec2 pos, float friction, Image image) {
+        super(objectID, world, pos, friction, image);
         body.setUserData(this);
         makeDynamic();
     }
@@ -31,14 +31,14 @@ public class DynamicCircle extends Circle {
      * @param friction The friction of its body
      * @param color The color representing the body in the visual realm
      */
-    public DynamicCircle(long ID, World world, Vec2 pos, float friction, Color color, double radious) {
-        super(ID, world, pos, friction, color, radious);
+    public DynamicCircle(long objectID, World world, Vec2 pos, float friction, Color color, double radious) {
+        super(objectID, world, pos, friction, color, radious);
         body.setUserData(this);
         makeDynamic();
     }
 
     /**
-     * Makes the body the 'super' classes constructor created dynamic and adds the restitution and density to the body.
+     * Makes the body the 'super' classes constructor created dynamic and adds the RESTITUTION and DENSITY to the body.
      */
     private void makeDynamic(){
         this.body.setType(BodyType.DYNAMIC);
