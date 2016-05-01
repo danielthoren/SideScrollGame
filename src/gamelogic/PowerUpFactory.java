@@ -19,12 +19,12 @@ import java.util.Random;
  */
 public class PowerUpFactory {
     private List<JumpHandler> jumpHandlers;
-    private Image firstAidTexture;
-    private Image coinTexture;
-    private Color color;
+    private Image firstAidTexture = null;
+    private Image coinTexture = null;
+    private Color color = null;
     private Random random;
     private float coinRadious;
-    private Vec2 boxSize;
+    private Vec2 boxSize = null;
 
     //Todo move constant to appropriate position
     private final static int HEALTH_BOUND = 30;

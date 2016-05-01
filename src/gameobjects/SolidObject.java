@@ -17,7 +17,7 @@ import gamelogic.GameObject;
  */
 public class SolidObject {
     protected Vec2 pos;     //The position of the upper left corner of the square in meters
-    protected Body body;    //The body of the square
+    protected Body body = null;    //The body of the square
     protected Image image;    //The image representing the square in the visual realm (=none if no image)
     protected Color color;    //The color of the square (=none if no color)
     protected float friction; //The friction of the square´s body

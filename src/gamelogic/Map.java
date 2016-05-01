@@ -145,9 +145,9 @@ public class Map
 
     public void addCollisionListener(CollisionListener object) { collisionListenersStagedForAddition.add(object);}
 
-    public List<DrawAndUpdateObject> getDrawAndUpdateObjectList() {return drawAndUpdateObjectList;}
+    public Iterable<DrawAndUpdateObject> getDrawAndUpdateObjectList() {return drawAndUpdateObjectList;}
 
-    public List<InputListener> getInputListenerList() {return inputListenerList;}
+    public Iterable<InputListener> getInputListenerList() {return inputListenerList;}
 
     public List<CollisionListener> getCollisionListenerList() {return collisionListenerList;}
 

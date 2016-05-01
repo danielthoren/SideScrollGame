@@ -8,12 +8,25 @@ import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.World;
 import org.jbox2d.dynamics.contacts.Contact;
 
+/**
+ * This class creates a sword which contains damage given to the player struck by the sword.
+ */
 public class Sword extends InventoryItemParent implements CollisionListener
 {
 
-    protected int damage;
+    protected int damage; //The damage of the sword
     protected boolean hasDamaged;
 
+    /**
+     * Creates a sword.
+     * @param objectID The id of the sword
+     * @param world The world where the sword is created
+     * @param position  The position of the sword
+     * @param friction  The friction of the sword
+     * @param image The image of the sword
+     * @param isSquare  Boolean value.
+     * @param damage    The damage of the sword.
+     */
     public Sword(final long objectID, final World world, final Vec2 position, final float friction, final Image image,
 		 final boolean isSquare, int damage)
     {
@@ -22,21 +35,32 @@ public class Sword extends InventoryItemParent implements CollisionListener
 	hasDamaged = false;
     }
 
-
+    /**
+     * This method is not done yet. It will be a attack method.
+     */
     private void attack(){
         System.out.println("attack");
     }
 
+    /**
+     * This method is not done yet, it will be a defend method.
+     */
     private void defend(){
         System.out.println("defend");
     }
 
+    /**
+     * Picks up the sword.
+     */
     @Override
     public void equip() {
 	super.equip();
 	LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber()).addCollisionListener(this);
     }
 
+    /**
+     * Drops the sword.
+     */
     @Override
     public void unEquip() {
 	super.unEquip();
@@ -93,11 +117,10 @@ public class Sword extends InventoryItemParent implements CollisionListener
      * @param contact A object containing the two bodies and fixtures that made contact. It also contains collisiondata
      */
     public void endContact(Contact contact){
-        if (contact.getFixtureA().getBody().getUserData().equals(solidObject) && contact.getFixtureB().getBody().getUserData() instanceof Player){
-            hasDamaged = false;
-            currentCollidingPlayer = null;
-        }
-        else if (contact.getFixtureB().getBody().getUserData().equals(solidObject) && contact.getFixtureA().getBody().getUserData() instanceof Player){
+        if (contact.getFixtureA().getBody().getUserData().equals(solidObject) &&
+            contact.getFixtureB().getBody().getUserData() instanceof Player ||
+            contact.getFixtureB().getBody().getUserData().equals(solidObject) &&
+            contact.getFixtureA().getBody().getUserData() instanceof Player){
             hasDamaged = false;
             currentCollidingPlayer = null;
         }

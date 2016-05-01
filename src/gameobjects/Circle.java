@@ -14,6 +14,10 @@ import org.jbox2d.dynamics.World;
 import gamelogic.DrawAndUpdateObject;
 import gamelogic.GameComponent;
 
+/**
+ * This class creates a circle shape. It extends solid object. Every object that will be
+ * in the shape of a circle will implement this class.
+ */
 public class Circle extends SolidObject implements DrawAndUpdateObject
 {
     private Double radious;  //The radious of the circle
