@@ -12,7 +12,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.World;
-import userinterface.*;
 import sun.applet.Main;
 
 import java.util.*;
