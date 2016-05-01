@@ -195,16 +195,6 @@ public class SolidObject {
     }
 
     /**
-     * Sets the RESTITUTION of all of the 'Fixtures' of a solidObject thus changing the RESTITUTION of the entire body.
-     * @param restitution The new restitutionvalue.
-     */
-    public void setRestitution(float restitution){
-        for (Fixture fixture = body.getFixtureList(); fixture != null; fixture = fixture.getNext()){
-            fixture.setRestitution(restitution);
-        }
-    }
-
-    /**
      * equals function looking at the objects id to check if this is the exact same object as the one compared with. This is
      * used in collisionchecks and in the 'gamelogic.Map' where objects are staged for removal/addition to check so that objects are exactly
      * the same. It is also used in the 'ContactListenerGame' to only run the callback on the objects actually colliding thus saving

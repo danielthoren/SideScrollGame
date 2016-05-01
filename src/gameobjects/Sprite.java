@@ -127,13 +127,9 @@ public class Sprite implements DrawAndUpdateObject
 
     public void setFlip(boolean flip) {this.flip = flip;}
 
-    public Vec2 getSpriteWindowSize() {return spriteWindowSize;}
-
     public long getId() {return id;}
 
     public void setPosition(Vec2 position) {this.position = position;}
-
-    public Image getImage() {return image;}
 
     public Vec2 getActualSizeOfSprite() {return actualSizeOfSprite;}
 

@@ -33,7 +33,7 @@ public class MovingPlatform extends Square{
         this.endPos = endPos;
         platformSpeed = 1;
         calculateVelocity();
-        makeBodyType(world);
+        makeBodyType();
     }
 
     /**
@@ -52,14 +52,14 @@ public class MovingPlatform extends Square{
         this.endPos = endPos;
         platformSpeed = 1;   //The platform speed is set to 1m/s
         calculateVelocity();
-        makeBodyType(world);
+        makeBodyType();
     }
 
     /**
      * Makes the body kinematic.
      * @param world The game world
      */
-    private void makeBodyType(World world){
+    private void makeBodyType(){
         body.setType(BodyType.KINEMATIC);
     }
 

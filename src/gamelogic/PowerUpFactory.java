@@ -27,18 +27,7 @@ public class PowerUpFactory {
     private Vec2 boxSize = null;
     private float friction;
 
-    //Todo move constant to appropriate position
     private final static int HEALTH_BOUND = 30;
-
-    public PowerUpFactory(float friction, float coinRadious, Vec2 boxSize, Color color) {
-        this.color = color;
-        this.friction = friction;
-        this.coinRadious = coinRadious;
-        this.boxSize = boxSize;
-        jumpHandlers = new ArrayList<>();
-        jumpHandlers.add(new WallJumpHandler());
-        random = new Random();
-    }
 
     public PowerUpFactory(float friction, Image firstAidBoxTexture, Image powerUpCoinTexture) {
         this.firstAidTexture = firstAidBoxTexture;

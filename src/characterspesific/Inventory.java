@@ -12,7 +12,7 @@ import java.util.List;
 public class Inventory {
 
     private Player player;
-    private List<InventoryItemParent> inventoryItemList;
+    private List<InventoryItem> inventoryItemList;
     private int equippedItemIndex;
     private int occupiedInventorySlots;
     private int maxInventorySize;
@@ -47,7 +47,7 @@ public class Inventory {
      * Adds item and equipps it if the inventory is not full.
      * @param inventoryItem The item to be added to the inventory.
      */
-    public void addItem(InventoryItemParent inventoryItem){
+    public void addItem(InventoryItem inventoryItem){
         if (occupiedInventorySlots < maxInventorySize) {
             if (equippedItemIndex != -1) {
                 inventoryItemList.get(equippedItemIndex).unEquip();

@@ -1,8 +1,6 @@
 package gamelogic;
 
-import gamelogic.GameComponent;
 import javafx.animation.AnimationTimer;
-import userinterface.GameFrame;
 
 /**
  * Responsible for updating and drawing the game at a constant rate. It also keeps track of the current fps.

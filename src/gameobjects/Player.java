@@ -394,14 +394,14 @@ public class Player extends SolidObject implements DrawAndUpdateObject, Collisio
             visibleHealth -= 1;
             if (visibleHealth == 0){
                 System.out.println("Dead");
-                respawn(gc);
+                respawn();
             }
         }
         else if(actualHealth != visibleHealth){
             visibleHealth = actualHealth;
             if (visibleHealth == 0){
                 System.out.println("Dead");
-                respawn(gc);
+                respawn();
             }
         }
     }
@@ -410,7 +410,7 @@ public class Player extends SolidObject implements DrawAndUpdateObject, Collisio
      * This method respawns the player after death.
      * @param gc The graphicscontext on which to draw on.
      */
-    private void respawn(GraphicsContext gc){
+    private void respawn(){
         Map map = LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber());
         map.removeBody(body);
         map.removeDrawAndUpdateObject(this);
@@ -550,8 +550,6 @@ public class Player extends SolidObject implements DrawAndUpdateObject, Collisio
 
     public void setRestitution(float restitution) {this.restitution = restitution;}
 
-    public void setMaxVelocity(Vec2 maxVelocity){this.maxVelocity = maxVelocity;}
-
     public void addScore(int score){this.score += score;}
 
     public boolean getGrounded() {return grounded;}
@@ -569,10 +567,6 @@ public class Player extends SolidObject implements DrawAndUpdateObject, Collisio
     public Vec2 getPosition() {return body.getPosition();}
 
     public int getScore() {return score;}
-
-    public int getActualHealth() {return actualHealth;}
-
-    public int getVisibleHealth() {return visibleHealth;}
 
     public void setCurrentJumpHandler(JumpHandler currentJumpHandler) {this.currentJumpHandler = currentJumpHandler;}
 

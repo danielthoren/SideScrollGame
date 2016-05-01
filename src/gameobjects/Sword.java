@@ -37,20 +37,6 @@ public class Sword extends InventoryItemParent implements CollisionListener
     }
 
     /**
-     * This method is not done yet. It will be a attack method.
-     */
-    private void attack(){
-        System.out.println("attack");
-    }
-
-    /**
-     * This method is not done yet, it will be a defend method.
-     */
-    private void defend(){
-        System.out.println("defend");
-    }
-
-    /**
      * Picks up the sword.
      */
     @Override

@@ -5,6 +5,9 @@ import gamelogic.DrawAndUpdateObject;
 
 /**
  * Interface of every item that can be picked up.
+ *
+ * !OBS: For the moment theese functions are only used in one class but the ability to add more is crusial. The interface is used in
+ * the 'Inventory' class.
  */
 public interface InventoryItem extends DrawAndUpdateObject
 {
