@@ -1,6 +1,5 @@
-package userinterface;
+package gamelogic;
 
-import gamelogic.DrawAndUpdateObject;
 import gameobjects.Player;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
