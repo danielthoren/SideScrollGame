@@ -1,6 +1,4 @@
-package gameobjects; /**
- * Created by daniel on 2016-03-12.
- */
+package gameobjects;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
