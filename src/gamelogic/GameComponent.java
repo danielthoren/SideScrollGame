@@ -10,22 +10,22 @@ import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.World;
 
 /**
- * This is the class that handles all the logic in the game. It is also a child of the class 'Parent' wich extends
+ * This is the class that handles all the logic in the game. It is also a child of the class 'Parent' which extends
  * 'Node'. Thus making this class a child of 'Node'. This enables the class to be added to another 'Node' or subclass
- * thereof higher up in the hiearchy (usually called the SceneGraph in javaFx). It also instansiates the 'Canvas' class
- * wich is added to this class (in the same manner as this class is added to another subclass of 'Node' higher up in the SceneGraph).
+ * thereof higher up in the hierarchy (usually called the SceneGraph in javaFx). It also instantiates the 'Canvas' class
+ * which is added to this class (in the same manner as this class is added to another subclass of 'Node' higher up in the SceneGraph).
  * The 'Canvas' instance is used to draw all of the game objects on.
  */
 public class GameComponent extends Parent
 {
-    private Canvas canvas;                                  //The canvas on wich to draw on
+    private Canvas canvas;                                  //The canvas on which to draw on
     private World world;
     private int velocityIterations, positionIterations;     //Values deciding the accuracy of velocity and position
     private Map currentMap;
     private static int currentMapNumber = 1;
     private static final long NANOS_PER_SECOND = 1000000000;
     /**
-     * Instanciates a game.
+     * Instantiates a game.
      * @param height The height of the window in pixels
      * @param width The width of the window in pixels
      */
@@ -45,7 +45,7 @@ public class GameComponent extends Parent
         getChildren().add(canvas);
         this.requestFocus();
 
-        //Setting the keyevents to listen to
+        //Setting the key events to listen to
         this.setOnKeyPressed(new EventHandler<KeyEvent>()
         {
             @Override public void handle(final KeyEvent event) {
@@ -65,11 +65,11 @@ public class GameComponent extends Parent
     }
 
     /**
-     * Updates all of the game objects. Since 'jBox2d' is not threadsafe the method is syncronized with the
-     * @param nanosecScienceLast The time scinse the last update in nanoseconds
+     * Updates all of the game objects. Since 'jBox2d' is not threadsafe the method is synchronized with the
+     * @param nanosecScienceLast The time since the last update in nanoseconds
      */
     public void update(float nanosecScienceLast){
-        currentMap.removeStagedOBjects();
+        currentMap.removeStagedObjects();
         currentMap.addStagedObjects();
         try {
             world.step(nanosecScienceLast / NANOS_PER_SECOND, velocityIterations, positionIterations);
@@ -113,7 +113,7 @@ public class GameComponent extends Parent
 
     /**
      * Converts the input meters (world coordinates) to pixels (java Fx coordinates) using the scale factor loaded in
-     * the 'MapLoader' singgelton.
+     * the 'MapLoader' singelton.
      * @param meters The amount of meters to be converted
      * @return The amount of pixels the meters corresponds to
      */
@@ -124,7 +124,7 @@ public class GameComponent extends Parent
 
     /**
      * Converts the input pixels (java Fx coordinates) to meters (world coordinates) using the scale factor loaded in
-     * the 'MapLoader' singgelton.
+     * the 'MapLoader' singelton.
      * @param pix The amount of pixels to be converted
      * @return The amount of meters the pixels corresponds to
      */

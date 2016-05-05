@@ -19,8 +19,8 @@ public class GameLoop extends AnimationTimer
     private static final long NANOS_PER_SECOND = 1000000000;
 
     /**
-     * Initialices the 'Gameloop'
-     * @param gameComponent The gamecomponent of the game
+     * Initialises the 'Gameloop'
+     * @param gameComponent The gameComponent of the game
      */
     public GameLoop(GameComponent gameComponent) {
 	this.gameComponent = gameComponent;
@@ -37,7 +37,7 @@ public class GameLoop extends AnimationTimer
     @Override
     public void handle(long now)
     {
-	//Calclate the time the previous rendering has taken
+	//Calculate the time the previous rendering has taken
 	/*
 	long updateLength = System.nanoTime() - lastLoopTime;
 	lastLoopTime = System.nanoTime();
@@ -61,7 +61,7 @@ public class GameLoop extends AnimationTimer
 
 	// update the gameFrame logic
 	gameComponent.update(updateLength);
-	// draw everyting
+	// draw everything
 	gameComponent.draw();
     }
 

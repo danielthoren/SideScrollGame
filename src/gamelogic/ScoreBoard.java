@@ -30,7 +30,7 @@ public final class ScoreBoard implements DrawAndUpdateObject
 
     /**
      * Draws the score of each players.
-     * @param gc The GraphicsContext with wich to draw
+     * @param gc The GraphicsContext with which to draw
      */
     public void draw(GraphicsContext gc){
 	int yTemp = yPosition;

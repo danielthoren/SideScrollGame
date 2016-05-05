@@ -17,7 +17,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 /**
- * This is the main class of the game. It creates the window in wich the game and all menues is drawn. It also
+ * This is the main class of the game. It creates the window in which the game and all menus is drawn. It also
  * instantiates the game and runs it.
  */
 public class GameFrame extends Application
@@ -32,14 +32,13 @@ public class GameFrame extends Application
 
     /**
      * The 'start' function is called to initialize the contents of the 'Application' when the 'launch()' function is called.
-     * @param primaryStage The primary 'Stage' in wich to put nodes.
+     * @param primaryStage The primary 'Stage' in which to put nodes.
      */
     @Override
     public  void start(Stage primaryStage){
         //Initializing GameFrame
         gameComponent = new GameComponent(GAME_HEIGHT, GAME_WIDTH);
         GameLoop gameLoop = new GameLoop(gameComponent);
-        System.out.println("hejsan");
 
         //Giving 'gameComponent' focus
         Platform.runLater(new Runnable()
@@ -57,7 +56,7 @@ public class GameFrame extends Application
         Scene scene = new Scene(root);
         scene.setFill(Color.BLACK);
 
-        mainBorderPane.setTop(createTopMenues());
+        mainBorderPane.setTop(createTopMenus());
         mainBorderPane.setCenter(gameComponent);
 
         primaryStage.setScene(scene);
@@ -69,22 +68,22 @@ public class GameFrame extends Application
     }
 
     /**
-     * Creates the Vbox instance, and the contents therin, to be placed on the windows top.
-     * @return returns a topcontainer containing menues specific to the game.
+     * Creates the Vbox instance, and the contents there in, to be placed on the windows top.
+     * @return returns a topContainer containing menus specific to the game.
      */
-    private VBox createTopMenues(){
+    private VBox createTopMenus(){
         VBox topContainer = new VBox();
         //Creating objects to put in the container (topContainer)
         MenuBar menuBar = new MenuBar();
         //Adding objects to the topContainer
         topContainer.getChildren().addAll(menuBar);
-        //Creating menues and putting them in the menuBar
+        //Creating menus and putting them in the menuBar
         Menu file = new Menu("File");
         menuBar.getMenus().addAll(file);
         //Creating MenuItems and putting them in the correct Menu
         MenuItem exit = new MenuItem("Exit");
         file.getItems().addAll(exit);
-        //Adding actionevents to the MenuItems
+        //Adding actionEvents to the MenuItems
         exit.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -96,7 +95,7 @@ public class GameFrame extends Application
     }
 
     /**
-     * Constructor is called from superclass when the mainclass calls launch.
+     * Constructor is called from superclass when the main class calls launch.
      */
     public GameFrame(){
         windowName = "GameFrame";

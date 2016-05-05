@@ -12,9 +12,9 @@ import org.jbox2d.dynamics.World;
 public class DynamicCircle extends Circle {
 
     /**
-     * Creates a square on wich realtime physics is applied.
-     * @param world The world in wich to add its body
-     * @param pos The position of the topleft corner of the square in meters
+     * Creates a square on which real time physics is applied.
+     * @param world The world in which to add its body
+     * @param pos The position of the top left corner of the square in meters
      * @param friction The friction of the body
      * @param image The image representing the body in the visual realm
      */
@@ -25,14 +25,14 @@ public class DynamicCircle extends Circle {
     }
 
     /**
-     * Creates a square on wich realtime physics is applied.
-     * @param world The world in wich to add its body
-     * @param pos The position of the topleft corner of the square in meters
+     * Creates a square on which real time physics is applied.
+     * @param world The world in which to add its body
+     * @param pos The position of the top left corner of the square in meters
      * @param friction The friction of its body
      * @param color The color representing the body in the visual realm
      */
-    public DynamicCircle(long objectID, World world, Vec2 pos, float friction, Color color, double radious) {
-        super(objectID, world, pos, friction, color, radious);
+    public DynamicCircle(long objectID, World world, Vec2 pos, float friction, Color color, double radius) {
+        super(objectID, world, pos, friction, color, radius);
         body.setUserData(this);
         makeDynamic();
     }

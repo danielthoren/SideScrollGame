@@ -7,14 +7,14 @@ import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.World;
 
 /**
- * Subclass of 'gameobjects.Square'. Creates a dynamic square on wich realtime physics is applied.
+ * Subclass of 'gameobjects.Square'. Creates a dynamic square on which real time physics is applied.
  */
 public class DynamicSquare extends Square {
 
     /**
-     * Creates a square on wich realtime physics is applied.
-     * @param world The world in wich to add its body
-     * @param pos The position of the topleft corner of the square in meters
+     * Creates a square on which real time physics is applied.
+     * @param world The world in which to add its body
+     * @param pos The position of the top left corner of the square in meters
      * @param friction The friction of the body
      * @param image The image representing the body in the visual realm
      */
@@ -25,9 +25,9 @@ public class DynamicSquare extends Square {
     }
 
     /**
-     * Creates a square on wich realtime physics is applied.
-     * @param world The world in wich to add its body
-     * @param pos The position of the topleft corner of the square in meters
+     * Creates a square on which real time physics is applied.
+     * @param world The world in which to add its body
+     * @param pos The position of the top left corner of the square in meters
      * @param friction The friction of its body
      * @param color The color representing the body in the visual realm
      * @param width The width of the body in meters

@@ -32,7 +32,7 @@ public class InventoryItemParent implements InventoryItem
      * Initializes a 'gameobjects.InventoryItemParent and puts it at the specified position in the specified world.
      * @param objectID The id of the object.
      * @param world The game world to add the object to.
-     * @param position The startposition of the object.
+     * @param position The start position of the object.
      * @param friction The friction of the object.
      * @param image The image of the object.
      */
@@ -62,9 +62,9 @@ public class InventoryItemParent implements InventoryItem
     /**
      * Setting the group index of all of the bodies fixtures. This is used to control collision between objects.
      * The primary usage in this specific class is to prevent the item:s body from colliding with the player whom currently
-     * equipps said item.
+     * equips said item.
      * @param index The index to set the group to. If two fixtures has the same negative value they will collide with everything
-     *              except for each other. If the value is posetive they will collide with nothing bot each other.
+     *              except for each other. If the value is positive they will collide with nothing bot each other.
      */
     private void setGroupIndex(int index){
         for (Fixture fixture = solidObject.getBody().getFixtureList(); fixture != null; fixture = fixture.getNext()){
@@ -77,7 +77,7 @@ public class InventoryItemParent implements InventoryItem
     /**
      * Calculates the default relative position of the object. This function should be overridden if the default position
      * does not suit the child-class.
-     * @param player The player on wich to calculate the relative position.
+     * @param player The player on which to calculate the relative position.
      */
     private void calcRelativePos(Player player){
         relativePos = new Vec2(player.getSize().x, -size.y/2);
@@ -114,8 +114,8 @@ public class InventoryItemParent implements InventoryItem
     }
 
     /**
-     * Draws the item using the parentclass drawfunction
-     * @param gc The GraphicsContext with wich to draw
+     * Draws the item using the parent class drawFunction
+     * @param gc The GraphicsContext with which to draw
      */
     @Override
     public void draw(GraphicsContext gc){
@@ -133,10 +133,10 @@ public class InventoryItemParent implements InventoryItem
     }
 
     /**
-     * Unequips the item from the player, destroying the items body and removing it from the 'DrawAndUpdate' listener aswell as
+     * Un-equips the item from the player, destroying the items body and removing it from the 'DrawAndUpdate' listener as well as
      * from the 'gamelogic.CollisionListener' listener.
      * OBSERVE!: If a child of this class implements other listeners, that child must override this
-     * function and remove itselfe from the other listenerlists aswell.
+     * function and remove itself from the other listenerLists as well.
      */
     public void unEquip(){
         LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber()).removeBody(solidObject.body);

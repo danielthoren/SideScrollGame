@@ -14,7 +14,7 @@ import gamelogic.DrawAndUpdateObject;
 import gamelogic.LoadMap;
 
 /**
- * Class that creates a squareobject that is a part of the current world
+ * Class that creates a square object that is a part of the current world
  */
 public class Square extends SolidObject implements DrawAndUpdateObject
 {
@@ -22,9 +22,9 @@ public class Square extends SolidObject implements DrawAndUpdateObject
     protected Double width; //The width of the square in meters
 
     /**
-     * Creates a square with static position and collision properites.
-     * @param world The world in wich to add its body
-     * @param pos The position at wich to place the square (units in meters)
+     * Creates a square with static position and collision properties.
+     * @param world The world in which to add its body
+     * @param pos The position at which to place the square (units in meters)
      * @param friction The friction of the body
      * @param image The image to display over the body (visible part of the square)
      */
@@ -39,8 +39,8 @@ public class Square extends SolidObject implements DrawAndUpdateObject
 
     /**
      * Creates a square with static position and collision properties.
-     * @param world The world in wich to add its body
-     * @param pos The position at wich to place the square (units in meters)
+     * @param world The world in which to add its body
+     * @param pos The position at which to place the square (units in meters)
      * @param friction The fiction of the body
      * @param color The color of the gameobjects.Square
      * @param width The width of the square in meters (world coordinates)
@@ -56,13 +56,13 @@ public class Square extends SolidObject implements DrawAndUpdateObject
 
     /**
      * Creates the body of the 'gameobjects.Square' object.
-     * @param world The world in wich to add its body.
+     * @param world The world in which to add its body.
      */
     protected void createBody(World world){
 	FixtureDef fixtureDef = new FixtureDef();
 	PolygonShape polygonShape = new PolygonShape();
 
-	//Do note that the SetAsBox takes half of the width and half of the height then spanning said measurments
+	//Do note that the SetAsBox takes half of the width and half of the height then spanning said measurements
 	//out on both sides of the centerpoint (bodyposition)
 	polygonShape.setAsBox(width.floatValue()/2, height.floatValue()/2);
 

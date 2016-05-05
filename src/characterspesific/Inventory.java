@@ -44,7 +44,7 @@ public class Inventory {
     }
 
     /**
-     * Adds item and equipps it if the inventory is not full.
+     * Adds item and equips it if the inventory is not full.
      * @param inventoryItem The item to be added to the inventory.
      */
     public void addItem(InventoryItemParent inventoryItem){

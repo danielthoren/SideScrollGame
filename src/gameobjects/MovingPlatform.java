@@ -9,10 +9,10 @@ import org.jbox2d.dynamics.World;
 
 
 /**
- * This class creates a movingplatform.
+ * This class creates a MovingPlatform.
  */
 public class MovingPlatform extends Square{
-    private Vec2 startPos;                  //The start posistion of the platform
+    private Vec2 startPos;                  //The start position of the platform
     private Vec2 endPos;                    // The position where the platform should return
     private Vec2 positiveVelocity;          // The velocity of the platform in the positive direction
     private Vec2 negativeVelocity;          // The velocity of the platform in the negative direction
@@ -25,7 +25,7 @@ public class MovingPlatform extends Square{
      * @param pos  The start position
      * @param friction The friction on the platform
      * @param image   The image texture on the platform
-     * @param endPos  The end posistion
+     * @param endPos  The end position
      */
     public MovingPlatform(long objectID, World world, Vec2 pos, float friction, Image image, Vec2 endPos) {
         super(objectID, world, pos, friction, image);
@@ -39,12 +39,12 @@ public class MovingPlatform extends Square{
     /**
      * Creates a square that will become a moving platform.
      * @param world The game world
-     * @param pos  The posistion where tha platform is creates (start position)
+     * @param pos  The position where tha platform is creates (start position)
      * @param friction The friction on the platform
-     * @param color  The collor of the platform
+     * @param color  The color of the platform
      * @param width  The width of the platform
      * @param height The height of the platform
-     * @param endPos The posistion where the platform should return
+     * @param endPos The position where the platform should return
      */
     public MovingPlatform(long objectID, World world, Vec2 pos, float friction, Color color, double width, double height, Vec2 endPos) {
         super(objectID, world, pos, friction, color, width, height);
@@ -70,7 +70,7 @@ public class MovingPlatform extends Square{
      */
     @Override
     public void update(){
-        //If endpos.x == startpos.x the speed is set depending on the y-position. Otherwise the velicity will never change
+        //If endpos.x == startpos.x the speed is set depending on the y-position. Otherwise the velocity will never change
         //direction and the platform will continue endlessly.
         if (endPos.x == startPos.x){
             if (body.getPosition().y <= startPos.y){
@@ -95,7 +95,7 @@ public class MovingPlatform extends Square{
     private void calculateVelocity() {
         //If endpos.x == startpos.x it means that the platform will only move
         //in the y-direction. Therefore setting this speed in a different if-statement
-        // so we dont get division by zero.
+        // so we don't get division by zero.
         //!OBS: if startpos.x == startpos.y then there is no xVelocity, thus it is set to zero.
         if (endPos.x - startPos.x == 0) {
             Double xVelocity = 0d;

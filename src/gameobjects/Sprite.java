@@ -21,18 +21,18 @@ public class Sprite implements DrawAndUpdateObject
     private final long id;
     private Vec2 currentOffset;
     private Vec2 position;
-    private Vec2 actualSizeOfSprite;    //Holds an approximate value of the actual imagesize inside of the spriteImages
+    private Vec2 actualSizeOfSprite;    //Holds an approximate value of the actual image size inside of the spriteImages
     private final Vec2 spriteWindowSize;
     private float angle;
     private boolean flip;
     private boolean freeze;
 
     /**
-     * Creates a spriteobject that draws a spritesheet with even spacing.
+     * Creates a sprite object that draws a sprite sheet with even spacing.
      * @param image The spriteSheet
-     * @param columns The amount of columns in the spritesheet
-     * @param rows The amount of rows in the spritesheet
-     * @param numberOfFrames The number of frames in the spritesheet
+     * @param columns The amount of columns in the sprite sheet
+     * @param rows The amount of rows in the sprite sheet
+     * @param numberOfFrames The number of frames in the sprite sheet
      * @param updateInterval The amount of frames to wait before changing frame
      * @param position The center-position of the sprite in world coordinates
      * @param angle The angle of the sprite
@@ -60,7 +60,7 @@ public class Sprite implements DrawAndUpdateObject
         if (!freeze) {
             currFramesSinceUpdate++;
             if (currFramesSinceUpdate > updateInterval) {
-                //Checking if the end of the spriteanimation has been reached. If so then reset all parameters.
+                //Checking if the end of the sprite animation has been reached. If so then reset all parameters.
                 if (currFrameNumber >= numberOfFrames - 1) {
                     currentOffset.x = 0;
                     currentOffset.y = 0;
@@ -82,7 +82,7 @@ public class Sprite implements DrawAndUpdateObject
     /**
      * Draws the sprite at the given position. If the 'flip' boolean is true the image is flipped over but stays
      * in the same position.
-     * @param gc The GraphicsContext with wich to draw
+     * @param gc The GraphicsContext with which to draw
      */
     public void draw(GraphicsContext gc){
         //Saving the current xy-plane to the gc stack

@@ -108,7 +108,7 @@ public final class LoadMap {
             gameObjects.add(sprite2);
             gameObjects.add(sprite);
 
-            //gameobjects.Player player = new gameobjects.Player(iD++, world, position, friction, DENSITY, acceleration, deceleration, size, Color.BLUE);
+            //gameobjects.Player player = new gameobjects.Player(ID++, world, position, friction, DENSITY, acceleration, deceleration, size, Color.BLUE);
             Player player = new Player(getObjectID(), world, position, friction, density, acceleration, deceleration, sprite);
 
             ScoreBoard.getOurInstance().addPlayers(player);
@@ -121,7 +121,7 @@ public final class LoadMap {
             gameObjectsCollision.add(player);
 
 
-            //gameobjects.Player player2 = new gameobjects.Player(iD++, world, position, friction, DENSITY, acceleration, deceleration, size, Color.BLANCHEDALMOND);
+            //gameobjects.Player player2 = new gameobjects.Player(ID++, world, position, friction, DENSITY, acceleration, deceleration, size, Color.BLANCHEDALMOND);
             Player player2 = new Player(getObjectID(), world, position, friction, density, acceleration, deceleration, sprite2);
 
             ScoreBoard.getOurInstance().addPlayers(player2);

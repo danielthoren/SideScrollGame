@@ -9,7 +9,7 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Holds the different values of the map. Having more than one instance of the map may be importaint in the future when
+ * Holds the different values of the map. Having more than one instance of the map may be important in the future when
  * multiple maps may be needed for one session (doors and such).
  */
 public class Map
@@ -30,7 +30,7 @@ public class Map
     private World world;
 
     /**
-     * Creates an instance of 'Map' wich is a container for all of the world objects. It also contains an abstractionlayer
+     * Creates an instance of 'Map' which is a container for all of the world objects. It also contains an abstractionLayer
      * for removing and adding new objects to the world, preventing the program from crashing.
      * @param world The world containing the bodies of the starting objects.
      * @param drawAndUpdateObjectList The objects implementing the 'DrawAndUpdate' interface.
@@ -52,12 +52,12 @@ public class Map
     }
 
     /**
-     * Removes objects staged for removal and clears the 'StagedForRemoval' lists. Theese lists are a buffer to prevent
-     * instantanious removal of objects during runtime, if objects were removed during iteration over lists containing theese
+     * Removes objects staged for removal and clears the 'StagedForRemoval' lists. These lists are a buffer to prevent
+     * instantaneous removal of objects during runtime, if objects were removed during iteration over lists containing these
      * objects or during the world step then the program would crash.
      */
-    public void removeStagedOBjects (){
-        //List used to keep track of wich id:s bodies have been removed. Used to prevent multiple removals of the same body.
+    public void removeStagedObjects(){
+        //List used to keep track of which id:s bodies have been removed. Used to prevent multiple removals of the same body.
         //If a item that will be staged for removal when collision occurs with a type of object then two such bodies will
         //be added to the 'stagedForRemoval' if the item collides with two objects of said type between one step.
         Collection<Long> bodyIDRemoved = new ArrayList<>();
@@ -78,10 +78,10 @@ public class Map
             }
         }
         //Removing all of the 'gamelogic.InputListener' objects from the maps global list
-        for (InputListener listenerRemova : inputListenersStagedForRemoval){
+        for (InputListener listenerRemoval : inputListenersStagedForRemoval){
             for (Iterator<InputListener> iterator = inputListenerList.iterator(); iterator.hasNext();) {
                 InputListener inputListener = iterator.next();
-                if (inputListener.getId() == listenerRemova.getId()){
+                if (inputListener.getId() == listenerRemoval.getId()){
                     iterator.remove();
                 }
             }
@@ -103,8 +103,8 @@ public class Map
 }
 
     /**
-     * Adding objects staged for addition and clears the 'StagedForAddition' lists. Theese lists are a buffer to prevent
-     * instantanious addition of objects during runtime, if objects were removed during iteration over lists containing theese
+     * Adding objects staged for addition and clears the 'StagedForAddition' lists. These lists are a buffer to prevent
+     * instantaneous addition of objects during runtime, if objects were removed during iteration over lists containing these
      * objects or during the world step then the program would crash.
      */
     public void addStagedObjects (){

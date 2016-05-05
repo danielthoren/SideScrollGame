@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * This class returns either a firsaidbox or a jump powerup given a random number.
+ * This class returns either a first aid box or a jump powerup given a random number.
  */
 public class PowerUpFactory {
     private List<JumpHandler> jumpHandlers;
@@ -23,17 +23,17 @@ public class PowerUpFactory {
     private Image coinTexture = null;
     private Color color = null;
     private Random random;
-    private float coinRadious;
+    private float coinRadius;
     private Vec2 boxSize = null;
     private float friction;
 
     //Todo move constant to appropriate position
     private final static int HEALTH_BOUND = 30;
 
-    public PowerUpFactory(float friction, float coinRadious, Vec2 boxSize, Color color) {
+    public PowerUpFactory(float friction, float coinRadius, Vec2 boxSize, Color color) {
         this.color = color;
         this.friction = friction;
-        this.coinRadious = coinRadious;
+        this.coinRadius = coinRadius;
         this.boxSize = boxSize;
         jumpHandlers = new ArrayList<>();
         jumpHandlers.add(new WallJumpHandler());
@@ -56,7 +56,7 @@ public class PowerUpFactory {
      */
     public PowerUps powerUp(World world){
         int randomPowerUP = random.nextInt(2); //Creates a random number from 0 to 1.
-        int lenList = random.nextInt(jumpHandlers.size()); //Returns a index used to retrive a random jumpHandler. (More can be added)
+        int lenList = random.nextInt(jumpHandlers.size()); //Returns a index used to retrieve a random jumpHandler. (More can be added)
 
         FirstAidBox firstAidBox;
         PowerUpCoin powerUpCoin;
@@ -75,10 +75,10 @@ public class PowerUpFactory {
 
 
             case (1):
-                //This case i similar to the previous. The diffrence being that we create a coin and not a box.
+                //This case i similar to the previous. The difference being that we create a coin and not a box.
                 if(coinTexture == null){
                 powerUpCoin = new PowerUpCoin(LoadMap.getObjectID(), world, new Vec2(new Random().nextFloat() * 2, new Random().nextFloat() * 4),
-                                              friction, this.color, coinRadious, jumpHandlers.get(lenList));
+                                              friction, this.color, coinRadius, jumpHandlers.get(lenList));
                 }
                 else {
                     powerUpCoin = new PowerUpCoin(LoadMap.getObjectID(), world, new Vec2(new Random().nextFloat() * 2, new Random().nextFloat() * 4),

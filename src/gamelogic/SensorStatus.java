@@ -1,7 +1,7 @@
 package gamelogic;
 
 /**
- * Coitainer containing information about a sensor.
+ * Container containing information about a sensor.
  */
 public class SensorStatus
 {

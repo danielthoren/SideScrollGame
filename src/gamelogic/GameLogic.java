@@ -50,7 +50,7 @@ public class GameLogic implements DrawAndUpdateObject
     /**
      * Nothing needs to be drawn in the 'gamelogic.GameLogic'
      *
-     * @param gc The GraphicsContext with wich to draw
+     * @param gc The GraphicsContext with which to draw
      */
     public void draw(GraphicsContext gc) {}
 

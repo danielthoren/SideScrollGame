@@ -13,7 +13,7 @@ public interface DrawAndUpdateObject extends GameObject{
 
     /**
      * The function that draws the object every frame
-     * @param gc The GraphicsContext with wich to draw
+     * @param gc The GraphicsContext with which to draw
      */
     void draw(GraphicsContext gc);
 }
