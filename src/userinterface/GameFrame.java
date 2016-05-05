@@ -39,6 +39,7 @@ public class GameFrame extends Application
         //Initializing GameFrame
         gameComponent = new GameComponent(GAME_HEIGHT, GAME_WIDTH);
         GameLoop gameLoop = new GameLoop(gameComponent);
+        System.out.println("hejsan");
 
         //Giving 'gameComponent' focus
         Platform.runLater(new Runnable()
