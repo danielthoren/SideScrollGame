@@ -45,21 +45,15 @@ public class GameComponent extends Parent
         getChildren().add(canvas);
         this.requestFocus();
 
-        //Setting the keyevents to listen to
-        this.setOnKeyPressed(new EventHandler<KeyEvent>()
-        {
-            @Override public void handle(final KeyEvent event) {
-                for (InputListener obj : currentMap.getInputListenerList()){
-                    obj.inputAction(event);
-                }
+        //Setting the key events to listen to
+        this.setOnKeyPressed(event -> {
+            for (InputListener obj : currentMap.getInputListenerList()){
+                obj.inputAction(event);
             }
         });
-        this.setOnKeyReleased(new EventHandler<KeyEvent>()
-        {
-            @Override public void handle(final KeyEvent event) {
-                for (InputListener obj : currentMap.getInputListenerList()){
-                    obj.inputAction(event);
-                }
+        this.setOnKeyReleased(event -> {
+            for (InputListener obj : currentMap.getInputListenerList()){
+                obj.inputAction(event);
             }
         });
     }

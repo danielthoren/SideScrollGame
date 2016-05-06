@@ -274,7 +274,7 @@ public class Player extends SolidObject implements Draw, Update, CollisionListen
             powerUpTime++;
             if (powerUpTime > SIX_SECONDS){
                 powerUpTime = 0;
-                currentJumpHandler =new DefaultJumpHandler();
+                currentJumpHandler = new DefaultJumpHandler();
                 startTime = false;
             }
         }
@@ -374,6 +374,7 @@ public class Player extends SolidObject implements Draw, Update, CollisionListen
         actualHealth -= damage;
     }
 
+
     /**
      * Draws the healthbar directly over each player.
      * @param gc The graphicscontext on which to draw on.
@@ -381,30 +382,38 @@ public class Player extends SolidObject implements Draw, Update, CollisionListen
     private void drawHealthBar(GraphicsContext gc){
         final int healthBarWidth = 100;
         final int healthBarHeight = 20;
+        //The difference between the visible health and the actual health
+        int healthDelta = visibleHealth - actualHealth;
         //This bar shows how much health you have lost.
         gc.setFill(Color.RED);
         gc.fillRect(GameComponent.metersToPix(body.getPosition().x) - healthBarWidth / 2,
                     GameComponent.metersToPix(body.getPosition().y - (size.y / 2)) - healthBarHeight, healthBarWidth, healthBarHeight);
+        //Shows the healthDelta to give a better representation of how much HP you lost.
+        gc.setFill(Color.WHITE);
+        gc.fillRect(GameComponent.metersToPix(body.getPosition().x) - healthBarWidth / 2 + actualHealth,
+                    GameComponent.metersToPix(body.getPosition().y - (size.y / 2)) - healthBarHeight, healthDelta, healthBarHeight);
+
         //This bar shows you your current health.
         gc.setFill(Color.GREEN);
         gc.fillRect(GameComponent.metersToPix(body.getPosition().x) - healthBarWidth / 2,
-                    GameComponent.metersToPix(body.getPosition().y - (size.y / 2)) - healthBarHeight, visibleHealth, healthBarHeight);
+                    GameComponent.metersToPix(body.getPosition().y - (size.y / 2)) - healthBarHeight, actualHealth, healthBarHeight);
         //This if-statement makes the bar "roll", it makes the
-        //healthbar change much smoother.
+        //health bar change much smoother.
         if(actualHealth < visibleHealth){
             visibleHealth -= 1;
-            if (visibleHealth == 0){
+            if (actualHealth <= 0){
                 System.out.println("Dead");
                 respawn();
             }
         }
         else if(actualHealth != visibleHealth){
             visibleHealth = actualHealth;
-            if (visibleHealth == 0){
+            if (actualHealth <= 0){
                 System.out.println("Dead");
                 respawn();
             }
         }
+
     }
 
     /**
