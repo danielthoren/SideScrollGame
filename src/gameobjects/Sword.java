@@ -15,8 +15,8 @@ import org.jbox2d.dynamics.contacts.Contact;
 public class Sword extends InventoryItemParent implements CollisionListener
 {
 
-    protected int damage; //The damage of the sword
-    protected boolean hasDamaged;
+    private int damage; //The damage of the sword
+    private boolean hasDamaged;
 
     /**
      * Creates a sword.
@@ -32,6 +32,7 @@ public class Sword extends InventoryItemParent implements CollisionListener
 	super(objectID, new DynamicSquare(objectID, world, position, friction, image));
 	this.damage = damage;
 	hasDamaged = false;
+        setRelativeAngle((float) Math.PI / 4);
     }
 
     /**
@@ -40,6 +41,7 @@ public class Sword extends InventoryItemParent implements CollisionListener
     @Override
     public void equip() {
 	super.equip();
+        getBody().setFixedRotation(true);
         LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber()).addCollisionListener(this);
     }
 
@@ -50,6 +52,14 @@ public class Sword extends InventoryItemParent implements CollisionListener
     public void unEquip() {
 	super.unEquip();
         LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber()).removeCollisionListener(this);
+    }
+
+    @Override
+    public void pickUp(Player player){
+        super.pickUp(player);
+        getBody().getFixtureList().setSensor(false);
+        getBody().setTransform(getBody().getPosition(), relativeAngle);
+        getBody().setFixedRotation(true);
     }
 
     /**

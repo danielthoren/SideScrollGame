@@ -42,6 +42,7 @@ public class InventoryItemParent implements InventoryItem
         player = null;
         //Setting the DENSITY of the object to 1. This is the default value of an equipped item and can be changed by setter in superclass.
         circle.setDensity(1f);
+        relativeAngle = 0;
     }
 
     /**
@@ -58,6 +59,7 @@ public class InventoryItemParent implements InventoryItem
         currentCollidingPlayer = null;
         relativePos = null;
         player = null;
+        relativeAngle = 0;
     }
 
     /**
@@ -73,6 +75,7 @@ public class InventoryItemParent implements InventoryItem
         currentCollidingPlayer = null;
         relativePos = null;
         player = null;
+        relativeAngle = 0;
     }
 
 
@@ -98,7 +101,6 @@ public class InventoryItemParent implements InventoryItem
      */
     private void calcRelativePos(Player player){
         relativePos = new Vec2(player.getSize().x, -getSize().y / 2);
-        relativeAngle = (float) -(Math.PI / 2 + Math.PI / 4);
     }
 
     /**
@@ -164,7 +166,6 @@ public class InventoryItemParent implements InventoryItem
         Map map = LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber());
         map.addDrawObject((square == null) ? circle : square);
         map.addUpdateObject(this);
-        getBody().setBullet(true);
     }
 
     /**
@@ -185,9 +186,6 @@ public class InventoryItemParent implements InventoryItem
      * @param player The player to add this to.
      */
     public void pickUp(Player player){
-        getBody().getFixtureList().setSensor(false);
-        getBody().setTransform(getBody().getPosition(), relativeAngle);
-        getBody().setFixedRotation(true);
         setGroupIndex(-(int)player.getId());
         calcRelativePos(player);
         this.player = player;
@@ -270,6 +268,8 @@ public class InventoryItemParent implements InventoryItem
             return circle.getId();
         }
     }
+
+    public void setRelativeAngle(final float relativeAngle) {this.relativeAngle = relativeAngle;}
 
     /**
      * equals function looking at the objects id to check if this is the exact same object as the one compared with.
