@@ -7,14 +7,15 @@ import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.World;
 
 /**
- * Created by daniel on 2016-03-31.
+ * Creates a dynamic circle, wich is a circle that is a part of the physicssimulation. It will move dynamically in accordance
+ * with the worlds forces and impulses.
  */
 public class DynamicCircle extends Circle {
 
     /**
-     * Creates a square on which real time physics is applied.
-     * @param world The world in which to add its body
-     * @param pos The position of the top left corner of the square in meters
+     * Creates a square on wich realtime physics is applied.
+     * @param world The world in wich to add its body
+     * @param pos The position of the topleft corner of the square in meters
      * @param friction The friction of the body
      * @param image The image representing the body in the visual realm
      */
@@ -25,14 +26,14 @@ public class DynamicCircle extends Circle {
     }
 
     /**
-     * Creates a square on which real time physics is applied.
-     * @param world The world in which to add its body
-     * @param pos The position of the top left corner of the square in meters
+     * Creates a square on wich realtime physics is applied.
+     * @param world The world in wich to add its body
+     * @param pos The position of the topleft corner of the square in meters
      * @param friction The friction of its body
      * @param color The color representing the body in the visual realm
      */
-    public DynamicCircle(long objectID, World world, Vec2 pos, float friction, Color color, double radius) {
-        super(objectID, world, pos, friction, color, radius);
+    public DynamicCircle(long objectID, World world, Vec2 pos, float friction, Color color, float radious) {
+        super(objectID, world, pos, friction, color, radious);
         body.setUserData(this);
         makeDynamic();
     }

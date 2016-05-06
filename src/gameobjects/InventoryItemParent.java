@@ -1,14 +1,14 @@
 package gameobjects;
 
 import characterspesific.InventoryItem;
+import gamelogic.Map;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import org.jbox2d.common.Vec2;
+import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.Filter;
 import org.jbox2d.dynamics.Fixture;
-import org.jbox2d.dynamics.World;
 import gamelogic.Direction;
-import gamelogic.DrawAndUpdateObject;
 import gamelogic.GameComponent;
 import gamelogic.LoadMap;
 
@@ -17,57 +17,79 @@ import gamelogic.LoadMap;
  */
 public class InventoryItemParent implements InventoryItem
 {
-    protected World world;
     protected Player player;
     protected Player currentCollidingPlayer;
-    protected DynamicCircle dynamicCircle;
-    protected DynamicSquare dynamicSquare;
-    protected SolidObject solidObject;
-    protected DrawAndUpdateObject drawAndUpdateObject;
+    protected Circle circle;
+    protected Square square;
     protected Vec2 relativePos;
+    protected float density;
+    protected float friction;
+    protected float restitution;
     protected float relativeAngle;
-    protected final Vec2 size;
 
     /**
      * Initializes a 'gameobjects.InventoryItemParent and puts it at the specified position in the specified world.
      * @param objectID The id of the object.
-     * @param world The game world to add the object to.
-     * @param position The start position of the object.
      * @param friction The friction of the object.
-     * @param image The image of the object.
+     * @param circle The circlebody of the object.
      */
-    public InventoryItemParent(long objectID, World world, Vec2 position, float friction, Image image, boolean isSquare) {
-        this.world = world;
-        if (isSquare){
-            dynamicSquare = new DynamicSquare(objectID, world, position, friction, image);
-            solidObject = dynamicSquare;
-            drawAndUpdateObject = dynamicSquare;
-            dynamicCircle = null;
-        }
-        else{
-            dynamicCircle = new DynamicCircle(objectID, world, position, friction, image);
-            solidObject = dynamicCircle;
-            drawAndUpdateObject = dynamicCircle;
-            dynamicSquare = null;
-        }
-
+    public InventoryItemParent(long objectID, Circle circle) {
+        this.circle = circle;
+        density = circle.getBody().getFixtureList().getDensity();
+        friction = circle.getBody().getFixtureList().getFriction();
+        restitution = circle.getBody().getFixtureList().getRestitution();
+        square = null;
         currentCollidingPlayer = null;
         relativePos = null;
         player = null;
         //Setting the DENSITY of the object to 1. This is the default value of an equipped item and can be changed by setter in superclass.
-        solidObject.setDensity(1f);
-        size = new Vec2(GameComponent.pixToMeters((float) image.getWidth()), GameComponent.pixToMeters((float) image.getHeight()));
+        circle.setDensity(1f);
     }
+
+    /**
+     * Initializes a 'gameobjects.InventoryItemParent and puts it at the specified position in the specified world.
+     * @param objectID The id of the object.
+     * @param friction The friction of the object.
+     * @param square The squarebody of the object.
+     */
+    public InventoryItemParent(long objectID, Square square) {
+        this.square = square;
+        circle = null;
+        density = square.getBody().getFixtureList().getDensity();
+        friction = square.getBody().getFixtureList().getFriction();
+        restitution = square.getBody().getFixtureList().getRestitution();
+        currentCollidingPlayer = null;
+        relativePos = null;
+        player = null;
+        //Setting the DENSITY of the object to 1. This is the default value of an equipped item and can be changed by setter in superclass.
+        square.setDensity(1f);
+    }
+
+    /**
+     * Initializes a 'gameobjects.InventoryItemParent and puts it at the specified position in the specified world.
+     * !OBS This constructor does not set the body of the InventoryObject, thus its childclass must create a body and either
+     * set the circle parameter or the square parameter so that it points to that object.
+     *
+     * @param objectID The id of the object.
+     */
+    public InventoryItemParent(long objectID) {
+        square = null;
+        circle = null;
+        currentCollidingPlayer = null;
+        relativePos = null;
+        player = null;
+    }
+
 
     /**
      * Setting the group index of all of the bodies fixtures. This is used to control collision between objects.
      * The primary usage in this specific class is to prevent the item:s body from colliding with the player whom currently
-     * equips said item.
+     * equipps said item.
      * @param index The index to set the group to. If two fixtures has the same negative value they will collide with everything
-     *              except for each other. If the value is positive they will collide with nothing bot each other.
+     *              except for each other. If the value is posetive they will collide with nothing bot each other.
      */
     private void setGroupIndex(int index){
-        for (Fixture fixture = solidObject.getBody().getFixtureList(); fixture != null; fixture = fixture.getNext()){
+        for (Fixture fixture = getBody().getFixtureList(); fixture != null; fixture = fixture.getNext()){
             Filter filter = fixture.getFilterData();
             filter.groupIndex = index;
             fixture.setFilterData(filter);
@@ -77,10 +99,10 @@ public class InventoryItemParent implements InventoryItem
     /**
      * Calculates the default relative position of the object. This function should be overridden if the default position
      * does not suit the child-class.
-     * @param player The player on which to calculate the relative position.
+     * @param player The player on wich to calculate the relative position.
      */
     private void calcRelativePos(Player player){
-        relativePos = new Vec2(player.getSize().x, -size.y/2);
+        relativePos = new Vec2(player.getSize().x, -getSize().y / 2);
         relativeAngle = (float) -(Math.PI / 2 + Math.PI / 4);
     }
 
@@ -93,54 +115,72 @@ public class InventoryItemParent implements InventoryItem
      */
     @Override
     public void update(){
-        drawAndUpdateObject.update();
         if (currentCollidingPlayer != null && currentCollidingPlayer.isPickUpItem() && player == null){
             currentCollidingPlayer.getInventory().addItem(this);
         }
         else if (player != null) {
             Vec2 newPos = new Vec2(0,0);
-            float newAngle = solidObject.getBody().getAngle();
+            float newAngle = getBody().getAngle();
             if (player.getDirection() == Direction.LEFT){
                 newPos = new Vec2(player.getPosition().x - relativePos.x, player.getPosition().y + relativePos.y);
-                newAngle = Math.abs(solidObject.getBody().getAngle());
+                newAngle = Math.abs(getBody().getAngle());
             }
             else if (player.getDirection() == Direction.RIGHT){
                 newPos = new Vec2(player.getPosition().x + relativePos.x, player.getPosition().y + relativePos.y);
-                newAngle = -Math.abs(solidObject.getBody().getAngle());
+                newAngle = -Math.abs(getBody().getAngle());
             }
-            solidObject.getBody().setTransform(newPos, newAngle);
-            solidObject.getBody().setFixedRotation(true);
+            getBody().setTransform(newPos, newAngle);
+            getBody().setFixedRotation(true);
         }
     }
 
     /**
-     * Draws the item using the parent class drawFunction
-     * @param gc The GraphicsContext with which to draw
+     * Draws the item using the parentclass drawfunction
+     * @param gc The GraphicsContext with wich to draw
      */
     @Override
     public void draw(GraphicsContext gc){
-        solidObject.drawSquare(gc, solidObject.body.getPosition(), (double) size.x, (double) size.y);
+        if (circle == null){
+            square.draw(gc);
+        }
+        else{
+            circle.draw(gc);
+        }
     }
 
     /**
      * Equips the item to the player owning the inventory that this is stored in.
      */
     public void equip(){
-        LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber()).addDrawAndUpdateObject(this);
-        if (dynamicSquare == null){
-            dynamicCircle.createBody(world);
+        LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber()).addDrawObject(this);
+        LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber()).addUpdateObject(this);
+        if (circle == null) {
+            if (square.getBody() == null) {
+                square.createBody(LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber()).getWorld());
+
+            }
         }
+        else{
+            if (circle.getBody() == null){
+                circle.createBody(LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber()).getWorld());
+            }
+        }
+        Map map = LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber());
+        map.addDrawObject((square == null) ? circle : square);
+        map.addUpdateObject(this);
     }
 
     /**
-     * Un-equips the item from the player, destroying the items body and removing it from the 'DrawAndUpdate' listener as well as
+     * Unequips the item from the player, destroying the items body and removing it from the 'DrawAndUpdate' listener aswell as
      * from the 'gamelogic.CollisionListener' listener.
      * OBSERVE!: If a child of this class implements other listeners, that child must override this
-     * function and remove itself from the other listenerLists as well.
+     * function and remove itselfe from the other listenerlists aswell.
      */
     public void unEquip(){
-        LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber()).removeBody(solidObject.body);
-        solidObject.body = null;
+        Map map = LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber());
+        map.removeBody(getBody());
+        map.removeDrawObject((square == null) ? circle : square);
+        map.removeUpdateObject(this);
     }
 
     /**
@@ -148,9 +188,9 @@ public class InventoryItemParent implements InventoryItem
      * @param player The player to add this to.
      */
     public void pickUp(Player player){
-        solidObject.body.getFixtureList().setSensor(false);
-        solidObject.body.setFixedRotation(true);
-        solidObject.body.setTransform(solidObject.body.getPosition(), relativeAngle);
+        getBody().getFixtureList().setSensor(false);
+        getBody().setFixedRotation(true);
+        getBody().setTransform(getBody().getPosition(), relativeAngle);
         setGroupIndex(-(int)player.getId());
         calcRelativePos(player);
         this.player = player;
@@ -160,18 +200,52 @@ public class InventoryItemParent implements InventoryItem
      * Drops this item from the player.
      */
     public void drop(){
-        solidObject.body.setFixedRotation(false);
+        getBody().setFixedRotation(false);
         setGroupIndex(0);
         player = null;
     }
 
 
     /**
+     * This function adds an abstractionlayer to the object since it can either have a
+     * Circle or a Square as a bodyobject. If it has a circle then the Vec2 coordinates are the same (the radius).
+     * @return the size.
+     */
+    protected Vec2 getSize(){
+        if (circle == null){
+            return square.getSize();
+        }
+        else {
+            return new Vec2(circle.getRadius(), circle.getRadius());
+        }
+    }
+
+    /**
+     * Gets the body of thoe object.
+     * This function adds an abstractionlayer to the object since it can either have a
+     * Circle or a Square as a bodyobject.
+     * @return The body of the object.
+     */
+    protected Body getBody(){
+        if (circle == null){
+            return square.getBody();
+        }
+        else {
+            return circle.getBody();
+        }
+    }
+
+    /**
      * Returns the id of the 'gameobjects.SolidObject' of the items body
      * @return int id
      */
     public long getId(){
-        return solidObject.getId();
+        if (circle == null) {
+            return square.getId();
+        }
+        else{
+            return circle.getId();
+        }
     }
 
     /**

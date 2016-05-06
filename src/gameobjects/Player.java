@@ -1,5 +1,7 @@
 package gameobjects;
 
+import gamelogic.Draw;
+import gamelogic.Update;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -19,7 +21,6 @@ import characterspesific.Inventory;
 import characterspesific.JumpHandler;
 import gamelogic.CollisionListener;
 import gamelogic.Direction;
-import gamelogic.DrawAndUpdateObject;
 import gamelogic.GameComponent;
 import gamelogic.InputListener;
 import gamelogic.LoadMap;
@@ -27,9 +28,9 @@ import gamelogic.Map;
 import gamelogic.SensorStatus;
 
 /**
- * Class that holds the player which is controlled by the user playing the game.
+ * Class that holds the player wich is controlled by the user playing the game.
  */
-public class Player extends SolidObject implements DrawAndUpdateObject, CollisionListener, InputListener
+public class Player extends SolidObject implements Draw, Update, CollisionListener, InputListener
 {
     private Direction direction;
     private World world;
@@ -43,7 +44,7 @@ public class Player extends SolidObject implements DrawAndUpdateObject, Collisio
     private final float sensorThickness;
     private boolean isRunning, pickUpItem, grounded, collisionLeft, collisionRight;
     private static final boolean DRAW_SENSORS = false;                //Used for debugging, draws the sensorFixtures of the player
-    private static final boolean DEBUG_DRAW = false;                 //Used for debugging, draws the bodyFixtures over the sprite
+    private static final boolean DEBUG_DRAW = false;                 //Used for debugging, draws the bodyfixtures over the sprite
     private int score, actualHealth, visibleHealth, maxHealth;
     private long velocityZeroTimer;
     private boolean startTime = false;
@@ -59,13 +60,13 @@ public class Player extends SolidObject implements DrawAndUpdateObject, Collisio
     /**
      * Instantiates a player with the given parameters.
      * @param id The id of this specific gameObject. Used to identify and compare objects with each other.
-     * @param world The world in which to create the player.
-     * @param position The position at which to create the player.
+     * @param world The world in wich to create the player.
+     * @param position The position at wich to create the player.
      * @param friction The friction of the player body.
      * @param density The density of the player body.
      * @param acceleration The acceleration of the player. Used to accelerate when running/jumping.
      * @param deceleration The deceleration of the player. Used to stop the player from running.
-     * @param sprite The sprite of the layer. Used to draw the player.
+     * @param sprite The prite of thep layer. Used to draw the player.
      */
     public Player(long id, World world, Vec2 position, float friction, float density, Vec2 acceleration, Vec2 deceleration, Sprite sprite) {
         super(id, position, friction);
@@ -79,14 +80,14 @@ public class Player extends SolidObject implements DrawAndUpdateObject, Collisio
     /**
      * Instantiates a player with the given parameters.
      * @param id The id of this specific gameObject. Used to identify and compare objects with each other.
-     * @param world The world in which to create the player.
-     * @param position The position at which to create the player.
+     * @param world The world in wich to create the player.
+     * @param position The position at wich to create the player.
      * @param friction The friction of the player body.
      * @param density The density of the player body.
      * @param acceleration The acceleration of the player. Used to accelerate when running/jumping.
      * @param deceleration The deceleration of the player. Used to stop the player from running.
      * @param color The color of the visual representation of the players body.
-     * @param size The size of the players body.
+     * @param size The imSize of the players body.
      */
     public Player(long id, World world, Vec2 position, float friction, float density, Vec2 acceleration, Vec2 deceleration, Color color, Vec2 size) {
         super(id, position, friction, color);
@@ -98,7 +99,7 @@ public class Player extends SolidObject implements DrawAndUpdateObject, Collisio
     }
 
     /**
-     * Initialization values shared by the constructors. Used to initialize the player.
+     * Initializationvalues shared by the constructors. Used to initialize the player.
      * @param world The current game world.
      * @param density The density of the player.
      * @param acceleration The acceleration of the player.
@@ -134,7 +135,7 @@ public class Player extends SolidObject implements DrawAndUpdateObject, Collisio
     }
 
     /**
-     * Creates the players body using the 'size' parameter to create the different shapes that the body consists of.
+     * Creates the players body using the 'imSize' parameter to create the different shapes that the body consists of.
      * The body is built up by two circles and a square that sit on top of each other in the following order:
      * circle
      * square
@@ -143,8 +144,8 @@ public class Player extends SolidObject implements DrawAndUpdateObject, Collisio
      * player body.
      *
      * !OBS: The function can be shorted but it would be pointless since all that happens in the function is the creation of the different parts
-     * of the body, how the parts should look, be sized and positioned relative to each other. Thus the function is left as it is.
-     * @param world The world in which to create the player body.
+     * of the body, how the parts shoudl look, be sized and positioned relative to each other. Thus the function is left as it is.
+     * @param world The world in wich to create the player body.
      */
     private void createBody(World world){
         FixtureDef upperCircle = new FixtureDef();
@@ -161,30 +162,30 @@ public class Player extends SolidObject implements DrawAndUpdateObject, Collisio
         CircleShape upperCircleShape = new CircleShape();
         CircleShape bottomCircleShape = new CircleShape();
 
-        //Do note that the SetAsBox takes half of the width and half of the height then spanning said measurements
-        //out on both sides of the center point (bodyPosition). The height of each element is first divided by two
+        //Do note that the SetAsBox takes half of the width and half of the height then spanning said measurments
+        //out on both sides of the centerpoint (bodyposition). The height of each element is first divided by two
         //(because the shapes takes half width and height) and then by 3 since there are 3 elements on a player.
-        float radius;
+        float radious;
         Vec2 middleBoxSize;
         Vec2 upperCirclePos;
         Vec2 bottomCirclePos;
         if (size.y / size.x >= 1) {
-            radius = size.x/2;
-            //size.x/50 is a scalable small number that is subtracted from the middle box to avoid an edge between the circle and the box.
+            radious = size.x/2;
+            //imSize.x/50 is a scalable small number that is substracted from the middlebox to avoid an edge between the circle and the box.
             //noinspection MagicNumber
-            middleBoxSize = new Vec2(size.x - size.x / 50 , radius * 2);
-            upperCirclePos = (new Vec2(0, (size.y - radius * 4) / 2 > 0 ? -((size.y - radius * 4) / 2) - radius : -radius));
-            bottomCirclePos = (new Vec2(0, (size.y - radius * 4) / 2 > 0 ? (size.y - radius * 4) / 2 + radius : radius));
+            middleBoxSize = new Vec2(size.x - size.x / 50 , radious * 2);
+            upperCirclePos = (new Vec2(0, (size.y - radious * 4) / 2 > 0 ? -((size.y - radious * 4) / 2) - radious : -radious));
+            bottomCirclePos = (new Vec2(0, (size.y - radious * 4) / 2 > 0 ? (size.y - radious * 4) / 2 + radious : radious));
         }
         else{
-            radius = size.y/2;
-            //size.x/50 is a scalable small number that is subtracted from the middle box to avoid an edge between the circle and the box.
+            radious = size.y/2;
+            //imSize.x/50 is a scalable small number that is substracted from the middlebox to avoid an edge between the circle and the box.
             //noinspection MagicNumber
             middleBoxSize = new Vec2(size.y - size.y / 50, size.y);
-            upperCirclePos = (new Vec2((size.x - radius * 4) / 2 > 0 ? -((size.x - radius * 4) / 2) - radius : -radius, 0));
-            bottomCirclePos = (new Vec2((size.x - radius * 4) / 2 > 0 ? (size.x - radius * 4) / 2 + radius : radius, 0));
+            upperCirclePos = (new Vec2((size.x - radious * 4) / 2 > 0 ? -((size.x - radious * 4) / 2) - radious : -radious, 0));
+            bottomCirclePos = (new Vec2((size.x - radious * 4) / 2 > 0 ? (size.x - radious * 4) / 2 + radious : radious, 0));
         }
-        Vec2 bottomSensorPos = new Vec2(0, bottomCirclePos.y + radius);
+        Vec2 bottomSensorPos = new Vec2(0, bottomCirclePos.y + radious);
         Vec2 bottomSensorSize = new Vec2(size.x - size.x / 4, sensorThickness * 2);
         Vec2 leftSensorPos = new Vec2(-size.x / 2 - sensorThickness, 0);
         Vec2 leftSensorSize = new Vec2(sensorThickness, size.y - size.y/5);
@@ -192,8 +193,8 @@ public class Player extends SolidObject implements DrawAndUpdateObject, Collisio
         Vec2 rightSensorSize = new Vec2(sensorThickness, size.y - size.y/5);
 
         //Initializing the shapes
-        upperCircleShape.setRadius(radius);
-        bottomCircleShape.setRadius(radius);
+        upperCircleShape.setRadius(radious);
+        bottomCircleShape.setRadius(radious);
         middleBoxShape.setAsBox(middleBoxSize.x/2, middleBoxSize.y / 2);
         bottomSensorShape.setAsBox(bottomSensorSize.x / 2, bottomSensorSize.y / 2, bottomSensorPos, 0);
         leftSensorShape.setAsBox(leftSensorSize.x / 2, leftSensorSize.y / 2, leftSensorPos, 0);
@@ -239,12 +240,12 @@ public class Player extends SolidObject implements DrawAndUpdateObject, Collisio
 
         //Setting the group index to be able to prevent collision between the player and certain objects (for example
         //between the player and the inventory-items)
-        upperCircle.filter.groupIndex = -(int) ID;
-        middleBox.filter.groupIndex = -(int) ID;
-        bottomCircle.filter.groupIndex = -(int) ID;
-        bottomSensor.filter.groupIndex = -(int) ID;
-        leftSensor.filter.groupIndex = -(int) ID;
-        rightSensor.filter.groupIndex = -(int) ID;
+        upperCircle.filter.groupIndex = -(int) iD;
+        middleBox.filter.groupIndex = -(int) iD;
+        bottomCircle.filter.groupIndex = -(int) iD;
+        bottomSensor.filter.groupIndex = -(int) iD;
+        leftSensor.filter.groupIndex = -(int) iD;
+        rightSensor.filter.groupIndex = -(int) iD;
 
         //Creating the body using the fixtureDef and the BodyDef created beneath
         BodyDef bodyDef = new BodyDef();
@@ -264,7 +265,7 @@ public class Player extends SolidObject implements DrawAndUpdateObject, Collisio
     }
 
     /**
-     * The update function runs every frame and updates the functions in player that needs updating. For example it updates
+     * The update function runs every frame and updates the functions in player that needs updating. For exapmle it updates
      * the acceleration/deceleration of the player. It also checks that the sensor of the player body is not wrong and so on.
      */
     public void update(){
@@ -273,12 +274,12 @@ public class Player extends SolidObject implements DrawAndUpdateObject, Collisio
             powerUpTime++;
             if (powerUpTime > SIX_SECONDS){
                 powerUpTime = 0;
-                currentJumpHandler = new DefaultJumpHandler();
+                currentJumpHandler =new DefaultJumpHandler();
                 startTime = false;
             }
         }
 
-        //Ensures that the sensor value is not wrong. If velocity.y is 0 for two frames then the character is grounded
+        //Ensures that the sensorvalue is not wrong. If velocity.y is 0 for two frames then the character is grounded
         if (body.getLinearVelocity().y > -GROUNDED_THRESHOLD && body.getLinearVelocity().y < GROUNDED_THRESHOLD && !grounded){
             if (velocityZeroTimer == -1){velocityZeroTimer = System.currentTimeMillis();}
             else if (System.currentTimeMillis() - velocityZeroTimer >= APPROXIMATED_FRAME_TIME * 2){
@@ -342,7 +343,7 @@ public class Player extends SolidObject implements DrawAndUpdateObject, Collisio
     @Override
     public void draw(GraphicsContext gc) {
         drawHealthBar(gc);
-        //'DEBUG_DRAW' used for debugging. It draws the body and the texture so that one can observe their relative positions.
+        //'DEBUG_DRAW' used for debugging. It draws the body and the texture so that one can obserbe their relative positions.
         if (sprite == null || DEBUG_DRAW) {
             for (Fixture fixture = body.getFixtureList(); fixture != null; fixture = fixture.getNext()) {
                 if (fixture.getType() == ShapeType.CIRCLE) {
@@ -373,63 +374,55 @@ public class Player extends SolidObject implements DrawAndUpdateObject, Collisio
         actualHealth -= damage;
     }
 
-
     /**
-     * Draws the health bar directly over each player.
-     * @param gc The graphicsContext on which to draw on.
+     * Draws the healthbar directly over each player.
+     * @param gc The graphicscontext on which to draw on.
      */
     private void drawHealthBar(GraphicsContext gc){
         final int healthBarWidth = 100;
         final int healthBarHeight = 20;
-        //The difference between the visible health and the actual health
-        int healthDelta = visibleHealth - actualHealth;
         //This bar shows how much health you have lost.
         gc.setFill(Color.RED);
         gc.fillRect(GameComponent.metersToPix(body.getPosition().x) - healthBarWidth / 2,
                     GameComponent.metersToPix(body.getPosition().y - (size.y / 2)) - healthBarHeight, healthBarWidth, healthBarHeight);
-        //Shows the healthDelta to give a better representation of how much HP you lost.
-        gc.setFill(Color.WHITE);
-        gc.fillRect(GameComponent.metersToPix(body.getPosition().x) - healthBarWidth / 2 + actualHealth,
-                    GameComponent.metersToPix(body.getPosition().y - (size.y / 2)) - healthBarHeight, healthDelta, healthBarHeight);
-
         //This bar shows you your current health.
         gc.setFill(Color.GREEN);
         gc.fillRect(GameComponent.metersToPix(body.getPosition().x) - healthBarWidth / 2,
-                    GameComponent.metersToPix(body.getPosition().y - (size.y / 2)) - healthBarHeight, actualHealth, healthBarHeight);
+                    GameComponent.metersToPix(body.getPosition().y - (size.y / 2)) - healthBarHeight, visibleHealth, healthBarHeight);
         //This if-statement makes the bar "roll", it makes the
-        //health bar change much smoother.
-
+        //healthbar change much smoother.
         if(actualHealth < visibleHealth){
             visibleHealth -= 1;
-            if (actualHealth <= 0){
+            if (visibleHealth == 0){
                 System.out.println("Dead");
-                respawn(gc);
+                respawn();
             }
         }
         else if(actualHealth != visibleHealth){
             visibleHealth = actualHealth;
-            if (actualHealth <= 0){
+            if (visibleHealth == 0){
                 System.out.println("Dead");
-                respawn(gc);
+                respawn();
             }
         }
-
     }
 
     /**
-     * This method re-spawns the player after death.
-     * @param gc The graphicsContext on which to draw on.
+     * This method respawns the player after death.
+     * @param gc The graphicscontext on which to draw on.
      */
-    private void respawn(GraphicsContext gc){
+    private void respawn(){
         Map map = LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber());
         map.removeBody(body);
-        map.removeDrawAndUpdateObject(this);
+        map.removeDrawObject(this);
+        map.removeUpdateObject(this);
         map.removeCollisionListener(this);
         map.removeInputListener(this);
         createBody(world);
-        LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber()).addCollisionListener(this);
-        LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber()).addDrawAndUpdateObject(this);
-        LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber()).addInputListener(this);
+        map.addUpdateObject(this);
+        map.addDrawObject(this);
+        map.addInputListener(this);
+        map.addCollisionListener(this);
         resetHealth(maxHealth);
         addScore(-1);
     }
@@ -450,7 +443,7 @@ public class Player extends SolidObject implements DrawAndUpdateObject, Collisio
     }
 
     /**
-     * Handles the inputs that the player listens to.
+     * Handles the inputs that the player listenes to.
      * @param event The KeyEvent contains all the information about the input.
      */
     public void inputAction(KeyEvent event){
@@ -487,8 +480,8 @@ public class Player extends SolidObject implements DrawAndUpdateObject, Collisio
     }
 
     /**
-     * Handles the collision checks of the player. If a sensor collides with something then set the specific sensor
-     * collision status to either true or false. This is used to determine if the player can jump or not (the bottom sensor
+     * Handles the collisionchecks of the player. If a sensor collides with something then set the specific sensor
+     * collision statis to either true or false. This is used to determine if the player can jump or not (the bottomsensor
      * must collide with something) among other things.
      * @param contact A object containing the two bodies and fixtures that made contact. It also contains collisiondata
      */
@@ -511,8 +504,8 @@ public class Player extends SolidObject implements DrawAndUpdateObject, Collisio
     }
 
     /**
-     * Handles the collisionChecks of the player. If a sensor collides with something then set the specific sensor
-     * collision status to either true or false. This is used to determine if the player can jump or not (the bottom sensor
+     * Handles the collisionchecks of the player. If a sensor collides with something then set the specific sensor
+     * collision statis to either true or false. This is used to determine if the player can jump or not (the bottomsensor
      * must collide with something) among other things.
      * @param contact A object containing the two bodies and fixtures that made contact. It also contains collisiondata
      */
@@ -528,7 +521,7 @@ public class Player extends SolidObject implements DrawAndUpdateObject, Collisio
     }
 
     /**
-     * Checks which sensor has collided and then sets the appropriate flag to the specified value.
+     * Checks wich sensor has collided and then sets the appropriate flag to the specified value.
      * This is used to determine if the player is on the ground of not (among other things).
      * @param fixture The sensor Fixture that has collided.
      * @param setValue The value to set the flag to (false if collision has ended and true if collision has begun)
@@ -548,7 +541,7 @@ public class Player extends SolidObject implements DrawAndUpdateObject, Collisio
     }
 
     /**
-     * Calls the jumpHandler function that then makes the player jump.
+     * Calls the jumphandlerfunction that then makes the player jump.
      */
     private void jump(){
         currentJumpHandler.jump(this);
@@ -559,8 +552,6 @@ public class Player extends SolidObject implements DrawAndUpdateObject, Collisio
     public Vec2 getSize() {return size;}
 
     public void setRestitution(float restitution) {this.restitution = restitution;}
-
-    public void setMaxVelocity(Vec2 maxVelocity){this.maxVelocity = maxVelocity;}
 
     public void addScore(int score){this.score += score;}
 
@@ -580,10 +571,6 @@ public class Player extends SolidObject implements DrawAndUpdateObject, Collisio
 
     public int getScore() {return score;}
 
-    public int getActualHealth() {return actualHealth;}
-
-    public int getVisibleHealth() {return visibleHealth;}
-
     public void setCurrentJumpHandler(JumpHandler currentJumpHandler) {this.currentJumpHandler = currentJumpHandler;}
 
     public boolean isPickUpItem() {return pickUpItem;}
@@ -594,8 +581,8 @@ public class Player extends SolidObject implements DrawAndUpdateObject, Collisio
 
     /**
      * Ensures that the vector can only contain integers
-     * @param x The x position of the idleFrame.
-     * @param y The y position of the idleFrame.
+     * @param x The x position of the idleframe.
+     * @param y The y position of the idleframe.
      */
     public void setSpriteIdleFrame(int x, int y) {
         this.spriteIdleFrame = new Vec2(x, y);

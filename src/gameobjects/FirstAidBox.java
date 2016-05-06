@@ -24,8 +24,8 @@ public class FirstAidBox extends DynamicSquare implements PowerUps
      * @param world The world where the coin will be created
      * @param pos   The position of the coin
      * @param friction  The friction of the coin
-     * @param image     The image of the coin
-     * @param objectID    The ID of the coin
+     * @param image     The iamge of the coin
+     * @param objectID    The iD of the coin
      */
     public FirstAidBox(long objectID, World world, Vec2 pos, float friction, int heal, Image image) {
         super(objectID, world, pos, friction, image);
@@ -36,15 +36,14 @@ public class FirstAidBox extends DynamicSquare implements PowerUps
     /**
      * Creates a box that will symbolize a first aid kit
      * @param world The world where the box will be created
-     * @param pos   The position of the box
+     * @param pos   The posistion of the box
      * @param friction  The friction of the box
      * @param color The color of the box
-     * @param width The width of the box
-     * @param height    The height if the box
+     * @param size The size of the box
      * @param objectID    The id of the box
      */
-    public FirstAidBox(long objectID, World world, Vec2 pos, float friction, int heal, Color color, double width, double height) {
-        super(objectID, world, pos, friction, color, width, height);
+    public FirstAidBox(long objectID, World world, Vec2 pos, float friction, int heal, Color color, Vec2 size) {
+        super(objectID, world, pos, friction, color, size);
         this.heal = heal;
         body.setUserData(this);
     }
@@ -56,7 +55,7 @@ public class FirstAidBox extends DynamicSquare implements PowerUps
      *OBS!
      * The chain of 'instanceof' is used to check if the object collided with is an instance of player. The 'getUserData' method in
      * body is a container of type 'Object'. This container always contains the class owning the body (in this project) thus
-     * this parameter can be used to check which type of gameobject is collided with and then run methods on said object to get
+     * this parameter can be used to check wich type of gameobject is collided with and then run methods on said object to get
      * an effect. For example heal the player if we are sure that the object collided with is of the 'Player' class
      * (thus we can safely cast the object contained inside the 'UserData' to 'Player'.
      */
@@ -66,7 +65,7 @@ public class FirstAidBox extends DynamicSquare implements PowerUps
     }
 
     /**
-     * Helps the 'beginContact' function to check collisions and take action appropriately. For more detailed comments read the
+     * Helps the 'beginContact' function to check collisions and take action appropriatly. For more detailed comments read the
      * comments on said function.
      * @param fixtureA One of the fixtures in the check.
      * @param fixtureB One of the fixtures in the check.
@@ -77,7 +76,7 @@ public class FirstAidBox extends DynamicSquare implements PowerUps
             Map map = LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber());
             map.removeBody(body);
             map.removeCollisionListener(this);
-            map.removeDrawAndUpdateObject(this);
+            map.removeDrawObject(this);
         }
     }
 

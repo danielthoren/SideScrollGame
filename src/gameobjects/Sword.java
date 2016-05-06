@@ -25,29 +25,13 @@ public class Sword extends InventoryItemParent implements CollisionListener
      * @param position  The position of the sword
      * @param friction  The friction of the sword
      * @param image The image of the sword
-     * @param isSquare  Boolean value.
      * @param damage    The damage of the sword.
      */
-    public Sword(final long objectID, final World world, final Vec2 position, final float friction, final Image image,
-		 final boolean isSquare, int damage)
+    public Sword(final long objectID, final World world, final Vec2 position, final float friction, final Image image, int damage)
     {
-	super(objectID, world, position, friction, image, isSquare);
+	super(objectID, new DynamicSquare(objectID, world, position, friction, image));
 	this.damage = damage;
 	hasDamaged = false;
-    }
-
-    /**
-     * This method is not done yet. It will be a attack method.
-     */
-    private void attack(){
-        System.out.println("attack");
-    }
-
-    /**
-     * This method is not done yet, it will be a defend method.
-     */
-    private void defend(){
-        System.out.println("defend");
     }
 
     /**
@@ -56,7 +40,7 @@ public class Sword extends InventoryItemParent implements CollisionListener
     @Override
     public void equip() {
 	super.equip();
-	LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber()).addCollisionListener(this);
+        LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber()).addCollisionListener(this);
     }
 
     /**
@@ -65,11 +49,11 @@ public class Sword extends InventoryItemParent implements CollisionListener
     @Override
     public void unEquip() {
 	super.unEquip();
-	LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber()).removeDrawAndUpdateObject(this);
+        LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber()).removeCollisionListener(this);
     }
 
     /**
-     * Takes care of collision encounters with players:
+     * Takes care of collisionencounters with players:
      * - if: This collides with a player, set the 'currentCollidingPlayer' field to said player.
      *       - if: This item is in an inventory and has not damaged a player since this started to collide with a player
      *             (thus preventing the item from draining all of the health of the other player with just one collision)
@@ -78,7 +62,7 @@ public class Sword extends InventoryItemParent implements CollisionListener
      *OBS!
      * The chain of 'instanceof' is used to check if the object collided with is an instance of player. The 'getUserData' method in
      * body is a container of type 'Object'. This container always contains the class owning the body (in this project) thus
-     * this parameter can be used to check which type of gameobject is collided with and then run methods on said object to get
+     * this parameter can be used to check wich type of gameobject is collided with and then run methods on said object to get
      * an effect. For example heal the player if we are sure that the object collided with is of the 'Player' class
      * (thus we can safely cast the object contained inside the 'UserData' to 'Player'.
      *
@@ -90,13 +74,13 @@ public class Sword extends InventoryItemParent implements CollisionListener
     }
 
     /**
-     * Helps the 'beginContact' function to check for certain collisions. for more detailed comments on what these two functions
+     * Helps the 'beginContact' function to check for certain collisions. for more detailed comments on what theese two functions
      * do read the comments on said function.
      * @param fixtureA One of the fixtures used in the check.
      * @param fixtureB One of the fixtures used in the check.
      */
     private void beginContactCheck(Fixture fixtureA, Fixture fixtureB){
-        if (fixtureA.getBody().getUserData().equals(solidObject) &&
+        if (fixtureA.getBody().getUserData().equals((circle == null) ? square : circle) &&
                 fixtureB.getBody().getUserData() instanceof Player){
             currentCollidingPlayer = (Player) fixtureB.getBody().getUserData();
             if (player != null && !hasDamaged && !fixtureB.getBody().getUserData().equals(player)) {
@@ -107,13 +91,13 @@ public class Sword extends InventoryItemParent implements CollisionListener
     }
 
     /**
-     * Takes car of collision encounters with players:
+     * Takes car of collisionencounters with players:
      * - if: This stops to collide with a player then set the field 'hasDamaged' to 'false' and 'currentCollidingPlayer' to 'null'.
      *
      * OBS!
      * The chain of 'instanceof' is used to check if the object collided with is an instance of player. The 'getUserData' method in
      * body is a container of type 'Object'. This container always contains the class owning the body (in this project) thus
-     * this parameter can be used to check which type of gameobject is collided with and then run methods on said object to get
+     * this parameter can be used to check wich type of gameobject is collided with and then run methods on said object to get
      * an effect. For example heal the player if we are sure that the object collided with is of the 'Player' class
      * (thus we can safely cast the object contained inside the 'UserData' to 'Player'.
      * Also the branches are not identical because they evaluate different fixtures.
@@ -132,7 +116,7 @@ public class Sword extends InventoryItemParent implements CollisionListener
      * @param fixtureB The second fixture to be used in check.
      */
     private void endContactCheck(Fixture fixtureA, Fixture fixtureB){
-        if (fixtureA.getBody().getUserData().equals(solidObject) && fixtureB.getBody().getUserData() instanceof Player){
+        if (fixtureA.getBody().getUserData().equals((circle == null) ? square : circle) && fixtureB.getBody().getUserData() instanceof Player){
             hasDamaged = false;
             currentCollidingPlayer = null;
         }
