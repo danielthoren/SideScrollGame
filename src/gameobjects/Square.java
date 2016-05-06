@@ -28,7 +28,7 @@ public class Square extends SolidObject implements Draw
     public Square(long objectID, World world, Vec2 pos, float friction, Image image) {
 	super(objectID, pos, friction, image);
 	size = new Vec2((float) image.getWidth() / LoadMap.getInstance().getPixPerMeter(), (float) image.getHeight() / LoadMap.getInstance().getPixPerMeter());
-	createBody(world);
+	createBody(world, 5f, friction, 0.01f);
 	body.setUserData(this);
     }
 
@@ -43,7 +43,7 @@ public class Square extends SolidObject implements Draw
     public Square(long objectID, World world, Vec2 pos, float friction, Color color, Vec2 size){
 	super(objectID, pos, friction, color);
 	this.size = size;
-	createBody(world);
+	createBody(world, 5f, friction, 0.01f);
 	body.setUserData(this);
     }
 
@@ -51,7 +51,7 @@ public class Square extends SolidObject implements Draw
      * Creates the body of the 'gameobjects.Square' object.
      * @param world The world in wich to add its body.
      */
-    protected void createBody(World world){
+    protected void createBody(World world, float density, float friction, float restitution){
 	FixtureDef fixtureDef = new FixtureDef();
 	PolygonShape polygonShape = new PolygonShape();
 
@@ -61,9 +61,9 @@ public class Square extends SolidObject implements Draw
 
 	//Creating the fixture of the body. The concrete part that can be touched (the part that can collide)
 	fixtureDef.shape = polygonShape;
-	fixtureDef.density = 10;
+	fixtureDef.density = density;
 	fixtureDef.friction = friction;
-	fixtureDef.restitution = 0;
+	fixtureDef.restitution = restitution;
 
 	//Creating the body using the fixtureDef and the BodyDef created beneath
 	BodyDef bodyDef = new BodyDef();

@@ -51,7 +51,7 @@ public class GameLoop extends AnimationTimer
 		// we last recorded
 		if (lastFpsTime >= NANOS_PER_SECOND)
 		{
-			System.out.println("(FPS: "+fps+")");
+			//System.out.println("(FPS: "+fps+")");
 			lastFpsTime = 0;
 			currFps = fps;
 			fps = 0;

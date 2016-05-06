@@ -77,6 +77,7 @@ public final class LoadMap {
 
             Image swordIm = loadImage("/textures/Textures/Sword.png", new Vec2(0.2f, 0.4f));
             Sword sword = new Sword(getObjectID(), world, new Vec2(5f, 0f), 0.4f, swordIm, 15);
+            sword.setDensity(0.1f);
             drawObjects.add(sword);
             updateObjects.add(sword);
             gameObjectsCollision.add(sword);

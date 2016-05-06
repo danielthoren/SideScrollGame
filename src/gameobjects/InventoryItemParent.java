@@ -3,7 +3,6 @@ package gameobjects;
 import characterspesific.InventoryItem;
 import gamelogic.Map;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.Filter;
@@ -30,7 +29,6 @@ public class InventoryItemParent implements InventoryItem
     /**
      * Initializes a 'gameobjects.InventoryItemParent and puts it at the specified position in the specified world.
      * @param objectID The id of the object.
-     * @param friction The friction of the object.
      * @param circle The circlebody of the object.
      */
     public InventoryItemParent(long objectID, Circle circle) {
@@ -49,7 +47,6 @@ public class InventoryItemParent implements InventoryItem
     /**
      * Initializes a 'gameobjects.InventoryItemParent and puts it at the specified position in the specified world.
      * @param objectID The id of the object.
-     * @param friction The friction of the object.
      * @param square The squarebody of the object.
      */
     public InventoryItemParent(long objectID, Square square) {
@@ -61,8 +58,6 @@ public class InventoryItemParent implements InventoryItem
         currentCollidingPlayer = null;
         relativePos = null;
         player = null;
-        //Setting the DENSITY of the object to 1. This is the default value of an equipped item and can be changed by setter in superclass.
-        square.setDensity(1f);
     }
 
     /**
@@ -156,18 +151,20 @@ public class InventoryItemParent implements InventoryItem
         LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber()).addUpdateObject(this);
         if (circle == null) {
             if (square.getBody() == null) {
-                square.createBody(LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber()).getWorld());
-
+                square.createBody(LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber()).getWorld(), density, friction, restitution);
+                square.setDensity(density);
             }
         }
         else{
             if (circle.getBody() == null){
                 circle.createBody(LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber()).getWorld());
+                circle.setDensity(density);
             }
         }
         Map map = LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber());
         map.addDrawObject((square == null) ? circle : square);
         map.addUpdateObject(this);
+        getBody().setBullet(true);
     }
 
     /**
@@ -189,11 +186,17 @@ public class InventoryItemParent implements InventoryItem
      */
     public void pickUp(Player player){
         getBody().getFixtureList().setSensor(false);
-        getBody().setFixedRotation(true);
         getBody().setTransform(getBody().getPosition(), relativeAngle);
+        getBody().setFixedRotation(true);
         setGroupIndex(-(int)player.getId());
         calcRelativePos(player);
         this.player = player;
+        if (circle == null){
+            square.setDensity(1f);
+        }
+        else{
+            circle.setDensity(1f);
+        }
     }
 
     /**
@@ -202,6 +205,16 @@ public class InventoryItemParent implements InventoryItem
     public void drop(){
         getBody().setFixedRotation(false);
         setGroupIndex(0);
+        Vec2 gravity = LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber()).getWorld().getGravity();
+        //Sets the velocity to specific value. If this is not doen the object will move verry fast in the direction of the gravity.
+        //The reason behind this is that box2d freezes the velocity on the object when making it KINEMATIC, than that velocity is
+        //applied again when the body is set to DYNAMIC again.
+        if (player.getDirection() == Direction.LEFT){
+            getBody().setLinearVelocity(new Vec2(-1, -1));
+        }
+        else {
+            getBody().setLinearVelocity(new Vec2(1, -1));
+        }
         player = null;
     }
 
@@ -233,6 +246,16 @@ public class InventoryItemParent implements InventoryItem
         else {
             return circle.getBody();
         }
+    }
+
+    public void setDensity(float density){
+        if (circle == null){
+            square.setDensity(density);
+        }
+        else{
+            circle.setDensity(density);
+        }
+        this.density = density;
     }
 
     /**
