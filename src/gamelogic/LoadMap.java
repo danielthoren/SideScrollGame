@@ -18,7 +18,8 @@ import java.util.*;
 
 /**
  * The singelton that loads and holds the map. This is a singelton since there is no need for more than one maploader.
- * All maps and objects can be loaded from this one class.
+ * All maps and objects can be loaded from this one class. This saves system resources since there is no need for more than one
+ * class that loads maps.
  */
 @SuppressWarnings("ALL")
 public final class LoadMap {
@@ -52,45 +53,54 @@ public final class LoadMap {
 
         if (!maps.containsKey(mapNumber)){
 
-            List<DrawAndUpdateObject> gameObjects;
+            List<Draw> drawObjects;
+            List<Update> updateObjects;
             List<InputListener> gameObjectsListen;
             List<CollisionListener> gameObjectsCollision;
 
-            gameObjects = new ArrayList<DrawAndUpdateObject>(10);
+            drawObjects = new ArrayList<>(10);
+            updateObjects = new ArrayList<>(10);
             gameObjectsListen = new ArrayList<InputListener>(2);
             gameObjectsCollision = new ArrayList<CollisionListener>(2);
 
 
-            gameObjects.add(new DynamicSquare(getObjectID(), world, new Vec2(1f, 2f), 0.3f, Color.BLUE, 0.4d, 0.4d));
-            gameObjects.add(new DynamicSquare(getObjectID(), world, new Vec2(1.5f, 2f), 0.3f, Color.AQUA, 0.4d, 0.4d));
-            gameObjects.add(new DynamicSquare(getObjectID(), world, new Vec2(1.3f, 0.5f), 0.3f, Color.AZURE, 0.4d, 0.4d));
+            DynamicSquare dyn1 = new DynamicSquare(getObjectID(), world, new Vec2(1f, 2f), 0.3f, Color.BLUE, new Vec2(0.4f, 0.4f));
+            DynamicSquare dyn2 = new DynamicSquare(getObjectID(), world, new Vec2(1.5f, 2f), 0.3f, Color.AQUA, new Vec2(0.4f, 0.4f));
+            DynamicSquare dyn3 = new DynamicSquare(getObjectID(), world, new Vec2(1.3f, 0.5f), 0.3f, Color.AZURE, new Vec2(0.4f, 0.4f));
+            drawObjects.add(dyn1);
+            drawObjects.add(dyn2);
+            drawObjects.add(dyn3);
 
             Image stoneBrickWall = loadImage("/textures/squareTextures/StoneBrickWall.jpg", new Vec2(0.4f, 0.4f));
             Image dessertSquare = loadImage("/textures/squareTextures/DessertSquare.jpg", new Vec2(0.4f, 0.4f));
             Image grayHexagons = loadImage("/textures/squareTextures/GrayHexagons.png", new Vec2(0.4f, 0.4f));
 
-
             Image swordIm = loadImage("/textures/Textures/Sword.png", new Vec2(0.2f, 0.4f));
-            Sword sword = new Sword(getObjectID(), world, new Vec2(5f, 0f), 0.4f, swordIm, true, 15);
-            gameObjects.add(sword);
+            Sword sword = new Sword(getObjectID(), world, new Vec2(5f, 0f), 0.4f, swordIm, 15);
+            drawObjects.add(sword);
+            updateObjects.add(sword);
             gameObjectsCollision.add(sword);
 
-            gameObjects.add(new DynamicCircle(getObjectID(), world, new Vec2(2f,0f), 0.2f, Color.AQUA, 0.2));
+            drawObjects.add(new DynamicCircle(getObjectID(), world, new Vec2(2f,0f), 0.2f, Color.AQUA, 0.2f));
 
-            gameObjects.add(new DynamicSquare(getObjectID(), world, new Vec2(2f, 2f), 0.3f, stoneBrickWall));
-            gameObjects.add(new DynamicSquare(getObjectID(), world, new Vec2(2.5f, 2f), 0.3f, stoneBrickWall));
-            gameObjects.add(new DynamicSquare(getObjectID(), world, new Vec2(2.3f, 0.5f), 0.3f, grayHexagons));
-            gameObjects.add(new DynamicSquare(getObjectID(), world, new Vec2(1f, 3f), 0.3f, grayHexagons));
-            gameObjects.add(new DynamicSquare(getObjectID(), world, new Vec2(1.5f, 3f), 0.3f, dessertSquare));
-            gameObjects.add(new DynamicSquare(getObjectID(), world, new Vec2(1.3f, 1.5f), 0.3f, dessertSquare));
+            drawObjects.add(new DynamicSquare(getObjectID(), world, new Vec2(2f, 2f), 0.3f, stoneBrickWall));
+            drawObjects.add(new DynamicSquare(getObjectID(), world, new Vec2(2.5f, 2f), 0.3f, stoneBrickWall));
+            drawObjects.add(new DynamicSquare(getObjectID(), world, new Vec2(2.3f, 0.5f), 0.3f, grayHexagons));
+            drawObjects.add(new DynamicSquare(getObjectID(), world, new Vec2(1f, 3f), 0.3f, grayHexagons));
+            drawObjects.add(new DynamicSquare(getObjectID(), world, new Vec2(1.5f, 3f), 0.3f, dessertSquare));
+            drawObjects.add(new DynamicSquare(getObjectID(), world, new Vec2(1.3f, 1.5f), 0.3f, dessertSquare));
             
-            gameObjects.add(new Square(getObjectID(), world, new Vec2(0f, 3f), 1f, Color.BEIGE, 0.4d, 6d));
-            gameObjects.add(new Square(getObjectID(), world, new Vec2(7f, 3f), 1f, Color.BEIGE, 0.4f, 6f));
-            DrawAndUpdateObject bottomSquare = new Square(getObjectID(), world, new Vec2(0f, 5.5f), 0.8f, Color.AZURE, 14.35d, 0.4d);
-            gameObjects.add(bottomSquare);
+            drawObjects.add(new Square(getObjectID(), world, new Vec2(0f, 3f), 1f, Color.BEIGE, new Vec2(0.4f, 6f)));
+            drawObjects.add(new Square(getObjectID(), world, new Vec2(7f, 3f), 1f, Color.BEIGE, new Vec2(0.4f, 6f)));
+            Draw bottomSquare = new Square(getObjectID(), world, new Vec2(0f, 5.5f), 0.8f, Color.AZURE, new Vec2(14.35f, 0.4f));
+            drawObjects.add(bottomSquare);
 
-            gameObjects.add(new MovingPlatform(getObjectID(), world, new Vec2(0f, 3f), 1f, Color.WHEAT, 1d, 0.1d, new Vec2(7f, 4f)));
-            gameObjects.add(new MovingPlatform(getObjectID(), world, new Vec2(1f, 3f), 1f, Color.BISQUE, 1d, 0.1d, new Vec2(1f, 5f)));
+            MovingPlatform platform1 = new MovingPlatform(getObjectID(), world, new Vec2(0f, 3f), 1f, Color.WHEAT, new Vec2(1f, 0.1f), new Vec2(7f, 4f));
+            MovingPlatform platform2 = new MovingPlatform(getObjectID(), world, new Vec2(1f, 3f), 1f, Color.BISQUE, new Vec2(1f, 0.1f), new Vec2(1f, 5f));
+            drawObjects.add(platform1);
+            drawObjects.add(platform2);
+            updateObjects.add(platform1);
+            updateObjects.add(platform2);
 
 
             Vec2 position = new Vec2(6f, 5f);
@@ -105,10 +115,12 @@ public final class LoadMap {
             Sprite sprite2 = new Sprite(getObjectID(), agentSprite, 10, 1, 10, 3, new Vec2(3,2), 0);
             sprite.setActualSizeOfSprite(new Vec2(0.48f, 0.90f));
             sprite2.setActualSizeOfSprite(new Vec2(0.48f, 0.90f));
-            gameObjects.add(sprite2);
-            gameObjects.add(sprite);
+            drawObjects.add(sprite2);
+            updateObjects.add(sprite2);
+            drawObjects.add(sprite);
+            updateObjects.add(sprite);
 
-            //gameobjects.Player player = new gameobjects.Player(ID++, world, position, friction, DENSITY, acceleration, deceleration, size, Color.BLUE);
+            //gameobjects.Player player = new gameobjects.Player(iD++, world, position, friction, DENSITY, acceleration, deceleration, imSize, Color.BLUE);
             Player player = new Player(getObjectID(), world, position, friction, density, acceleration, deceleration, sprite);
 
             ScoreBoard.getOurInstance().addPlayers(player);
@@ -117,11 +129,12 @@ public final class LoadMap {
             player.setRunLeftCode(KeyCode.A);
             player.setRunRightCode(KeyCode.D);
             gameObjectsListen.add(player);
-            gameObjects.add(player);
+            drawObjects.add(player);
+            updateObjects.add(player);
             gameObjectsCollision.add(player);
 
 
-            //gameobjects.Player player2 = new gameobjects.Player(ID++, world, position, friction, DENSITY, acceleration, deceleration, size, Color.BLANCHEDALMOND);
+            //gameobjects.Player player2 = new gameobjects.Player(iD++, world, position, friction, DENSITY, acceleration, deceleration, imSize, Color.BLANCHEDALMOND);
             Player player2 = new Player(getObjectID(), world, position, friction, density, acceleration, deceleration, sprite2);
 
             ScoreBoard.getOurInstance().addPlayers(player2);
@@ -130,17 +143,24 @@ public final class LoadMap {
             player2.setRunRightCode(KeyCode.RIGHT);
             player2.setRunLeftCode(KeyCode.LEFT);
             gameObjectsListen.add(player2);
-            gameObjects.add(player2);
+            drawObjects.add(player2);
+            updateObjects.add(player2);
             gameObjectsCollision.add(player2);
 
-            gameObjects.add(ScoreBoard.getOurInstance());
-            gameObjects.add(new GameLogic(LoadMap.getObjectID()));
+            drawObjects.add(ScoreBoard.getOurInstance());
+            updateObjects.add(new GameLogic(LoadMap.getObjectID()));
 
-            Map map = new Map(world, gameObjects, gameObjectsListen, gameObjectsCollision);
+            Map map = new Map(world, drawObjects, updateObjects, gameObjectsListen, gameObjectsCollision);
             maps.put(mapNumber, map);
         }
     }
 
+    /**
+     * Tries to load images, if the path is invalid then load errortexture.
+     * @param path The path to load from.
+     * @param size The imSize of the image, if the vector is (0,0) then it loads the default imSize.
+     * @return Returns a javafx image.
+     */
     public Image loadImage(String path, Vec2 size){
         Image image;
         try{

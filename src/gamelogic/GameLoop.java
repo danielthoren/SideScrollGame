@@ -1,8 +1,6 @@
 package gamelogic;
 
-import gamelogic.GameComponent;
 import javafx.animation.AnimationTimer;
-import userinterface.GameFrame;
 
 /**
  * Responsible for updating and drawing the game at a constant rate. It also keeps track of the current fps.
@@ -19,8 +17,8 @@ public class GameLoop extends AnimationTimer
     private static final long NANOS_PER_SECOND = 1000000000;
 
     /**
-     * Initialises the 'Gameloop'
-     * @param gameComponent The gameComponent of the game
+     * Initialices the 'Gameloop'
+     * @param gameComponent The gamecomponent of the game
      */
     public GameLoop(GameComponent gameComponent) {
 	this.gameComponent = gameComponent;
@@ -37,7 +35,7 @@ public class GameLoop extends AnimationTimer
     @Override
     public void handle(long now)
     {
-	//Calculate the time the previous rendering has taken
+	//Calclate the time the previous rendering has taken
 	/*
 	long updateLength = System.nanoTime() - lastLoopTime;
 	lastLoopTime = System.nanoTime();
@@ -61,7 +59,7 @@ public class GameLoop extends AnimationTimer
 
 	// update the gameFrame logic
 	gameComponent.update(updateLength);
-	// draw everything
+	// draw everyting
 	gameComponent.draw();
     }
 

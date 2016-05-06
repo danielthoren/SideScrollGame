@@ -1,5 +1,8 @@
 package gameobjects;
 
+import gamelogic.GameComponent;
+import gamelogic.LoadMap;
+import gamelogic.Update;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import org.jbox2d.common.Vec2;
@@ -9,10 +12,10 @@ import org.jbox2d.dynamics.World;
 
 
 /**
- * This class creates a MovingPlatform.
+ * This class creates a movingplatform.
  */
-public class MovingPlatform extends Square{
-    private Vec2 startPos;                  //The start position of the platform
+public class MovingPlatform extends Square implements Update{
+    private Vec2 startPos;                  //The start posistion of the platform
     private Vec2 endPos;                    // The position where the platform should return
     private Vec2 positiveVelocity;          // The velocity of the platform in the positive direction
     private Vec2 negativeVelocity;          // The velocity of the platform in the negative direction
@@ -25,7 +28,7 @@ public class MovingPlatform extends Square{
      * @param pos  The start position
      * @param friction The friction on the platform
      * @param image   The image texture on the platform
-     * @param endPos  The end position
+     * @param endPos  The end posistion
      */
     public MovingPlatform(long objectID, World world, Vec2 pos, float friction, Image image, Vec2 endPos) {
         super(objectID, world, pos, friction, image);
@@ -33,33 +36,31 @@ public class MovingPlatform extends Square{
         this.endPos = endPos;
         platformSpeed = 1;
         calculateVelocity();
-        makeBodyType(world);
+        makeBodyKinematic();
     }
 
     /**
      * Creates a square that will become a moving platform.
      * @param world The game world
-     * @param pos  The position where tha platform is creates (start position)
+     * @param startPos  The posistion where tha platform is creates (start position)
      * @param friction The friction on the platform
-     * @param color  The color of the platform
-     * @param width  The width of the platform
-     * @param height The height of the platform
-     * @param endPos The position where the platform should return
+     * @param color  The collor of the platform
+     * @param size The size of the platform
+     * @param endPos The posistion where the platform should return
      */
-    public MovingPlatform(long objectID, World world, Vec2 pos, float friction, Color color, double width, double height, Vec2 endPos) {
-        super(objectID, world, pos, friction, color, width, height);
-        startPos = pos;
+    public MovingPlatform(long objectID, World world, Vec2 startPos, float friction, Color color, Vec2 size, Vec2 endPos) {
+        super(objectID, world, startPos, friction, color, size);
+        this.startPos = startPos;
         this.endPos = endPos;
         platformSpeed = 1;   //The platform speed is set to 1m/s
         calculateVelocity();
-        makeBodyType(world);
+        makeBodyKinematic();
     }
 
     /**
      * Makes the body kinematic.
-     * @param world The game world
      */
-    private void makeBodyType(World world){
+    private void makeBodyKinematic(){
         body.setType(BodyType.KINEMATIC);
     }
 
@@ -70,7 +71,7 @@ public class MovingPlatform extends Square{
      */
     @Override
     public void update(){
-        //If endpos.x == startpos.x the speed is set depending on the y-position. Otherwise the velocity will never change
+        //If endpos.x == startpos.x the speed is set depending on the y-position. Otherwise the velicity will never change
         //direction and the platform will continue endlessly.
         if (endPos.x == startPos.x){
             if (body.getPosition().y <= startPos.y){
@@ -95,7 +96,7 @@ public class MovingPlatform extends Square{
     private void calculateVelocity() {
         //If endpos.x == startpos.x it means that the platform will only move
         //in the y-direction. Therefore setting this speed in a different if-statement
-        // so we don't get division by zero.
+        // so we dont get division by zero.
         //!OBS: if startpos.x == startpos.y then there is no xVelocity, thus it is set to zero.
         if (endPos.x - startPos.x == 0) {
             Double xVelocity = 0d;

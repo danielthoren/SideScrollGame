@@ -7,11 +7,11 @@ import javafx.scene.paint.Color;
 import java.util.ArrayList;
 import java.util.Collection;
 
-
 /**
- * This singelton draws the score of the players.
+ * This singelton draws the score of the players. There should never be more than one scoreboard, thus the scoreboard is a
+ * singelton. 
  */
-public final class ScoreBoard implements DrawAndUpdateObject
+public final class ScoreBoard implements Draw
 {
     private static ScoreBoard ourInstance = new ScoreBoard();
     private static Collection<Player> players = new ArrayList<>(2);
@@ -21,26 +21,22 @@ public final class ScoreBoard implements DrawAndUpdateObject
     private static int xPosition = 100;
 
     public static ScoreBoard getOurInstance() {
-	return ourInstance;
+        return ourInstance;
     }
-
-    private ScoreBoard() {}
-
-    public void update(){}
 
     /**
      * Draws the score of each players.
-     * @param gc The GraphicsContext with which to draw
+     * @param gc The GraphicsContext with wich to draw
      */
     public void draw(GraphicsContext gc){
-	int yTemp = yPosition;
-	int whichPlayer = 1;
-	gc.setFill(Color.WHEAT);
-	for (Player player : players){
-	    gc.fillText("gameobjects.Player" + whichPlayer+ " score: " + Integer.toString(player.getScore()), xPosition, yTemp);
-	    whichPlayer ++;
-	    yTemp *= 2; //Increases the y-coordinate for each player so the text is drawn in a nice line.
-	}
+        int yTemp = yPosition;
+        int whichPlayer = 1;
+        gc.setFill(Color.WHEAT);
+        for (Player player : players){
+            gc.fillText("gameobjects.Player" + whichPlayer+ " score: " + Integer.toString(player.getScore()), xPosition, yTemp);
+            whichPlayer ++;
+          yTemp *= 2; //Increases the y-coordinate for each player so the text is drawn in a nice line.
+        }
     }
 
     /**
@@ -48,16 +44,14 @@ public final class ScoreBoard implements DrawAndUpdateObject
      * @param player The player to add to the list.
      */
     public void addPlayers(Player player){
-	players.add(player);
+        players.add(player);
     }
 
     public long getId(){
-	return OBJECT_ID;
+        return OBJECT_ID;
     }
 
     public static void setyPosition(final int yPosition) {ScoreBoard.yPosition = yPosition;}
 
     public static void setxPosition(final int xPosition) {ScoreBoard.xPosition = xPosition;}
 }
-
-

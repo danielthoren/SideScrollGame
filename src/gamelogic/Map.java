@@ -9,55 +9,62 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Holds the different values of the map. Having more than one instance of the map may be important in the future when
+ * Holds the different values of the map. Having more than one instance of the map may be importaint in the future when
  * multiple maps may be needed for one session (doors and such).
  */
 public class Map
 {
-    private List<DrawAndUpdateObject> drawAndUpdateObjectList;
+    private List<Draw> drawObjects;
+    private List<Update> updateObjects;
     private List<InputListener> inputListenerList;
     private List<CollisionListener> collisionListenerList;
 
-    private List<DrawAndUpdateObject> drawANdUpdateObjectsStagedForRemoval;
+    private List<Draw> drawObjectsStagedForRemoval;
+    private List<Update> updateObjectsStagedForRemoval;
     private List<InputListener> inputListenersStagedForRemoval;
     private List<CollisionListener> collisionListenersStagedForRemoval;
     private List<Body> bodiesStagedForRemoval;
 
-    private List<DrawAndUpdateObject> drawAndUpdateObjectsStagedForAddition;
+    private List<Draw> drawObjectsStagedForAddition;
+    private List<Update> updateObjectsStagedForAddition;
     private List<InputListener> inputListenersStagedForAddition;
     private List<CollisionListener> collisionListenersStagedForAddition;
 
     private World world;
 
     /**
-     * Creates an instance of 'Map' which is a container for all of the world objects. It also contains an abstractionLayer
+     * Creates an instance of 'Map' wich is a container for all of the world objects. It also contains an abstractionlayer
      * for removing and adding new objects to the world, preventing the program from crashing.
      * @param world The world containing the bodies of the starting objects.
-     * @param drawAndUpdateObjectList The objects implementing the 'DrawAndUpdate' interface.
+     * @param drawObjects The objects implementing the 'Draw' interface.
+     * @param updateObjects The objects implementing the 'Update' interface.
      * @param gameObjectsListen The objects implementing the 'InputListener' interface.
      * @param gameObjectsCollision The objects implementing the 'CollisionListener' interface.
      */
-    public Map(World world, List<DrawAndUpdateObject> drawAndUpdateObjectList, List<InputListener> gameObjectsListen, List<CollisionListener> gameObjectsCollision) {
-        this.drawAndUpdateObjectList = drawAndUpdateObjectList;
+    public Map(World world, List<Draw> drawObjects, List<Update> updateObjects, List<InputListener> gameObjectsListen, List<CollisionListener> gameObjectsCollision) {
+        this.drawObjects = drawObjects;
+        this.updateObjects = updateObjects;
         this.collisionListenerList = gameObjectsCollision;
         this.inputListenerList = gameObjectsListen;
         this.world = world;
-        drawANdUpdateObjectsStagedForRemoval = new ArrayList<>(2);
+        drawObjectsStagedForRemoval = new ArrayList<>(2);
+        updateObjectsStagedForRemoval = new ArrayList<>(2);
         inputListenersStagedForRemoval = new ArrayList<>(2);
         collisionListenersStagedForRemoval = new ArrayList<>(2);
         bodiesStagedForRemoval = new ArrayList<>(2);
-        drawAndUpdateObjectsStagedForAddition = new ArrayList<>(2);
+        drawObjectsStagedForAddition = new ArrayList<>(2);
+        updateObjectsStagedForAddition = new ArrayList<>(2);
         inputListenersStagedForAddition = new ArrayList<>(2);
         collisionListenersStagedForAddition = new ArrayList<>(2);
     }
 
     /**
-     * Removes objects staged for removal and clears the 'StagedForRemoval' lists. These lists are a buffer to prevent
-     * instantaneous removal of objects during runtime, if objects were removed during iteration over lists containing these
+     * Removes objects staged for removal and clears the 'StagedForRemoval' lists. Theese lists are a buffer to prevent
+     * instantanious removal of objects during runtime, if objects were removed during iteration over lists containing theese
      * objects or during the world step then the program would crash.
      */
-    public void removeStagedObjects(){
-        //List used to keep track of which id:s bodies have been removed. Used to prevent multiple removals of the same body.
+    public void removeStagedOBjects (){
+        //List used to keep track of wich id:s bodies have been removed. Used to prevent multiple removals of the same body.
         //If a item that will be staged for removal when collision occurs with a type of object then two such bodies will
         //be added to the 'stagedForRemoval' if the item collides with two objects of said type between one step.
         Collection<Long> bodyIDRemoved = new ArrayList<>();
@@ -68,20 +75,29 @@ public class Map
                 world.destroyBody(body);
             }
         }
-        //Removing all of the 'DrawAndUpdate' objects from the maps global list
-        for (DrawAndUpdateObject objectRemove : drawANdUpdateObjectsStagedForRemoval){
-            for (Iterator<DrawAndUpdateObject> iterator = drawAndUpdateObjectList.iterator(); iterator.hasNext();){
-                DrawAndUpdateObject object = iterator.next();
+        //Removing all of the 'Draw' objects from the maps global list
+        for (Draw objectRemove : drawObjectsStagedForRemoval){
+            for (Iterator<Draw> iterator = drawObjects.iterator(); iterator.hasNext();){
+                Draw object = iterator.next();
+                if (objectRemove.getId() == object.getId()){
+                    iterator.remove();
+                }
+            }
+        }
+        //Removing all of the 'Update' objects from the maps global list
+        for (Update objectRemove : updateObjectsStagedForRemoval){
+            for (Iterator<Update> iterator = updateObjects.iterator(); iterator.hasNext();){
+                Update object = iterator.next();
                 if (objectRemove.getId() == object.getId()){
                     iterator.remove();
                 }
             }
         }
         //Removing all of the 'gamelogic.InputListener' objects from the maps global list
-        for (InputListener listenerRemoval : inputListenersStagedForRemoval){
+        for (InputListener listenerRemova : inputListenersStagedForRemoval){
             for (Iterator<InputListener> iterator = inputListenerList.iterator(); iterator.hasNext();) {
                 InputListener inputListener = iterator.next();
-                if (inputListener.getId() == listenerRemoval.getId()){
+                if (inputListener.getId() == listenerRemova.getId()){
                     iterator.remove();
                 }
             }
@@ -97,20 +113,25 @@ public class Map
         }
         //Clearing all of the 'StagedForRemoval' lists
         bodiesStagedForRemoval.clear();
-        drawANdUpdateObjectsStagedForRemoval.clear();
+        updateObjectsStagedForRemoval.clear();
+        drawObjectsStagedForRemoval.clear();
         inputListenersStagedForRemoval.clear();
         collisionListenersStagedForRemoval.clear();
 }
 
     /**
-     * Adding objects staged for addition and clears the 'StagedForAddition' lists. These lists are a buffer to prevent
-     * instantaneous addition of objects during runtime, if objects were removed during iteration over lists containing these
+     * Adding objects staged for addition and clears the 'StagedForAddition' lists. Theese lists are a buffer to prevent
+     * instantanious addition of objects during runtime, if objects were removed during iteration over lists containing theese
      * objects or during the world step then the program would crash.
      */
     public void addStagedObjects (){
-        //Adding all of the staged 'DrawAndUpdate' objects to the maps global list
-        for (DrawAndUpdateObject object : drawAndUpdateObjectsStagedForAddition){
-            drawAndUpdateObjectList.add(object);
+        //Adding all of the staged 'Draw' objects to the maps global list
+        for (Draw object : drawObjectsStagedForAddition){
+            drawObjects.add(object);
+        }
+        //Adding all of the staged 'Update' objects to the maps global list
+        for (Update object : updateObjectsStagedForAddition){
+            updateObjects.add(object);
         }
         //Adding all of the staged 'gamelogic.InputListener' objects to the maps global list
         for (InputListener listener : inputListenersStagedForAddition){
@@ -121,7 +142,8 @@ public class Map
             collisionListenerList.add(collisionListener);
         }
         //Clearing the objects staged for addition
-        drawAndUpdateObjectsStagedForAddition.clear();
+        drawObjectsStagedForAddition.clear();
+        updateObjectsStagedForAddition.clear();
         inputListenersStagedForAddition.clear();
         collisionListenersStagedForAddition.clear();
     }
@@ -132,15 +154,21 @@ public class Map
 
     public void removeInputListener(InputListener listener){inputListenersStagedForRemoval.add(listener);}
 
-    public void removeDrawAndUpdateObject(DrawAndUpdateObject object){drawANdUpdateObjectsStagedForRemoval.add(object);}
+    public void removeDrawObject(Draw object){drawObjectsStagedForRemoval.add(object);}
 
-    public void addDrawAndUpdateObject(DrawAndUpdateObject object) {drawAndUpdateObjectsStagedForAddition.add(object);}
+    public void removeUpdateObject(Update object){updateObjectsStagedForRemoval.add(object);}
+
+    public void addDrawObject(Draw object) {drawObjectsStagedForAddition.add(object);}
+
+    public void addUpdateObject(Update object) {updateObjectsStagedForAddition.add(object);}
 
     public void addInputListener(InputListener object) { inputListenersStagedForAddition.add(object);}
 
     public void addCollisionListener(CollisionListener object) { collisionListenersStagedForAddition.add(object);}
 
-    public Iterable<DrawAndUpdateObject> getDrawAndUpdateObjectList() {return drawAndUpdateObjectList;}
+    public List<Draw> getDrawObjects() {return drawObjects;}
+
+    public List<Update> getUpdateObjects() {return updateObjects;}
 
     public Iterable<InputListener> getInputListenerList() {return inputListenerList;}
 

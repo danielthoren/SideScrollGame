@@ -4,10 +4,6 @@ package gamelogic;
  * Enum describing directions in the gameworld.
  */
 public enum Direction {
-    /**
-     * Describes the direction up (up on the screen)
-     */
-    UPWARDS,
 
     /**
      * Describes the direction down (down on the screen)

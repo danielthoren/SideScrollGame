@@ -11,7 +11,7 @@ public class WallJumpHandler implements JumpHandler {
     private DefaultJumpHandler defaultJumpHandler;
 
     /**
-     * Creates a character specific.WallJumpHandler, the default character specific. JumpHandler takes no arguments except for in the jump function.
+     * Creates a characterspesific.WallJumpHandler, the default characterspesific.JumpHandler takes no arguments except for in the jump function.
      */
     public WallJumpHandler() {
         defaultJumpHandler = new DefaultJumpHandler();

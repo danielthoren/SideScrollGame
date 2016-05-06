@@ -1,6 +1,5 @@
-package gameobjects; /**
- * Created by daniel on 2016-03-12.
- */
+package gameobjects;
+import gamelogic.Draw;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -10,61 +9,55 @@ import org.jbox2d.dynamics.BodyDef;
 import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.FixtureDef;
 import org.jbox2d.dynamics.World;
-import gamelogic.DrawAndUpdateObject;
 import gamelogic.LoadMap;
 
 /**
- * Class that creates a square object that is a part of the current world
+ * Class that creates a squareobject that is a part of the current world
  */
-public class Square extends SolidObject implements DrawAndUpdateObject
+public class Square extends SolidObject implements Draw
 {
-    protected Double height;//The height of the square in meters
-    protected Double width; //The width of the square in meters
+    protected Vec2 size;
 
     /**
-     * Creates a square with static position and collision properties.
-     * @param world The world in which to add its body
-     * @param pos The position at which to place the square (units in meters)
+     * Creates a square with static position and collision properites.
+     * @param world The world in wich to add its body
+     * @param pos The position at wich to place the square (units in meters)
      * @param friction The friction of the body
      * @param image The image to display over the body (visible part of the square)
      */
     public Square(long objectID, World world, Vec2 pos, float friction, Image image) {
 	super(objectID, pos, friction, image);
-	width = image.getWidth() / LoadMap.getInstance().getPixPerMeter();
-	height = image.getHeight() / LoadMap.getInstance().getPixPerMeter();
-
+	size = new Vec2((float) image.getWidth() / LoadMap.getInstance().getPixPerMeter(), (float) image.getHeight() / LoadMap.getInstance().getPixPerMeter());
 	createBody(world);
 	body.setUserData(this);
     }
 
     /**
      * Creates a square with static position and collision properties.
-     * @param world The world in which to add its body
-     * @param pos The position at which to place the square (units in meters)
+     * @param world The world in wich to add its body
+     * @param pos The position at wich to place the square (units in meters)
      * @param friction The fiction of the body
      * @param color The color of the gameobjects.Square
-     * @param width The width of the square in meters (world coordinates)
-     * @param height The height of the square in meters (world coordinates)
+     * @param size The size of the object
      */
-    public Square(long objectID, World world, Vec2 pos, float friction, Color color, double width, double height){
+    public Square(long objectID, World world, Vec2 pos, float friction, Color color, Vec2 size){
 	super(objectID, pos, friction, color);
-	this.width = width;
-	this.height = height;
+	this.size = size;
 	createBody(world);
 	body.setUserData(this);
     }
 
     /**
      * Creates the body of the 'gameobjects.Square' object.
-     * @param world The world in which to add its body.
+     * @param world The world in wich to add its body.
      */
     protected void createBody(World world){
 	FixtureDef fixtureDef = new FixtureDef();
 	PolygonShape polygonShape = new PolygonShape();
 
-	//Do note that the SetAsBox takes half of the width and half of the height then spanning said measurements
+	//Do note that the SetAsBox takes half of the width and half of the height then spanning said measurments
 	//out on both sides of the centerpoint (bodyposition)
-	polygonShape.setAsBox(width.floatValue()/2, height.floatValue()/2);
+	polygonShape.setAsBox(size.x/2, size.y/2);
 
 	//Creating the fixture of the body. The concrete part that can be touched (the part that can collide)
 	fixtureDef.shape = polygonShape;
@@ -82,15 +75,11 @@ public class Square extends SolidObject implements DrawAndUpdateObject
 	body.setActive(true);
     }
 
-    /**
-     * Regular rectangle object does not need updating, static position.
-     */
-    public void update(){
-    }
-
     @Override
     public void draw(GraphicsContext gc){
 	//drawSquare(gc, body.getPosition(), width, height);
 	drawBoxPolygonFixture(gc, body.getFixtureList());
     }
+
+    public Vec2 getSize() {return size;}
 }
