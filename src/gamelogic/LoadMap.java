@@ -75,11 +75,12 @@ public final class LoadMap {
             Image dessertSquare = loadImage("/textures/squareTextures/DessertSquare.jpg", new Vec2(0.4f, 0.4f));
             Image grayHexagons = loadImage("/textures/squareTextures/GrayHexagons.png", new Vec2(0.4f, 0.4f));
 
-            Image swordIm = loadImage("/textures/Textures/Sword.png", new Vec2(0.2f, 0.4f));
+            Image swordIm = loadImage("/textures/Textures/Sword.png", new Vec2(0.3f, 0.6f));
             Sword sword = new Sword(getObjectID(), world, new Vec2(5f, 0f), 0.4f, swordIm, 15);
             sword.setDensity(0.1f);
             drawObjects.add(sword);
             updateObjects.add(sword);
+            gameObjectsListen.add(sword);
             gameObjectsCollision.add(sword);
 
             drawObjects.add(new DynamicCircle(getObjectID(), world, new Vec2(2f,0f), 0.2f, Color.AQUA, 0.2f));

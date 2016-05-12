@@ -1,9 +1,14 @@
 package gameobjects;
 
 import gamelogic.CollisionListener;
+import gamelogic.Direction;
 import gamelogic.GameComponent;
+import gamelogic.InputListener;
 import gamelogic.LoadMap;
+import javafx.event.EventType;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Fixture;
 import org.jbox2d.dynamics.World;
@@ -12,16 +17,15 @@ import org.jbox2d.dynamics.contacts.Contact;
 /**
  * This class creates a sword which contains damage given to the player struck by the sword.
  */
-public class Sword extends InventoryItemParent implements CollisionListener
+public class Sword extends InventoryItemParent implements CollisionListener, InputListener
 {
 
     private int damage; //The damage of the sword
     private boolean hasDamaged;
     private long animationTimer;
-    private boolean swingAnimation;
-    private boolean stabAnimation;
-    private boolean defendAnimation;
+    private boolean swingAnimation, stabAnimation, defendAnimation, trigger1, trigger2;
     private final Vec2 origRelativePos;
+    private final float origRelativeAngle;
 
     /**
      * Creates a sword.
@@ -37,13 +41,16 @@ public class Sword extends InventoryItemParent implements CollisionListener
 	super(objectID, new DynamicSquare(objectID, world, position, friction, image));
 	this.damage = damage;
 	hasDamaged = false;
-        relativeAngle = 0;
+        relativeAngle = (float) (Math.PI - 0.3);
         relativePos = new Vec2(getSize().x, -getSize().y/2);
         origRelativePos = relativePos;
+        origRelativeAngle = relativeAngle;
         animationTimer = 0;
         swingAnimation = false;
         stabAnimation = false;
         defendAnimation = false;
+        trigger1 = false;
+        trigger2 = false;
     }
 
     /**
@@ -107,14 +114,12 @@ public class Sword extends InventoryItemParent implements CollisionListener
      * @param fixtureB One of the fixtures used in the check.
      */
     private void beginContactCheck(Fixture fixtureA, Fixture fixtureB){
-        if (stabAnimation || swingAnimation) {
-            if (fixtureA.getBody().getUserData().equals((circle == null) ? square : circle) &&
-                fixtureB.getBody().getUserData() instanceof Player) {
-                currentCollidingPlayer = (Player) fixtureB.getBody().getUserData();
-                if (player != null && !hasDamaged && !fixtureB.getBody().getUserData().equals(player)) {
-                    currentCollidingPlayer.damage(damage);
-                    hasDamaged = true;
-                }
+        if (fixtureA.getBody().getUserData().equals((circle == null) ? square : circle) &&
+            fixtureB.getBody().getUserData() instanceof Player) {
+            currentCollidingPlayer = (Player) fixtureB.getBody().getUserData();
+            if (player != null && !hasDamaged && !fixtureB.getBody().getUserData().equals(player) && (stabAnimation || swingAnimation)) {
+                currentCollidingPlayer.damage(damage);
+                hasDamaged = true;
             }
         }
     }
@@ -154,14 +159,72 @@ public class Sword extends InventoryItemParent implements CollisionListener
         }
     }
 
+    /**
+     * Listens for inputs.
+     * @param event Object that contains information of the input
+     */
+    public void inputAction(KeyEvent event){
+        if (player != null){
+            if (event.getEventType().equals(KeyEvent.KEY_PRESSED)){
+                if (event.getCode() == KeyCode.SPACE){
+                    System.out.println("in keycheck");
+                    if (!swingAnimation && !stabAnimation && !defendAnimation){
+                        swingAnimation = true;
+                    }
+                }
+                else if (event.getCode() == KeyCode.SHIFT){
+                    if (!swingAnimation && !stabAnimation && !defendAnimation){
+                        stabAnimation = true;
+                    }
+                }
+                else if (event.getCode() == KeyCode.CONTROL){
+                    if (!swingAnimation && !stabAnimation && !defendAnimation){
+                        defendAnimation = true;
+                    }
+                }
+            }
+        }
+    }
+
     private void swingAnimation(){
         Vec2 relativeDistance = new Vec2(player.getBody().getPosition().x - getBody().getPosition().x, player.getBody().getPosition().y - getBody().getPosition().y);
         double radius = Math.sqrt((double) (Math.pow(relativeDistance.x, 2) + Math.pow(relativeDistance.y, 2)));
 
-        double newAngle = getBody().getAngle() + getBody().getAngle() * 1.1;
-        Vec2 newRelativePos = new Vec2((float) (radius * Math.sin(newAngle)), (float) (radius * Math.cos(newAngle)));
-        relativePos = newRelativePos;
+        double newAngle = relativeAngle;
+        if (Math.abs(newAngle) > 0.1 && !trigger1){
+            if (player.getDirection() == Direction.LEFT) {
+                newAngle = getBody().getAngle() - 0.1;
+            }
+            else{
+                newAngle = getBody().getAngle() + 0.1;
+            }
+        }
+        else {
+            trigger1 = true;
+        }
 
+        if (trigger1 && !trigger2){
+            if (player.getDirection() == Direction.LEFT) {
+                newAngle = getBody().getAngle() - 0.1;
+            }
+            else{
+                newAngle = getBody().getAngle() + 0.1;
+            }
+            if (Math.abs(relativeAngle) > origRelativeAngle){
+                trigger2 = true;
+            }
+        }
+        else if (trigger2){
+            animationTimer = -1;
+            relativePos = origRelativePos;
+            relativeAngle = origRelativeAngle;
+            swingAnimation = false;
+            trigger1 = false;
+            trigger2 = false;
+        }
+        relativeAngle = (float) newAngle;
+        System.out.println(relativeAngle);
+        //relativePos = new Vec2((float) (radius * Math.sin(newAngle)), (float) (radius * Math.cos(newAngle)));
         animationTimer++;
     }
 

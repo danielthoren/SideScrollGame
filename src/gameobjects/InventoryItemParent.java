@@ -3,6 +3,7 @@ package gameobjects;
 import characterspesific.InventoryItem;
 import gamelogic.Map;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.KeyEvent;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.Filter;
@@ -25,6 +26,7 @@ public class InventoryItemParent implements InventoryItem
     protected float friction;
     protected float restitution;
     protected float relativeAngle;
+    private Direction previousDir;
 
     /**
      * Initializes a 'gameobjects.InventoryItemParent and puts it at the specified position in the specified world.
@@ -43,6 +45,7 @@ public class InventoryItemParent implements InventoryItem
         //Setting the DENSITY of the object to 1. This is the default value of an equipped item and can be changed by setter in superclass.
         circle.setDensity(1f);
         relativeAngle = 0;
+        previousDir = Direction.RIGHT;
     }
 
     /**
@@ -60,6 +63,7 @@ public class InventoryItemParent implements InventoryItem
         relativePos = null;
         player = null;
         relativeAngle = 0;
+        previousDir = Direction.RIGHT;
     }
 
     /**
@@ -76,6 +80,7 @@ public class InventoryItemParent implements InventoryItem
         relativePos = null;
         player = null;
         relativeAngle = 0;
+        previousDir = Direction.RIGHT;
     }
 
 
@@ -117,16 +122,17 @@ public class InventoryItemParent implements InventoryItem
         }
         else if (player != null) {
             Vec2 newPos = new Vec2(0,0);
-            float newAngle = getBody().getAngle();
             if (player.getDirection() == Direction.LEFT){
                 newPos = new Vec2(player.getPosition().x - relativePos.x, player.getPosition().y + relativePos.y);
-                newAngle = Math.abs(getBody().getAngle());
+                relativeAngle = Math.abs(relativeAngle);
+                previousDir = player.getDirection();
             }
             else if (player.getDirection() == Direction.RIGHT){
                 newPos = new Vec2(player.getPosition().x + relativePos.x, player.getPosition().y + relativePos.y);
-                newAngle = -Math.abs(getBody().getAngle());
+                relativeAngle = -Math.abs(relativeAngle);
+                previousDir = player.getDirection();
             }
-            getBody().setTransform(newPos, newAngle);
+            getBody().setTransform(newPos, relativeAngle);
             getBody().setFixedRotation(true);
         }
     }
@@ -137,6 +143,7 @@ public class InventoryItemParent implements InventoryItem
      */
     @Override
     public void draw(GraphicsContext gc){
+        System.out.println(relativeAngle);
         if (circle == null){
             square.draw(gc);
         }
@@ -151,6 +158,7 @@ public class InventoryItemParent implements InventoryItem
     public void equip(){
         LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber()).addDrawObject(this);
         LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber()).addUpdateObject(this);
+        previousDir = player.getDirection();
         if (circle == null) {
             if (square.getBody() == null) {
                 square.createBody(LoadMap.getInstance().getMap(GameComponent.getCurrentMapNumber()).getWorld(), density, friction, restitution);
@@ -188,6 +196,7 @@ public class InventoryItemParent implements InventoryItem
     public void pickUp(Player player){
         setGroupIndex(-(int)player.getId());
         this.player = player;
+        previousDir = player.getDirection();
         if (circle == null){
             square.setDensity(1f);
         }
