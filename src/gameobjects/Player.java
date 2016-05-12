@@ -36,7 +36,7 @@ public class Player extends SolidObject implements Draw, Update, CollisionListen
     private World world;
     private JumpHandler currentJumpHandler;
     private Inventory inventory;
-    private KeyCode runRightCode, jumpCode, runLeftCode, pickUpCode, dropItemCode;
+    private KeyCode runRightCode, jumpCode, runLeftCode, pickUpCode, dropItemCode, useItem1Code, useItem2Code, useItem3Code;
     private Sprite sprite;
     private Vec2 spriteIdleFrame;
     private Vec2 maxVelocity, acceleration, deceleration, size;
@@ -132,6 +132,9 @@ public class Player extends SolidObject implements Draw, Update, CollisionListen
         runRightCode = KeyCode.D;
         jumpCode = KeyCode.W;
         dropItemCode = KeyCode.G;
+        useItem1Code = KeyCode.SPACE;
+        useItem2Code = KeyCode.SHIFT;
+        useItem3Code = KeyCode.CONTROL;
     }
 
     /**
@@ -473,6 +476,9 @@ public class Player extends SolidObject implements Draw, Update, CollisionListen
             }
             if (event.getCode() == dropItemCode){
                 inventory.dropCurrentItem();
+            }
+            if (event.getCode() == useItem1Code){
+                if ()
             }
         }
         else if (event.getEventType().equals(KeyEvent.KEY_RELEASED)){

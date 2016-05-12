@@ -17,6 +17,11 @@ public class Sword extends InventoryItemParent implements CollisionListener
 
     private int damage; //The damage of the sword
     private boolean hasDamaged;
+    private long animationTimer;
+    private boolean swingAnimation;
+    private boolean stabAnimation;
+    private boolean defendAnimation;
+    private final Vec2 origRelativePos;
 
     /**
      * Creates a sword.
@@ -32,7 +37,13 @@ public class Sword extends InventoryItemParent implements CollisionListener
 	super(objectID, new DynamicSquare(objectID, world, position, friction, image));
 	this.damage = damage;
 	hasDamaged = false;
-        setRelativeAngle((float) Math.PI / 4);
+        relativeAngle = 0;
+        relativePos = new Vec2(getSize().x, -getSize().y/2);
+        origRelativePos = relativePos;
+        animationTimer = 0;
+        swingAnimation = false;
+        stabAnimation = false;
+        defendAnimation = false;
     }
 
     /**
@@ -60,6 +71,12 @@ public class Sword extends InventoryItemParent implements CollisionListener
         getBody().getFixtureList().setSensor(false);
         getBody().setTransform(getBody().getPosition(), relativeAngle);
         getBody().setFixedRotation(true);
+    }
+
+    @Override
+    public void update(){
+        super.update();
+        if (swingAnimation){swingAnimation();}
     }
 
     /**
@@ -90,12 +107,14 @@ public class Sword extends InventoryItemParent implements CollisionListener
      * @param fixtureB One of the fixtures used in the check.
      */
     private void beginContactCheck(Fixture fixtureA, Fixture fixtureB){
-        if (fixtureA.getBody().getUserData().equals((circle == null) ? square : circle) &&
-                fixtureB.getBody().getUserData() instanceof Player){
-            currentCollidingPlayer = (Player) fixtureB.getBody().getUserData();
-            if (player != null && !hasDamaged && !fixtureB.getBody().getUserData().equals(player)) {
-                currentCollidingPlayer.damage(damage);
-                hasDamaged = true;
+        if (stabAnimation || swingAnimation) {
+            if (fixtureA.getBody().getUserData().equals((circle == null) ? square : circle) &&
+                fixtureB.getBody().getUserData() instanceof Player) {
+                currentCollidingPlayer = (Player) fixtureB.getBody().getUserData();
+                if (player != null && !hasDamaged && !fixtureB.getBody().getUserData().equals(player)) {
+                    currentCollidingPlayer.damage(damage);
+                    hasDamaged = true;
+                }
             }
         }
     }
@@ -125,10 +144,30 @@ public class Sword extends InventoryItemParent implements CollisionListener
      * @param fixtureA The first fixture to be used in check.
      * @param fixtureB The second fixture to be used in check.
      */
-    private void endContactCheck(Fixture fixtureA, Fixture fixtureB){
-        if (fixtureA.getBody().getUserData().equals((circle == null) ? square : circle) && fixtureB.getBody().getUserData() instanceof Player){
-            hasDamaged = false;
-            currentCollidingPlayer = null;
+    private void endContactCheck(Fixture fixtureA, Fixture fixtureB) {
+        if (swingAnimation || stabAnimation) {
+            if (fixtureA.getBody().getUserData().equals((circle == null) ? square : circle) &&
+                fixtureB.getBody().getUserData() instanceof Player) {
+                hasDamaged = false;
+                currentCollidingPlayer = null;
+            }
         }
     }
+
+    private void swingAnimation(){
+        Vec2 relativeDistance = new Vec2(player.getBody().getPosition().x - getBody().getPosition().x, player.getBody().getPosition().y - getBody().getPosition().y);
+        double radius = Math.sqrt((double) (Math.pow(relativeDistance.x, 2) + Math.pow(relativeDistance.y, 2)));
+
+        double newAngle = getBody().getAngle() + getBody().getAngle() * 1.1;
+        Vec2 newRelativePos = new Vec2((float) (radius * Math.sin(newAngle)), (float) (radius * Math.cos(newAngle)));
+        relativePos = newRelativePos;
+
+        animationTimer++;
+    }
+
+    public void setDefendAnimation(final boolean defendAnimation) {this.defendAnimation = defendAnimation;}
+
+    public void setStabAnimation(final boolean stabAnimation) {this.stabAnimation = stabAnimation;}
+
+    public void setSwingAnimation(final boolean swingAnimation) {this.swingAnimation = swingAnimation;}
 }

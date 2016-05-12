@@ -187,7 +187,6 @@ public class InventoryItemParent implements InventoryItem
      */
     public void pickUp(Player player){
         setGroupIndex(-(int)player.getId());
-        calcRelativePos(player);
         this.player = player;
         if (circle == null){
             square.setDensity(1f);
