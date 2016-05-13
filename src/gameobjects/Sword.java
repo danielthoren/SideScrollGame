@@ -20,7 +20,10 @@ import org.jbox2d.dynamics.contacts.Contact;
 public class Sword extends InventoryItemParent implements CollisionListener, InputListener
 {
 
-    private int damage; //The damage of the sword
+    private Direction swordHold;
+    private int damage;
+    //Values between 0.1 and 0.8
+    private float speed;
     private boolean hasDamaged;
     private long animationTimer;
     private boolean swingAnimation, stabAnimation, defendAnimation, trigger1, trigger2;
@@ -40,9 +43,11 @@ public class Sword extends InventoryItemParent implements CollisionListener, Inp
     {
 	super(objectID, new DynamicSquare(objectID, world, position, friction, image));
 	this.damage = damage;
+        swordHold = Direction.UP;
 	hasDamaged = false;
         relativeAngle = (float) (Math.PI - 0.3);
         relativePos = new Vec2(getSize().x, -getSize().y/2);
+        speed = 0.1f;
         origRelativePos = relativePos;
         origRelativeAngle = relativeAngle;
         animationTimer = 0;
@@ -153,7 +158,6 @@ public class Sword extends InventoryItemParent implements CollisionListener, Inp
         if (swingAnimation || stabAnimation) {
             if (fixtureA.getBody().getUserData().equals((circle == null) ? square : circle) &&
                 fixtureB.getBody().getUserData() instanceof Player) {
-                hasDamaged = false;
                 currentCollidingPlayer = null;
             }
         }
@@ -190,30 +194,48 @@ public class Sword extends InventoryItemParent implements CollisionListener, Inp
         Vec2 relativeDistance = new Vec2(player.getBody().getPosition().x - getBody().getPosition().x, player.getBody().getPosition().y - getBody().getPosition().y);
         double radius = Math.sqrt((double) (Math.pow(relativeDistance.x, 2) + Math.pow(relativeDistance.y, 2)));
 
-        double newAngle = relativeAngle;
-        if (Math.abs(newAngle) > 0.1 && !trigger1){
+        if (swordHold == Direction.UP){
+            swingDown();
+        }
+        else{
+            swingUp();
+        }
+
+        System.out.println(relativeAngle);
+        //relativePos = new Vec2((float) (radius * Math.sin(newAngle)), (float) (radius * Math.cos(newAngle)));
+        animationTimer++;
+    }
+
+    /**
+     * Function making the sword swing down from upwards orientation
+     */
+    private void swingDown(){
+        //Sword orientation 0 radians equals the sword being down.
+        //Rotates the sword downwards until it is horizontal
+        if (relativeAngle * (player.getDirection() == Direction.LEFT ? -1 : 1) > 0 && !trigger1){
             if (player.getDirection() == Direction.LEFT) {
-                newAngle = getBody().getAngle() - 0.1;
+                relativeAngle = (float) (getBody().getAngle() - speed);
             }
             else{
-                newAngle = getBody().getAngle() + 0.1;
+                relativeAngle = (float) (getBody().getAngle() + speed);
             }
         }
         else {
             trigger1 = true;
         }
-
+        //Rotating the sword up again
         if (trigger1 && !trigger2){
             if (player.getDirection() == Direction.LEFT) {
-                newAngle = getBody().getAngle() - 0.1;
+                relativeAngle = (float) (getBody().getAngle() + speed);
             }
             else{
-                newAngle = getBody().getAngle() + 0.1;
+                relativeAngle = (float) (getBody().getAngle() - speed);
             }
-            if (Math.abs(relativeAngle) > origRelativeAngle){
+            if (Math.abs(relativeAngle) > Math.abs(origRelativeAngle)){
                 trigger2 = true;
             }
         }
+        //Resetting the swing action
         else if (trigger2){
             animationTimer = -1;
             relativePos = origRelativePos;
@@ -221,11 +243,12 @@ public class Sword extends InventoryItemParent implements CollisionListener, Inp
             swingAnimation = false;
             trigger1 = false;
             trigger2 = false;
+            hasDamaged = false;
         }
-        relativeAngle = (float) newAngle;
-        System.out.println(relativeAngle);
-        //relativePos = new Vec2((float) (radius * Math.sin(newAngle)), (float) (radius * Math.cos(newAngle)));
-        animationTimer++;
+    }
+
+    private void swingUp(){
+
     }
 
     public void setDefendAnimation(final boolean defendAnimation) {this.defendAnimation = defendAnimation;}
