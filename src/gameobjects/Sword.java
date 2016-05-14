@@ -45,7 +45,8 @@ public class Sword extends InventoryItemParent implements CollisionListener, Inp
 	this.damage = damage;
         swordHold = Direction.UP;
 	hasDamaged = false;
-        relativeAngle = (float) (Math.PI - 0.3);
+        //Posetive clockwise, negative anticlockwise
+        relativeAngle = 0.3f;
         relativePos = new Vec2(getSize().x, -getSize().y/2);
         speed = 0.1f;
         origRelativePos = relativePos;
@@ -88,6 +89,10 @@ public class Sword extends InventoryItemParent implements CollisionListener, Inp
     @Override
     public void update(){
         super.update();
+        System.out.print(relativeAngle);
+        System.out.print(" real :  ");
+        System.out.println(getBody().getAngle());
+
         if (swingAnimation){swingAnimation();}
     }
 
@@ -171,7 +176,6 @@ public class Sword extends InventoryItemParent implements CollisionListener, Inp
         if (player != null){
             if (event.getEventType().equals(KeyEvent.KEY_PRESSED)){
                 if (event.getCode() == KeyCode.SPACE){
-                    System.out.println("in keycheck");
                     if (!swingAnimation && !stabAnimation && !defendAnimation){
                         swingAnimation = true;
                     }
@@ -183,10 +187,26 @@ public class Sword extends InventoryItemParent implements CollisionListener, Inp
                 }
                 else if (event.getCode() == KeyCode.CONTROL){
                     if (!swingAnimation && !stabAnimation && !defendAnimation){
-                        defendAnimation = true;
+                        switchSwordHold();
                     }
                 }
             }
+        }
+    }
+
+    /**
+     * Toggles between holding the sword with the tip upp and holding the sword with the tip down.
+     */
+    private void switchSwordHold(){
+        if (swordHold == Direction.UP) {
+            relativeAngle = (float) Math.PI - relativeAngle;
+            relativePos = new Vec2(relativePos.x, -relativePos.y);
+            swordHold = Direction.DOWN;
+        }
+        else{
+            relativeAngle = origRelativeAngle;
+            relativePos = origRelativePos;
+            swordHold = Direction.UP;
         }
     }
 
@@ -200,8 +220,6 @@ public class Sword extends InventoryItemParent implements CollisionListener, Inp
         else{
             swingUp();
         }
-
-        System.out.println(relativeAngle);
         //relativePos = new Vec2((float) (radius * Math.sin(newAngle)), (float) (radius * Math.cos(newAngle)));
         animationTimer++;
     }
@@ -212,7 +230,7 @@ public class Sword extends InventoryItemParent implements CollisionListener, Inp
     private void swingDown(){
         //Sword orientation 0 radians equals the sword being down.
         //Rotates the sword downwards until it is horizontal
-        if (relativeAngle * (player.getDirection() == Direction.LEFT ? -1 : 1) > 0 && !trigger1){
+        if (Math.abs(relativeAngle) < Math.PI && !trigger1){
             if (player.getDirection() == Direction.LEFT) {
                 relativeAngle = (float) (getBody().getAngle() - speed);
             }
@@ -231,7 +249,7 @@ public class Sword extends InventoryItemParent implements CollisionListener, Inp
             else{
                 relativeAngle = (float) (getBody().getAngle() - speed);
             }
-            if (Math.abs(relativeAngle) > Math.abs(origRelativeAngle)){
+            if (Math.abs(relativeAngle) < Math.abs(origRelativeAngle)){
                 trigger2 = true;
             }
         }

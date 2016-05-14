@@ -124,12 +124,12 @@ public class InventoryItemParent implements InventoryItem
             Vec2 newPos = new Vec2(0,0);
             if (player.getDirection() == Direction.LEFT){
                 newPos = new Vec2(player.getPosition().x - relativePos.x, player.getPosition().y + relativePos.y);
-                relativeAngle = Math.abs(relativeAngle);
+                relativeAngle = -Math.abs(relativeAngle);
                 previousDir = player.getDirection();
             }
             else if (player.getDirection() == Direction.RIGHT){
                 newPos = new Vec2(player.getPosition().x + relativePos.x, player.getPosition().y + relativePos.y);
-                relativeAngle = -Math.abs(relativeAngle);
+                relativeAngle = Math.abs(relativeAngle);
                 previousDir = player.getDirection();
             }
             getBody().setTransform(newPos, relativeAngle);
@@ -143,7 +143,6 @@ public class InventoryItemParent implements InventoryItem
      */
     @Override
     public void draw(GraphicsContext gc){
-        System.out.println(relativeAngle);
         if (circle == null){
             square.draw(gc);
         }
